@@ -31,9 +31,11 @@ const useAuth = () => {
   useEffect(() => {
     if (isAuthenticated) {
       router.push('/dashboard');
-    } else {
-      router.push('/login');
     }
+    //  else {
+    //   router.push('/login');
+    // }
+    
   }, [isAuthenticated, router]);
 
   return { isAuthenticated, setAuth };

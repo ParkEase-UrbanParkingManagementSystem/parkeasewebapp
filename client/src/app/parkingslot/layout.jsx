@@ -1,8 +1,7 @@
-
 import Navbar from "@/ui/pmcNavbar/PmcNavbar"
 import {useAuth} from '../../utils/authContext'
 
-const DashboardLayout = ({children}) => {
+const SlotsLayout = ({children}) => {
   
   
 
@@ -16,4 +15,4 @@ const DashboardLayout = ({children}) => {
   )
 }
 
-export default DashboardLayout
+export default SlotsLayout

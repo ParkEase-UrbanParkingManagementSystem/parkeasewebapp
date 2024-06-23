@@ -1,21 +1,29 @@
 "use client"; // Marks this file as a Client Component
 
 import { Inter } from "next/font/google";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import "./globals.css";
-import useAuth from '../utils/useAuth'; // Import the custom hook
+import {AuthProvider} from '../utils/authContext'
+
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
+  
   children,
-}: Readonly<{
+}: Readonly<
+{
   children: React.ReactNode;
 }>) {
-  const { isAuthenticated } = useAuth(); // Use the custom hook
 
+  
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <AuthProvider>
+            {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }
