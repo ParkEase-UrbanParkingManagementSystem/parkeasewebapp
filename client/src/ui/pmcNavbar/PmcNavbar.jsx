@@ -17,6 +17,7 @@ const Navbar = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
@@ -26,12 +27,12 @@ const Navbar = () => {
 
 
   return (
-    <div className="p-4 flex justify-between items-center bg-yellow-400 ">
+    <div className="p-4 flex justify-between items-center bg-yellow-400 rounded-lg">
       <div className="">
         <Image src="/images/logo.png" alt="Logo" width={60} height={80} />
       </div>
       <div className="flex items-center">
-        <Links />
+        
         <div className="relative">
           <button 
             onClick={toggleDropdown} 

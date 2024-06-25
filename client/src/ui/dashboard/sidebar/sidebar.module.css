@@ -1,0 +1,36 @@
+.container{
+    position: sticky;
+    top: 40px;
+}
+
+.user{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.links{
+    display: flex;
+    flex-direction: column;
+}
+
+.userimage{
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.userDetail{
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.username{
+    font-weight: 500;
+}
+
+.userTitle{
+    font-size: 12px;
+
+}
