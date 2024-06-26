@@ -2,6 +2,7 @@
 
 // Mark this component as a Client Component
 "use client";
+import styles from "./login.module.css";
 
 import { Fragment, useState } from 'react';
 import { useRouter } from 'next/navigation'; // Importing Next.js router for navigation
@@ -39,14 +40,26 @@ const Login = () => {
 
   return (
     <Fragment>
-      <div className="login-container">
-        <h1 className='text-center mt-4'>PMC Login</h1>
+      <div className={styles.login_container}>
+        <div className={styles.left}>
+
+           <div>Your Gateway to Hassle-free parking</div>
+
+        </div>
+
+      <div className={styles.right}>  
+
+        <div className={styles.center}>    
+
+        <div className="items-start border-4">
+        <h1 className='text-center mt-4 text-2xl'>Log In</h1>
+        </div>
         <form onSubmit={onSubmit}>
           <input
             type='email'
             name='email'
             placeholder='Email'
-            className='form-control my-3'
+            className='form-control my-3 w-96'
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
@@ -54,15 +67,17 @@ const Login = () => {
             type='password'
             name='password'
             placeholder='Password'
-            className='form-control my-3'
+            className='form-control my-3 w-96'
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
           <button className='btn btn-success btn-block'>Login</button>
         </form>
         <div className="text-center mt-3">
-          <a href="/register">Register</a> {/* Using <a> for navigation */}
+          <p>Don't have an account? <a href="/register">Register</a></p> {/* Using <a> for navigation */}
         </div>
+      </div>
+      </div>  
       </div>
     </Fragment>
   );

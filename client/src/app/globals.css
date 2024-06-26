@@ -4,11 +4,13 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
 :root {
-  --bg: 	#202020;
+  --bg: 	white
   --bgSoft: #474747;
-  --text: white;
+  --text: #202020;
   --textSoft: #e5e5e5;
   --btn: #d2b746;
+  --yellow: #FFB403;
+  --darkblue: #1A2131;
   }
 
 *{
