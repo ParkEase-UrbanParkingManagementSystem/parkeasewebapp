@@ -1,8 +1,11 @@
 import React from 'react'
 
+
 const WardenPage = () => {
   return (
-    <div>WardenPage</div>
+    <>
+    <div>WardenPage</div></>
+    
   )
 }
 
