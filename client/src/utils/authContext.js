@@ -44,11 +44,11 @@ export const AuthProvider = ({ children }) => {
     isAuth();
   }, []);
 
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.push('/login'); // Redirect to login if not authenticated and loading is complete
-    }
-  }, [isAuthenticated, loading, router]);
+  // useEffect(() => {
+  //   if (!loading && !isAuthenticated) {
+  //     router.push('/login'); // Redirect to login if not authenticated and loading is complete
+  //   }
+  // }, [isAuthenticated, loading, router]);
 
   if (loading) {
     return <Loading/>; // You can add a better loading UI here

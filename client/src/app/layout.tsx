@@ -28,13 +28,13 @@ export default function RootLayout({
 }
 
 function LayoutWithAuth({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth(); // Accessing the auth state
+  // const { isAuthenticated } = useAuth(); // Accessing the auth state
 
   return (
     <>
-      {isAuthenticated && (       
+      {/* {isAuthenticated && (       
           <Navbar />
-      )}
+      )} */}
       {children}
 
       <Footer/>

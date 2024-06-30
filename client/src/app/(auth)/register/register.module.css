@@ -1,0 +1,33 @@
+.register_container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    height: 100vh;
+    background-color: #ffb403;
+  }
+  
+  .left {
+    display: grid;
+    grid-template-rows: 5% 20% 75%;
+    height: 100vh;
+  }
+  
+  .right {
+    /* flex: 5; */
+    border-top-left-radius: 7%;
+    border-bottom-left-radius: 7%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .image {
+      z-index: 10;
+  }
+  
