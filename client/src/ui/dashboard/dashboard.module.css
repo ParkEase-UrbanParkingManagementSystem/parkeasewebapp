@@ -1,14 +1,18 @@
-.container{
-    display: flex;
+.container {
+  display: grid;
+  grid-template-columns: 18% 82%;
 }
 
-.menu{
-    flex: 1;
-    background-color: #facc15;
-    padding: 20px;
+.menu {
+  background-color: #FFB403;
+  padding: 10px;
+  height: 100vh;
+  place-content: start;
+  border-top-right-radius: 8%;
+  --tw-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
-.content{
-    flex: 4;
-    padding: 20px;
+.content {
+  padding: 20px;
 }
