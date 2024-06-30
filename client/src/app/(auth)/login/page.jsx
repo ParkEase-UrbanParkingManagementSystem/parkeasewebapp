@@ -2,10 +2,11 @@
 
 // Mark this component as a Client Component
 "use client";
+import styles from "./login.module.css";
 
-import { Fragment, useState } from 'react';
-import { useRouter } from 'next/navigation'; // Importing Next.js router for navigation
-
+import { Fragment, useState } from "react";
+import { useRouter } from "next/navigation"; // Importing Next.js router for navigation
+import Image from "next/image";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -39,33 +40,72 @@ const Login = () => {
 
   return (
     <Fragment>
-      <div className="login-container">
-        <h1 className='text-center mt-4'>PMC Login</h1>
-        <form onSubmit={onSubmit}>
-          <input
-            type='email'
-            name='email'
-            placeholder='Email'
-            className='form-control my-3'
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-          />
-          <input
-            type='password'
-            name='password'
-            placeholder='Password'
-            className='form-control my-3'
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-          />
-          <button className='btn btn-success btn-block'>Login</button>
-        </form>
-        <div className="text-center mt-3">
-          <a href="/register">Register</a> {/* Using <a> for navigation */}
+      <div className={styles.login_container}>
+        <div className={styles.left}>
+          <div className="m-2"><Image
+              src="/images/Group 177.png"
+              alt="Description of the image"
+              width={150}
+              height={200}
+              className={styles.image}
+            ></Image></div>
+          <div className="text-4xl text-white tracking-widest m-5 font-semibold">
+            Your Gateway to Hassle - free parking
+          </div>
+          <div className="justify-self-center">
+            <Image
+              src="/images/Business decisions-bro 2.png"
+              alt="Description of the image"
+              width={500}
+              height={500}
+              className={styles.image}
+            ></Image>
+          </div>
+        </div>
+        <div className={styles.right}>
+          <div className={styles.center}>
+            <div className="float-left py-10">
+              <h1 className="text-center text-3xl font-extrabold">Log In</h1>
+            </div>
+            
+            <div>
+              <form onSubmit={onSubmit}>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  className="form-control my-3 w-96"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  className="form-control my-3 w-96"
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                />
+                <button className="btn btn-success btn-block w-full">
+                  Login
+                </button>
+              </form>
+            </div>
+
+            <div className="text-center mt-3">
+              <p>
+                Don't have an account?{" "}
+                <a href="/register" className="text-blue-500">
+                  Register
+                </a>
+              </p>
+              {/* Using <a> for navigation */}
+            </div>
+          </div>
         </div>
       </div>
     </Fragment>
   );
-}
+};
 
 export default Login;

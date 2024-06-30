@@ -6,7 +6,7 @@ const Loading = () => {
   return (
     <div className={styles.loadingContainer}>
       <p className='text-2xl font-bold'>Loading...</p>
-      <Image src="/images/logo.png" alt="Logo" width={180} height={80} />
+      <Image src="/images/ParkEase_logo.png" alt="Logo" width={180} height={80} />
     </div>
   );
 };
