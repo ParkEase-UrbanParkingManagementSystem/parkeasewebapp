@@ -1,0 +1,83 @@
+.container {
+  display: grid;
+  grid-template-rows: 10% 80% 10%;
+  height: 100vh;
+}
+
+.title {
+  place-content: center;
+  font-weight: bold;
+  font-size: x-large;
+}
+
+.tablecontent {
+    margin: 1rem;
+  --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.table tr:nth-child(odd) {
+    background-color: rgba(229, 231, 235, 1); /* Light gray background color for odd rows */
+  }
+
+.empidhead {
+  text-align: center;
+  width: 15rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.empiddata {
+  text-align: center;
+  width: 15rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.empnamehead,
+.empslothead {
+  text-align: center;
+  width: 20rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.empnamedata,
+.empslotdata {
+  text-align: center;
+  width: 20rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  --tw-text-opacity: 1;
+  color: rgba(16, 185, 129, var(--tw-text-opacity));
+}
+
+.empagehead,
+.empgenderhead {
+  text-align: center;
+  width: 10rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.empagedata,
+.empgenderdata {
+  text-align: center;
+  width: 10rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  --tw-text-opacity: 1;
+  color: rgba(59, 130, 246, var(--tw-text-opacity));
+}
+
+.number {
+  display: grid;
+  grid-template-columns: 30%40%30%;
+}
+
+.icon {
+  place-content: center;
+  justify-self: center;
+}
