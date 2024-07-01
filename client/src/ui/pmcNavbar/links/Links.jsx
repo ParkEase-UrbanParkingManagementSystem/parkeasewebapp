@@ -23,7 +23,7 @@ const Links = () => {
         <Link 
           href={link.path} 
           key={link.title} 
-          className={`block px-4 py-2 rounded-lg hover:bg-gray-700 hover:text-white text-gray-800 ${pathname === link.path && styles.active}`}
+          className={`block px-4 py-2 rounded-lg hover:bg-gray-700 hover:text-white text-gray-800 text-justify ${pathname === link.path && styles.active}`}
         >
           {link.title}
         </Link>

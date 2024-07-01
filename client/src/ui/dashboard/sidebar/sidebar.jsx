@@ -9,8 +9,8 @@ const sidebar = () => {
       <div className={styles.user}>
           <Image className={styles.userimage} src="/images/user.jpg" width="50" height="50" />
           <div className={styles.userDetail}>
-            <span className={styles.username}>John Doe</span>
-            <span className={styles.userTitle}>Admin PMC</span>
+            <span className={styles.username}>Mr.Nipul Yansith</span>
+            <span className={styles.userTitle}>Manager | ABC Company</span>
           </div>
       </div>
 
