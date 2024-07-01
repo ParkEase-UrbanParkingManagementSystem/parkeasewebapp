@@ -12,6 +12,7 @@ const Links = () => {
 
 
   const links = [
+    { title: "My Profile", path: "/profile" },
     { title: "Dashboard", path: "/dashboard" },
     { title: "Parking Slots", path: "/parkingslot" },
     { title: "Wardens", path: "/warden" }
