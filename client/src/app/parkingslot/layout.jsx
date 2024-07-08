@@ -1,18 +1,18 @@
-import Navbar from "@/ui/pmcNavbar/PmcNavbar"
-import {useAuth} from '../../utils/authContext'
+import styles from "@/ui/dashboard/dashboard.module.css"
+import Sidebar from "@/ui/dashboard/sidebar/sidebar"
 
-const SlotsLayout = ({children}) => {
-  
-  
-
+const DashboardLayout = ({children}) => {
   return (
     
-    <div>
-      
-        <div><Navbar/></div>
-        <div>{children}</div>
+    <div className={styles.container}>
+       <div className={styles.menu}>
+          <Sidebar/>
+       </div>
+        <div className={styles.content}>
+        {children}
+        </div>
     </div>
   )
 }
 
-export default SlotsLayout
+export default DashboardLayout

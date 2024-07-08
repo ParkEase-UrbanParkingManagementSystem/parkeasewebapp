@@ -1,3 +1,5 @@
+"Use Client";
+
 import React from "react";
 import styles from "./warden.module.css";
 
@@ -10,7 +12,8 @@ const WardenPage = () => {
         </div>
 
         <div className={styles.tablecontent}>
-          <table className={`${styles.table} w-full`}>
+          <table className={styles.table}>
+            
             <tr>
               <th className={styles.empidhead}>Employee ID</th>
               <th className={styles.empnamehead}>Name</th>
@@ -58,9 +61,16 @@ const WardenPage = () => {
               <td className={styles.empnamedata}>Nimal Athapaththu</td>
               <td className={styles.empgenderdata}>Male</td>
               <td className={styles.empagedata}>54</td>
-              <td className={styles.empslotdata} style={{ color: "red" }}>
+              <td className={styles.empslotdatafree}>
                 Not yet assigned
               </td>
+            </tr>
+            <tr>
+              <td className={styles.empiddata}>#1100</td>
+              <td className={styles.empnamedata}>Nimal Athapaththu</td>
+              <td className={styles.empgenderdata}>Male</td>
+              <td className={styles.empagedata}>54</td>
+              <td className={styles.empslotdata}>Kollupitiya</td>
             </tr>
             <tr>
               <td className={styles.empiddata}>#1100</td>
