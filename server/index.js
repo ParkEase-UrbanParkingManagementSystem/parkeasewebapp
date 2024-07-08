@@ -12,7 +12,7 @@ app.use(cors())
 //register and login routes
 
 app.use("/auth", require("./routes/jwtAuth"));
-// app.use("/wardens", require("./routes/wardens"))
+app.use("/wardens", require("./routes/wardens"));
 
 // //Dashboard route
 

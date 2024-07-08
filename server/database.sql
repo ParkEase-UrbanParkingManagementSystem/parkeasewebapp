@@ -1,13 +1,12 @@
 -- Download exteention
 
-CREATE TABLE users(
+CREATE TABLE warden(
     user_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
-
 );
+
 
 -- Insert fake users
 
-INSERT INTO users (name,email,password) VALUES ('Nipul','bbb@gmail.com','1234');
+INSERT INTO warden (name,email) VALUES ('NipulY','bbgb@gmail.com');
