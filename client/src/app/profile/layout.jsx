@@ -1,7 +1,7 @@
 import styles from "@/ui/dashboard/dashboard.module.css"
 import Sidebar from "@/ui/dashboard/sidebar/sidebar"
 
-const DashboardLayout = ({children}) => {
+const ProfileLayout = ({children}) => {
   return (
     
     <div className={styles.container}>
@@ -15,4 +15,4 @@ const DashboardLayout = ({children}) => {
   )
 }
 
-export default DashboardLayout
+export default ProfileLayout
