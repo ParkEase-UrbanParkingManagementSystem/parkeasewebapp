@@ -41,7 +41,7 @@ const Navbar = () => {
             ☰ {/* This is a simple icon; you can use a more stylish icon as needed */}
           </button>
           {dropdownOpen && (
-            <div className="absolute right-0 mt-2 py-2 w-48 bg-white border rounded shadow-lg">
+            <div className="absolute right-0 w-48 bg-white border rounded shadow-lg">
               <a 
                 href="/profile" 
                 className="block px-4 py-2 text-gray-800 hover:bg-yellow-400 hover:text-white"

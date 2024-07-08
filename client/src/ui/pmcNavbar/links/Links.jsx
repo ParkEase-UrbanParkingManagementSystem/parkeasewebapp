@@ -19,12 +19,12 @@ const Links = () => {
   ];
 
   return (
-    <div className="flex flex-col space-y-10 py-10">
+    <div className="flex flex-col space-y-2">
       {links.map((link) => (
         <Link 
           href={link.path} 
           key={link.title} 
-          className={`block px-4 py-2 rounded-lg hover:bg-gray-700 hover:text-white text-gray-800 text-justify ${pathname === link.path && styles.active}`}
+          className={`block px-4 py-2 rounded-lg hover:bg-gray-200 hover:text-black text-gray-800 text-justify ${pathname === link.path && styles.active}`}
         >
           {link.title}
         </Link>

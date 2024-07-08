@@ -11,16 +11,48 @@
 }
 
 .tablecontent {
-    margin: 1rem;
+  margin: 1rem;
   --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
     var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  max-height: 80vh; 
+  height: auto; 
+  overflow-y: auto; 
+  padding: 10px; 
 }
 
-.table tr:nth-child(odd) {
-    background-color: rgba(229, 231, 235, 1); /* Light gray background color for odd rows */
-  }
+.table {
+  width: 100%;
+  border-collapse: collapse; 
+}
+
+/* Style the first row (header row) with a dark gray background */
+.table tr:first-child {
+  background-color: rgba(
+    156, 163, 175,
+    1
+  ); 
+}
+
+/* Style odd rows excluding the first row */
+.table tr:nth-child(odd):not(:first-child) {
+  background-color: rgba(
+    229,
+    231,
+    235,
+    1
+  ); 
+}
+
+.table tr:not(:first-child):hover {
+  background-color: rgba(
+    255,
+    180,
+    3,
+    0.25
+  );
+}
 
 .empidhead {
   text-align: center;
@@ -50,8 +82,6 @@
   width: 20rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  --tw-text-opacity: 1;
-  color: rgba(16, 185, 129, var(--tw-text-opacity));
 }
 
 .empagehead,
@@ -68,8 +98,6 @@
   width: 10rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  --tw-text-opacity: 1;
-  color: rgba(59, 130, 246, var(--tw-text-opacity));
 }
 
 .number {
@@ -80,4 +108,12 @@
 .icon {
   place-content: center;
   justify-self: center;
+}
+
+.empslotdatafree {
+  text-align: center;
+  width: 20rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: red;
 }
