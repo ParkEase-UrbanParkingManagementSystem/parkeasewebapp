@@ -5,8 +5,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import { AuthProvider, useAuth } from "../utils/authContext"; // Ensure useAuth is exported from authContext
 import Footer from "../ui/footer/Footer";
-import styles from "./layout.module.css";
-import Sidebar from "@/ui/sidebar/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
