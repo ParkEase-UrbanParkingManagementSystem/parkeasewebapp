@@ -1,0 +1,15 @@
+.card {
+  border: 1px solid #ddd;
+  border-radius: 30px;
+  place-content: center;
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  padding: 16px;
+}
+
+.title {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 500;
+}
