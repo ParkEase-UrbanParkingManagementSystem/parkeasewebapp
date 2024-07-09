@@ -1,9 +1,9 @@
 import React from 'react'
 
-const ParkingSlots = () => {
+const ParkingLot = () => {
   return (
-    <div>ParkingSlots</div>
+    <div>ParkingLot</div>
   )
 }
 
-export default ParkingSlots
+export default ParkingLot
