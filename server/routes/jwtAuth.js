@@ -8,46 +8,57 @@ const authorization = require("../middleware/authorization");
 
 //register
 
-router.post("/registerPMC",validInfo, async (req,res)=>{
+router.post("/registerPMC", validInfo, async (req, res) => {
     try {
+        // Destructure the req.body
+        const { name, email, password, regNo, addressNo, street1, street2, city, district } = req.body;
 
-        //1. Destructure the req.body(name,email,password)
-
-        const {name,email,password} = req.body
-
-        //2. Check if the user exists
-
-        const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
-
-        if (user.rows.length !== 0) {
-            return res.status(409).send("Email already in use"); 
+        // Check if the user email already exists
+        const existingUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        if (existingUser.rows.length > 0) {
+            return res.status(409).send("Email already in use");
         }
-        
 
-        //3 Bcrypt the user password
+        // Start a transaction to ensure data consistency
+        await pool.query('BEGIN');
 
-        const saltRound = 10;
-        const salt = await bcrypt.genSalt(saltRound);
-        const bcryptPassword = await bcrypt.hash(password, salt);
+        try {
+            // Bcrypt the user password
+            const saltRound = 10;
+            const salt = await bcrypt.genSalt(saltRound);
+            const bcryptPassword = await bcrypt.hash(password, salt);
 
-        //4. Enter new user inside our database
+            // Insert new user into the users table
+            const newUser = await pool.query(
+                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING user_id",
+                [email, bcryptPassword, addressNo, street1, street2, city, district]
+            );
 
-        const newUser = await pool.query("INSERT INTO users (name,email,password) VALUES ($1,$2,$3) RETURNING *",[name,email,bcryptPassword]);
+            const userId = newUser.rows[0].user_id;
 
-        // res.json(newUser.rows[0])
+            // Insert PMC details into the pmc table
+            const newPMC = await pool.query(
+                "INSERT INTO pmc (name, regNo, user_id) VALUES ($1, $2, $3) RETURNING *",
+                [name, regNo, userId]
+            );
 
-        //5 Genarating JWT token
+            // Commit the transaction
+            await pool.query('COMMIT');
 
-        const token = jwtGenerator(newUser.rows[0].user_id);
-        
-        res.json({token});
+            // Generating JWT token
+            const token = jwtGenerator(userId);
 
-        
+            res.json({ token });
+        } catch (error) {
+            // Rollback the transaction in case of any error
+            await pool.query('ROLLBACK');
+            throw error; // Rethrow the error for centralized error handling
+        }
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
     }
-})
+});
 
 //Login
 

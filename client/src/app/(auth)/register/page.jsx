@@ -1,9 +1,5 @@
-// app/register/page.jsx
-
-// Mark this component as a Client Component
 "use client";
 import styles from "./register.module.css";
-
 import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation"; // Importing Next.js router for navigation
 import Link from "next/link"; // Importing Next.js Link for routing
@@ -13,13 +9,20 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [regNo, setRegNo] = useState(""); // New state for registration number
+  const [addressNo, setAddressNo] = useState(""); // New state for address number
+  const [street1, setStreet1] = useState(""); // New state for street 1
+  const [street2, setStreet2] = useState(""); // New state for street 2
+  const [city, setCity] = useState(""); // New state for city
+  const [district, setDistrict] = useState(""); // New state for district
+
   const router = useRouter(); // Using Next.js router for navigation
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
 
     try {
-      const body = { email, password, name };
+      const body = { email, password, name, regNo, addressNo, street1, street2, city, district };
 
       const response = await fetch(`http://localhost:5000/auth/registerPMC`, {
         method: "POST",
@@ -51,10 +54,10 @@ const Register = () => {
               width={150}
               height={200}
               className={styles.image}
-            ></Image>
+            />
           </div>
           <div className="text-4xl text-white tracking-widest m-5 font-semibold">
-            Your Gateway to Hassle - free parking
+            Your Gateway to Hassle-free Parking
           </div>
           <div className="justify-self-center">
             <Image
@@ -63,7 +66,7 @@ const Register = () => {
               width={500}
               height={500}
               className={styles.image}
-            ></Image>
+            />
           </div>
         </div>
         <div className={styles.right}>
@@ -76,7 +79,7 @@ const Register = () => {
               <form type="submit" onSubmit={onSubmitForm}>
                 <input
                   type="email"
-                  placeholder="email"
+                  placeholder="Email"
                   name="email"
                   className="form-control my-3 w-96"
                   value={email}
@@ -84,7 +87,7 @@ const Register = () => {
                 />
                 <input
                   type="password"
-                  placeholder="password"
+                  placeholder="Password"
                   name="password"
                   className="form-control my-3 w-96"
                   value={password}
@@ -92,7 +95,7 @@ const Register = () => {
                 />
                 <input
                   type="text"
-                  placeholder="name"
+                  placeholder="Name"
                   name="name"
                   className="form-control my-3 w-96"
                   value={name}
@@ -100,42 +103,54 @@ const Register = () => {
                 />
                 <input
                   type="text"
-                  placeholder="business registration number"
+                  placeholder="Business Registration Number"
                   name="regNo"
                   className="form-control my-3 w-96"
+                  value={regNo}
+                  onChange={(e) => setRegNo(e.target.value)}
                 />
 
                 <div>
-                  <h2>Address Details :</h2>
+                  <h2>Address Details:</h2>
                   <input
                     type="text"
-                    placeholder="address_no"
-                    name="addNo"
+                    placeholder="Address No"
+                    name="addressNo"
                     className="form-control my-3 w-96"
+                    value={addressNo}
+                    onChange={(e) => setAddressNo(e.target.value)}
                   />
                   <input
                     type="text"
-                    placeholder="street_1"
-                    name="st1"
+                    placeholder="Street 1"
+                    name="street1"
                     className="form-control my-3 w-96"
+                    value={street1}
+                    onChange={(e) => setStreet1(e.target.value)}
                   />
                   <input
                     type="text"
-                    placeholder="street_2"
-                    name="st2"
+                    placeholder="Street 2"
+                    name="street2"
                     className="form-control my-3 w-96"
+                    value={street2}
+                    onChange={(e) => setStreet2(e.target.value)}
                   />
                   <input
                     type="text"
-                    placeholder="city"
+                    placeholder="City"
                     name="city"
                     className="form-control my-3 w-96"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
                   />
                   <input
                     type="text"
-                    placeholder="district"
+                    placeholder="District"
                     name="district"
                     className="form-control my-3 w-96"
+                    value={district}
+                    onChange={(e) => setDistrict(e.target.value)}
                   />
                 </div>
 
