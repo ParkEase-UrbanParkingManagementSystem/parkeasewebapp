@@ -1,10 +1,12 @@
 "use client"; // Marks this file as a Client Component
 
 import { Inter } from "next/font/google";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
-import { AuthProvider, useAuth } from '../utils/authContext'; // Ensure useAuth is exported from authContext
-import Footer from '../ui/footer/Footer';
+import { AuthProvider, useAuth } from "../utils/authContext"; // Ensure useAuth is exported from authContext
+import Footer from "../ui/footer/Footer";
+import styles from "./layout.module.css";
+import Sidebar from "@/ui/sidebar/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,9 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <LayoutWithAuth>
-            {children}
-          </LayoutWithAuth>
+          <LayoutWithAuth>{children}</LayoutWithAuth>
         </AuthProvider>
       </body>
     </html>
@@ -31,12 +31,13 @@ function LayoutWithAuth({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {/* {isAuthenticated && (       
-          <Navbar />
-      )} */}
-      {children}
-
-      <Footer/>
+      <div className={styles.container}>
+        <div className={styles.menu}>
+          <Sidebar />
+        </div>
+        <div className={styles.content}>{children}</div>
+      </div>
+      <Footer />
     </>
   );
 }
