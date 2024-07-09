@@ -14,8 +14,7 @@ const sidebar = () => {
           height="50"
         />
         <div className={styles.userDetail}>
-          <span className={styles.username}>Mr.Nipul Yansith</span>
-          <span className={styles.userTitle}>Manager | ABC Company</span>
+          <span className={styles.userTitle}>ABC Parking Management Company</span>
         </div>
       </div>
 
