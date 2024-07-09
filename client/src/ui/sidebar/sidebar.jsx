@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../sidebar/sidebar.module.css";
-import Links from "@/ui/pmcsidebar/links/Links";
+import Links from "@/ui/pmcsidebar/links/links";
 import Image from "next/image";
 
 const sidebar = () => {
