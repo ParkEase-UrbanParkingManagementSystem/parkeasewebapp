@@ -1,18 +1,15 @@
-import styles from "@/ui/dashboard/dashboard.module.css"
-import Sidebar from "@/ui/dashboard/sidebar/sidebar"
+import styles from "../layout.module.css";
+import Sidebar from "../../ui/sidebar/sidebar";
 
-const ProfileLayout = ({children}) => {
+const ProfileLayout = ({ children }) => {
   return (
-    
     <div className={styles.container}>
-       <div className={styles.menu}>
-          <Sidebar/>
-       </div>
-        <div className={styles.content}>
-        {children}
-        </div>
+      <div className={styles.menu}>
+        <Sidebar />
+      </div>
+      <div className={styles.content}>{children}</div>
     </div>
-  )
-}
+  );
+};
 
-export default ProfileLayout
+export default ProfileLayout;

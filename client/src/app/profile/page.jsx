@@ -1,12 +1,17 @@
-import React from 'react';
-import styles from "./profile.module.css"
-import Image from 'next/image';
+import React from "react";
+import styles from "./profile.module.css";
+import Image from "next/image";
 
 const Profile = () => {
   return (
     <div className={styles.container}>
       <div className={styles.imagecontainer}>
-      <Image className={styles.userimage} src="/images/user.jpg" width="130" height="130" />
+        <Image
+          className={styles.userimage}
+          src="/images/user.jpg"
+          width="130"
+          height="130"
+        />
       </div>
       <div className={styles.profilecontainer}>
         <p>Name: Pasindi Vindula</p>

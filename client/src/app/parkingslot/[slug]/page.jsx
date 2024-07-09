@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const SingleParkingSlot = () => {
-  return (
-    <div>SingleParkingSlot</div>
-  )
-}
+  return <div>SingleParkingSlot</div>;
+};
 
-export default SingleParkingSlot
+export default SingleParkingSlot;

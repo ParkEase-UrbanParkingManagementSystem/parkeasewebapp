@@ -1,5 +1,5 @@
-import styles from "@/ui/dashboard/dashboard.module.css"
-import Sidebar from "@/ui/dashboard/sidebar/sidebar"
+import styles from "../layout.module.css"
+import Sidebar from "@/ui/sidebar/sidebar"
 
 const DashboardLayout = ({children}) => {
   return (
