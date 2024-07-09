@@ -5,7 +5,7 @@ CREATE TABLE user_role(
     role_type VARCHAR(50) NOT NULL UNIQUE
 );
 
-CREATE TABLE "user"(
+CREATE TABLE "users"(
     user_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     password VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -24,21 +24,21 @@ CREATE TABLE "user"(
 
 CREATE TABLE user_contactno (
     contactNo VARCHAR(20) NOT NULL,
-    user_id INT,
+    user_id uuid,
     PRIMARY KEY (contactNo, user_id),
     CONSTRAINT fk_user
         FOREIGN KEY(user_id) 
-        REFERENCES "user"(user_id)
+        REFERENCES "users"(user_id)
 );
 
 CREATE TABLE pmc(
     pmc_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL,
     regNo VARCHAR(100) NOT NULL UNIQUE,
-    user_id INT,
+    user_id uuid,
     CONSTRAINT fk_user_PMC
         FOREIGN KEY(user_id) 
-        REFERENCES "user"(user_id)
+        REFERENCES "users"(user_id)
 );
 
 CREATE TABLE warden(
@@ -50,15 +50,16 @@ CREATE TABLE warden(
     age INT,
     gender VARCHAR(10),
     registration_code VARCHAR(100),
-    user_id INT,
-    PMC_id INT,
+    user_id uuid, -- Change INT to UUID
+    PMC_id uuid, -- Ensure this matches the type in the PMC table
     CONSTRAINT fk_user_warden
         FOREIGN KEY(user_id) 
-        REFERENCES "user"(user_id),
+        REFERENCES "users"(user_id),
     CONSTRAINT fk_PMC
         FOREIGN KEY(PMC_id) 
         REFERENCES PMC(PMC_id)
 );
+
 
 CREATE TABLE driver(
     driver_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -68,10 +69,10 @@ CREATE TABLE driver(
     age INT,
     gender VARCHAR(10),
     profile_pic VARCHAR(255),
-    user_id INT,
+    user_id uuid,
     CONSTRAINT fk_user_driver
         FOREIGN KEY(user_id) 
-        REFERENCES "user"(user_id)
+        REFERENCES "users"(user_id)
 );
 
 CREATE TABLE parking_lot(
@@ -83,15 +84,16 @@ CREATE TABLE parking_lot(
     car_capacity INT,
     XLvehicle_capacity INT,
     full_capacity INT,
-    PMC_id INT,
+    PMC_id uuid, -- Change INT to UUID
     CONSTRAINT fk_PMC_parking_lot
         FOREIGN KEY(PMC_id) 
         REFERENCES PMC(PMC_id)
 );
 
+
 CREATE TABLE warden_parking_lot(
-    warden_id INT,
-    lot_id INT,
+    warden_id uuid, -- Change INT to UUID
+    lot_id uuid, -- Change INT to UUID
     assigned_date DATE,
     assigned_time TIME,
     PRIMARY KEY (warden_id, lot_id),
@@ -103,6 +105,7 @@ CREATE TABLE warden_parking_lot(
         REFERENCES parking_lot(lot_id)
 );
 
+
 CREATE TABLE vehicle_type(
     vehicle_type_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     type_name VARCHAR(50) NOT NULL UNIQUE
@@ -112,7 +115,7 @@ CREATE TABLE vehicle(
     vehicle_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     vehicle_number VARCHAR(20) NOT NULL UNIQUE,
     name VARCHAR(255),
-    type_id INT,
+    type_id uuid, -- Change INT to UUID
     CONSTRAINT fk_vehicle_type
         FOREIGN KEY(type_id) 
         REFERENCES vehicle_type(vehicle_type_id)
@@ -121,8 +124,8 @@ CREATE TABLE vehicle(
 
 CREATE TABLE driver_vehicle (
     driver_vehicle_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    driver_id INT,
-    vehicle_id INT,
+    driver_id uuid,
+    vehicle_id uuid,
     CONSTRAINT fk_driver
         FOREIGN KEY(driver_id) 
         REFERENCES driver(driver_id),
@@ -141,7 +144,7 @@ CREATE TABLE transaction (
     date DATE NOT NULL,
     time TIME NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
-    method_id INT,
+    method_id uuid,
     CONSTRAINT fk_payment_method
         FOREIGN KEY(method_id) 
         REFERENCES payment_method(method_id)
@@ -152,11 +155,11 @@ CREATE TABLE parking_instance (
     in_time TIMESTAMP NOT NULL,
     out_time TIMESTAMP,
     toll_amount DECIMAL(10, 2),
-    transaction_id INT,
-    driver_vehicle_id INT,
-    slot_id INT,
-    lot_id INT,
-    warden_id INT,
+    transaction_id uuid,
+    driver_vehicle_id uuid,
+    slot_id uuid,
+    lot_id uuid,
+    warden_id uuid,
     CONSTRAINT fk_transaction
         FOREIGN KEY(transaction_id) 
         REFERENCES transaction(transaction_id),
@@ -180,11 +183,12 @@ CREATE TABLE slot_price (
 CREATE TABLE parkpoints (
     parkpoint_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     no_of_points INT,
-    driver_id INT,
+    driver_id uuid, -- Change INT to UUID
     CONSTRAINT fk_driver_parkpoints
         FOREIGN KEY(driver_id) 
         REFERENCES driver(driver_id)
 );
+
 
 CREATE TABLE card (
     card_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -192,7 +196,7 @@ CREATE TABLE card (
     card_number VARCHAR(20) NOT NULL UNIQUE,
     expiration_date DATE,
     CVV VARCHAR(4),
-    driver_id INT,
+    driver_id uuid,
     CONSTRAINT fk_driver_card
         FOREIGN KEY(driver_id) 
         REFERENCES driver(driver_id)
@@ -201,7 +205,7 @@ CREATE TABLE card (
 CREATE TABLE payparkwallet (
     wallet_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     available_amount DECIMAL(10, 2),
-    driver_id INT,
+    driver_id uuid,
     CONSTRAINT fk_driver_wallet
         FOREIGN KEY(driver_id) 
         REFERENCES driver(driver_id)
@@ -209,7 +213,7 @@ CREATE TABLE payparkwallet (
 
 CREATE TABLE cash (
     cash_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    warden_id INT,
+    warden_id uuid,
     CONSTRAINT fk_warden_cash
         FOREIGN KEY(warden_id) 
         REFERENCES warden(warden_id)
@@ -217,10 +221,10 @@ CREATE TABLE cash (
 
 CREATE TABLE administrator (
     admin_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id INT,
+    user_id uuid,
     CONSTRAINT fk_user_admin
         FOREIGN KEY(user_id) 
-        REFERENCES "user"(user_id)
+        REFERENCES "users"(user_id)
 );
 
 
