@@ -42,13 +42,15 @@ const Login = () => {
     <Fragment>
       <div className={styles.login_container}>
         <div className={styles.left}>
-          <div className="m-2"><Image
+          <div className="m-2">
+            <Image
               src="/images/Group 177.png"
               alt="Description of the image"
               width={150}
               height={200}
               className={styles.image}
-            ></Image></div>
+            ></Image>
+          </div>
           <div className="text-4xl text-white tracking-widest m-5 font-semibold">
             Your Gateway to Hassle - free parking
           </div>
@@ -67,7 +69,7 @@ const Login = () => {
             <div className="float-left py-10">
               <h1 className="text-center text-3xl font-extrabold">Log In</h1>
             </div>
-            
+
             <div>
               <form onSubmit={onSubmit}>
                 <input

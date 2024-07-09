@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const ParkingLot = () => {
-  return (
-    <div>ParkingLot</div>
-  )
-}
+  return <div>ParkingLot</div>;
+};
 
-export default ParkingLot
+export default ParkingLot;
