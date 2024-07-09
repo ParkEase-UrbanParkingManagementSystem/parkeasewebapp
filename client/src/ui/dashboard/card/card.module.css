@@ -1,8 +1,34 @@
 .card {
-    border: 1px solid #ddd;
-    border-radius: 30px;
-    padding: 16px;
-    margin: 16px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
+  border: 1px solid #ddd;
+  border-radius: 30px;
+  place-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 200px;
+  position: relative;
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  padding: 16px;
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #ffb403;
+}
+
+.content{
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 500;
+}
+
+.title{
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-style: italic;
+  font-weight: 300;
+}
