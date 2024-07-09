@@ -8,7 +8,7 @@ const authorization = require("../middleware/authorization");
 
 //register
 
-router.post("/register",validInfo, async (req,res)=>{
+router.post("/registerPMC",validInfo, async (req,res)=>{
     try {
 
         //1. Destructure the req.body(name,email,password)
