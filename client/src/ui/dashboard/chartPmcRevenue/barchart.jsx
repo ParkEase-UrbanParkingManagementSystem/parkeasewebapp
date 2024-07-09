@@ -4,7 +4,7 @@ import {useRef, useEffect} from "react"
 import {Chart} from "chart.js/auto"
 import React from 'react'
 
-const ChartPMC = () => {
+const BarChartPMC = () => {
 
     const chartRef = useRef(null)
 
@@ -19,22 +19,22 @@ const ChartPMC = () => {
             const newChart = new Chart(context, {
                 type: "bar",
                 data: {
-                    labels: ["January", "February", "March", "April", "May",
-                                "June", "July", "August", "September", "October",
-                                "November", "December"
+                    labels: ["Area_1", "Area_2", "Area_3", "Area_4", "Area_5",
+                                "Area_6", "Area_7", "Area_8", "Area_9", "Area_10",
+                                "Area_11", "Area_12"
                     ],
 
                     datasets: [{
-                        label: "Revenue",
-                        data: [34,54,65],
-                        backgroundColor: "#1A2131",
-                        borderColor: "#1A2131",
+                        label: "Total Revenue By Parking Areas (thousands)",
+                        data: [34,54,65,34,54,65,34,54,65,34,54,65],
+                        backgroundColor: "#ffb403",
+                        borderColor: "#000000",
                         borderWidth: 1,
                     },
                 ],
                 },
                     options: {
-                        // responsive: true,
+                        responsive: true,
                         scales:{
                             x: {
                                 type: "category"
@@ -53,10 +53,10 @@ const ChartPMC = () => {
     })
 
   return (
-    <div style={{position: "relative", width:"50vw", height:"23vw"}}>
+    <div style={{position: "relative", width:"38vw", height:"20vw"}}>
         <canvas ref={chartRef}/>
     </div>
   )
 }
 
-export default ChartPMC
+export default BarChartPMC
