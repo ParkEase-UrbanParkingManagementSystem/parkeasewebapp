@@ -1,60 +1,59 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation'; // Import from 'next/navigation'
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // Import from 'next/navigation'
 import styles from "./profile.module.css";
 import Image from "next/image";
 import Card from "../../ui/card/card";
-import {faPen} from "@fortawesome/free-solid-svg-icons";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 library.add(faPen);
 
 const Profile = () => {
-  
   const [pmcDetails, setPmcDetails] = useState(null);
-    const router = useRouter();
+  const router = useRouter();
 
-    useEffect(() => {
-        const fetchPmcDetails = async () => {
-            const token = localStorage.getItem('token');
+  useEffect(() => {
+    const fetchPmcDetails = async () => {
+      const token = localStorage.getItem("token");
 
-            if (!token) {
-                router.push('/login'); // Redirect to login if no token found
-                return;
-            }
+      if (!token) {
+        router.push("/login"); // Redirect to login if no token found
+        return;
+      }
 
-            try {
-                const response = await fetch('http://localhost:5000/pmc/details', {
-                    method: 'GET',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'token': token
-                    },
-                });
+      try {
+        const response = await fetch("http://localhost:5000/pmc/details", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        });
 
-                const parseRes = await response.json();
+        const parseRes = await response.json();
 
-                if (response.ok) {
-                    setPmcDetails(parseRes);
-                } else {
-                    console.error("Can't get the details");
-                    // router.push('/login'); // Redirect to login on error
-                }
-            } catch (err) {
-                console.error(err.message);
-                // router.push('/login'); // Redirect to login on error
-            }
-        };
+        if (response.ok) {
+          setPmcDetails(parseRes);
+        } else {
+          console.error("Can't get the details");
+          // router.push('/login'); // Redirect to login on error
+        }
+      } catch (err) {
+        console.error(err.message);
+        // router.push('/login'); // Redirect to login on error
+      }
+    };
 
-        fetchPmcDetails();
-    }, [router]);
+    fetchPmcDetails();
+  }, [router]);
 
-    if (!pmcDetails) {
-        return <div>Loading...</div>; // Show a loading state while fetching data
-    }
-  
+  if (!pmcDetails) {
+    return <div>Loading...</div>; // Show a loading state while fetching data
+  }
+
   const cardItems1 = [
     { title: "Email Address:", content: "pasindiv@gmail.com" },
     { title: "Username:", content: "ABCPMC@123" },
@@ -92,16 +91,13 @@ const Profile = () => {
         </div>
       </div>
       <div className={styles.buttonContainer}>
-      <button className={styles.button}>
-        Edit Profile
-        <FontAwesomeIcon icon={faPen} className={styles.icon} />
-      </button>
+        <button className={styles.button}>
+          Edit Profile
+          <FontAwesomeIcon icon={faPen} className={styles.icon} />
+        </button>
       </div>
-      
     </div>
   );
-
-    
 };
 
 export default Profile;
