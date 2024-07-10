@@ -1,7 +1,13 @@
-"Use Client";
+"use client";
 
 import React from "react";
 import styles from "./warden.module.css";
+import Button from "../../ui/button/button";
+import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import Link from "next/link";
+
+library.add(faSquarePlus);
 
 const WardenPage = () => {
   return (
@@ -10,6 +16,9 @@ const WardenPage = () => {
         <div className={styles.title}>
           <p>Registered Parking Warden List</p>
         </div>
+        <Link href="/register-warden">
+          <Button label="Register New Wardens" icon={faSquarePlus} />
+        </Link>
 
         <div className={styles.tablecontent}>
           <table className={styles.table}>

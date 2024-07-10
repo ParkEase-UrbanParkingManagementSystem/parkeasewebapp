@@ -7,7 +7,7 @@ import Image from "next/image";
 import Card from "../../ui/card/card";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Button from "../../ui/button/button"
 
 library.add(faPen);
 
@@ -93,12 +93,7 @@ const Profile = () => {
           <Card items={cardItems2} />
         </div>
       </div>
-      <div className={styles.buttonContainer}>
-        <button className={styles.button}>
-          Edit Profile
-          <FontAwesomeIcon icon={faPen} className={styles.icon} />
-        </button>
-      </div>
+      <Button label="Edit Profile" icon={faPen}/>
     </div>
   );
 };

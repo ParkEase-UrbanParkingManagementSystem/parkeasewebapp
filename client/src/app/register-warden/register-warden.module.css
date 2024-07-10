@@ -1,0 +1,17 @@
+.container {
+  display: grid;
+  grid-template-rows: 10% 90%;
+}
+
+.title {
+  place-content: center;
+  font-weight: bold;
+  font-size: x-large;
+}
+
+.formcontent {
+  display: flex;
+  justify-content: center;
+}
+
+
