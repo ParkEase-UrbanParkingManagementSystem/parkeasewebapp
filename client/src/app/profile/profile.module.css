@@ -6,12 +6,19 @@
 
 .imagecontainer {
   place-self: center;
+
 }
 
 .userimage {
   border-radius: 50%;
   object-fit: cover;
-  place-self: center;
+  
+}
+
+.imgcnt{
+  
+  display: flex;
+  justify-content: center;
 }
 
 .profiledetail {

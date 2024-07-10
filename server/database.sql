@@ -16,7 +16,7 @@ CREATE TABLE "users"(
     province VARCHAR(100),
     isVerified BOOLEAN DEFAULT FALSE,
     verification_code VARCHAR(100),
-    role_id INT,
+    role_id uuid,
     CONSTRAINT fk_role
         FOREIGN KEY(role_id) 
         REFERENCES user_role(role_id)
