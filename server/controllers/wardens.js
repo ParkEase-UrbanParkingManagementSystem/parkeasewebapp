@@ -46,19 +46,40 @@ exports.getWardenDetails = async (req,res) => {
     }
 }
 
-exports.registerWarden = async (req,res) => {
-    //Enhance this using COMMIT ROLLBACK BEGIN -- 0
+exports.registerWarden = async (req, res) => {
+    const client = await pool.connect();
+    
     try {
+        const { fname, lname, nic, profile_pic, age, gender, registration_code, user_id, email, password, addressNo, street_1, street_2, city, province } = req.body;
         const pmc_id = req.user;
 
-        const newWarden = await pool.query(
+        await client.query('BEGIN');
+
+        const newWardenPMC = await client.query(
             "INSERT INTO wardens (fname, lname, nic, profile_pic, age, gender, registration_code, user_id, pmc_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
             [fname, lname, nic, profile_pic, age, gender, registration_code, user_id, pmc_id]
         );
 
-        res.json(newWarden.rows[0]);
+        const newWardenUser = await client.query(
+            "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+            [email, password, addressNo, street_1, street_2, city, province]
+        );
+
+        await client.query('COMMIT');
+
+        const combinedDetails = {
+            user: newWardenUser.rows[0],
+            warden: newWardenPMC.rows[0]
+        };
+
+        res.json(combinedDetails);
 
     } catch (error) {
+        await client.query('ROLLBACK');
         console.error(error.message);
+        res.status(500).json({ msg: "Server Error" });
+    } finally {
+        client.release();
     }
-}
+};
+
