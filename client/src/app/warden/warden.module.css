@@ -1,6 +1,6 @@
 .container {
   display: grid;
-  grid-template-rows: 10% 80% 10%;
+  grid-template-rows: 10% 10% 70% 10%;
   height: 100vh;
 }
 
@@ -11,12 +11,11 @@
 }
 
 .tablecontent {
-  margin: 1rem;
   --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
     var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  max-height: 80vh; 
+  max-height: 70vh; 
   height: auto; 
   overflow-y: auto; 
   padding: 10px; 

@@ -1,0 +1,31 @@
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffb403;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  white-space: nowrap;
+  height: 2.5rem;
+}
+
+.button:hover {
+  background-color: #e5a302;
+}
+
+.icon {
+  margin-left: 10px;
+  width: 16px;
+  height: 16px; 
+}
