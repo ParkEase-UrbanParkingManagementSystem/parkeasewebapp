@@ -82,7 +82,7 @@ const Profile = () => {
           height="130"
         />
         </div>
-        <p>ABC Parking Management Company</p>
+        <p>{pmcDetails.pmc.name} Parking Management Company</p>
       </div>
       <div className="flex">
         <div className="w-1/2">
