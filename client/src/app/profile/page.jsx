@@ -55,31 +55,34 @@ const Profile = () => {
   }
 
   const cardItems1 = [
-    { title: "Email Address:", content: "pasindiv@gmail.com" },
-    { title: "Username:", content: "ABCPMC@123" },
+    
+    { title: "Company Name:", content: `${pmcDetails.pmc.name}` },
+    { title: "Email Address:", content: `${pmcDetails.user.email}` },
     { title: "Last Accessed Time:", content: "12.30pm 0n 12th July 2024" },
   ];
 
   const cardItems2 = [
-    { title: "Company Name:", content: "ABC Company" },
-    { title: "Business Registration Number:", content: "123456789abc" },
-    { title: "Contact Number:", content: "071 466 7655" },
+    { title: "Business Registration Number:", content: `${pmcDetails.pmc.regno}` },
+    // { title: "Contact Number:", content: "071 466 7655" },
     {
       title: "Company Address:",
-      content: "102-32/C, Nandun Uyana, Muthuhena Waththa, Meegoda",
+      content: `${pmcDetails.user.addressno}, ${pmcDetails.user.street_1}, ${pmcDetails.user.street_2}, ${pmcDetails.user.city}`
     },
+    { title: "District:", content: `${pmcDetails.user.province}` }
   ];
 
   return (
     <div className={styles.container}>
       <div className={styles.imagecontainer}>
+      <div className={styles.imgcnt}>
         <Image
           className={styles.userimage}
           src="/images/user.jpg"
           width="130"
           height="130"
         />
-        <p>ABC Parking Management Company</p>
+        </div>
+        <p>{pmcDetails.pmc.name} Parking Management Company</p>
       </div>
       <div className="flex">
         <div className="w-1/2">
