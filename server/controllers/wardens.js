@@ -45,3 +45,20 @@ exports.getWardenDetails = async (req,res) => {
         res.status(500).json({message: "Server Error"})
     }
 }
+
+exports.registerWarden = async (req,res) => {
+    //Enhance this using COMMIT ROLLBACK BEGIN -- 0
+    try {
+        const pmc_id = req.user;
+
+        const newWarden = await pool.query(
+            "INSERT INTO wardens (fname, lname, nic, profile_pic, age, gender, registration_code, user_id, pmc_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+            [fname, lname, nic, profile_pic, age, gender, registration_code, user_id, pmc_id]
+        );
+
+        res.json(newWarden.rows[0]);
+
+    } catch (error) {
+        console.error(error.message);
+    }
+}
