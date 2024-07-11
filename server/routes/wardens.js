@@ -7,6 +7,6 @@ const validInfo = require('../middleware/validInfo');
 // router.post("/register", WardenController.register);
 router.get("/", WardenController.getWardens);
 router.get("/:id", WardenController.getWardenDetails);
-router.post("/registerWarden", authorization, validInfo, WardenController.registerWarden);
+router.post("/registerWarden", authorization, WardenController.registerWarden);
 
 module.exports = router;
