@@ -44,7 +44,7 @@ const Register = () => {
 
       if (response.ok) {
         console.log("Warden registered successfully", parseRes);
-        router.push("/dashboard");
+        router.push("/warden");
       } else {
         console.error("Error registering warden", parseRes);
       }
