@@ -36,7 +36,7 @@ const Profile = () => {
         const parseRes = await response.json();
 
         if (response.ok) {
-          setPmcDetails(parseRes);
+          setPmcDetails(parseRes.data);
         } else {
           console.error("Can't get the details");
           // router.push('/login'); // Redirect to login on error

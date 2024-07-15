@@ -40,7 +40,7 @@ function extractAgeAndGenderFromNIC(nic) {
     }
   
 
-    console.log(age,gender);
+    // console.log(age,gender);
     return {
       age,
       gender

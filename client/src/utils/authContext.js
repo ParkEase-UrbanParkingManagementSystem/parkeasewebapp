@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
       const response = await fetch("http://localhost:5000/auth/is-verify", {
         method: "GET",
-        headers: { token }
+        headers: {baduwa: token }
       });
 
       const parseRes = await response.json();
@@ -42,8 +42,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     isAuth();
-  }, []);
+  },[]);
 
+ 
   // useEffect(() => {
   //   if (!loading && !isAuthenticated) {
   //     router.push('/login'); // Redirect to login if not authenticated and loading is complete
@@ -51,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   // }, [isAuthenticated, loading, router]);
 
   if (loading) {
-    return <Loading/>; // You can add a better loading UI here
+    return <Loading />; // You can add a better loading UI here
   }
 
   return (
