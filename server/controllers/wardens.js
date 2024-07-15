@@ -50,7 +50,7 @@ exports.getWardenDetails = async (req,res) => {
 }
 
 exports.registerWarden = async (req, res) => {
-    console.log("Hellow");
+   
     const client = await pool.connect();
   
     try {
@@ -69,7 +69,7 @@ exports.registerWarden = async (req, res) => {
 
 
       const pmc_user_id = req.user; // Assuming pmc_id is taken from the authenticated user's context
-      console.log(pmc_user_id);
+     
 
       //Getting details from NIC
 
@@ -81,7 +81,7 @@ exports.registerWarden = async (req, res) => {
         // Extract age and gender from NIC
         const { age, gender } = extractAgeAndGenderFromNIC(nic);
 
-    //   console.log("Ane", pmc_id);
+   
 
       await client.query('BEGIN');
   

@@ -7,4 +7,4 @@ router.get("/details", authorization, PMCController.getPMCDetails);
 router.get("/wardens", authorization, PMCController.getAllWardens);
 
 module.exports = router;
-
+    
