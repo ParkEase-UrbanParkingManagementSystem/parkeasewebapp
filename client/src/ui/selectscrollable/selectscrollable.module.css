@@ -1,0 +1,60 @@
+/* selectScrollable.module.css */
+
+/* Styles for the entire Select component */
+.select {
+position: relative;
+width: 280px;
+font-family: Arial, sans-serif;
+}
+
+/* Styles for the trigger (the visible part users click on) */
+.selectTrigger {
+display: block;
+padding: 10px;
+background-color: #f0f0f0;
+border: 1px solid #ccc;
+cursor: pointer;
+text-align: left;
+}
+
+/* Styles for the placeholder text inside the trigger */
+.selectTrigger::placeholder {
+color: #999;
+}
+
+/* Styles for the content that appears when the trigger is clicked */
+.selectContent {
+position: absolute;
+top: 100%;
+left: 0;
+z-index: 1000;
+background-color: #fff;
+border: 1px solid #ccc;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+max-height: 300px;
+overflow-y: auto;
+}
+
+/* Styles for each group of options */
+.selectGroup {
+padding: 10px;
+border-bottom: 1px solid #eee;
+}
+
+/* Styles for the label of each group */
+.selectLabel {
+font-weight: bold;
+margin-bottom: 5px;
+}
+
+/* Styles for each selectable item */
+.selectItem {
+display: flex;
+padding: 8px 10px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+
+.selectItem:hover {
+background-color: #f0f0f0;
+}

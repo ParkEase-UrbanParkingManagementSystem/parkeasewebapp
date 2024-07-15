@@ -1,11 +1,17 @@
-.container{
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .logo{
-    font-size: 30px;
-    font-weight: bold;
-  }
+.container {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  width: 100%;
+  background-color: black;
+  padding: 40px;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: bold;
+  margin-left: 20px;
+  color: white;
+}
+
