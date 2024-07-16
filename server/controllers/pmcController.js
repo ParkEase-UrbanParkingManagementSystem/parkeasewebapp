@@ -25,14 +25,18 @@ const getPMCDetails = async (req, res) => {
 
         }
 
-        res.json(combinedDetails);
-        console.log(combinedDetails);
+        res.status(200).json({
+            message:"success",
+            data:combinedDetails});
 
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
     }
 };
+
+
+
 
 // Function to fetch all the wardens of PMC
 
@@ -46,6 +50,7 @@ const getAllWardens = async (req, res) => {
         }
 
         res.json(wardens.rows); // Returning only the rows, not the whole query object
+    
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Server Error");

@@ -1,6 +1,7 @@
 // "use client";
 import Image from "next/image";
 import styles from "./contact.module.css";
+import Navbar from "@/ui/homenavbar/homenavbar";
 // import dynamic from "next/dynamic";
 // import HydrationTest from "@/components/hydrationTest";
 
@@ -12,15 +13,13 @@ export const metadata = {
 };
 
 const ContactPage = () => {
-  // const a = Math.random();
-
-  // console.log(a);
 
   return (
     <div className={styles.container}>
-      <div className={styles.imgContainer}>
-        <Image src="/images/contact.png" alt="" fill className={styles.img} />
-      </div>
+      <Navbar />
+      {/* <div className={styles.imgContainer}>
+        <Image src="/images/home3.png" alt="" fill className={styles.img} />
+      </div> */}
       <div className={styles.formContainer}>
         {/* <HydrationTestNoSSR/> */}
         {/* <div suppressHydrationWarning>{a}</div> */}
