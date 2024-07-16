@@ -38,6 +38,7 @@ const WardenPage = () => {
         }
 
         const data = await response.json();
+        console.log(data);
 
         if (Array.isArray(data.data)) {
           setWardens(data.data);
@@ -52,6 +53,8 @@ const WardenPage = () => {
 
     fetchWardens();
   }, []);
+
+ 
 
   // Render loading state or handle empty wardens array case
   if (wardens.length === 0) {
