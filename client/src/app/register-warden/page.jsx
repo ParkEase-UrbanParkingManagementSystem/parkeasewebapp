@@ -16,7 +16,8 @@ const Register = () => {
     street1: "",
     street2: "",
     city: "",
-    province: ""
+    province: "",
+    contact: ""  // Added contact field
   });
 
   const router = useRouter();
@@ -58,89 +59,100 @@ const Register = () => {
       <div className={styles.container}>
         <div className={styles.title}>Warden Registration</div>
         <div className={styles.formcontent}>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="form-control my-3 w-96"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="form-control my-3 w-96"
-            />
-            <input
-              type="text"
-              placeholder="First Name"
-              name="fname"
-              value={formData.fname}
-              onChange={handleChange}
-              className="form-control my-3 w-96"
-            />
-            <input
-              type="text"
-              placeholder="Last Name"
-              name="lname"
-              value={formData.lname}
-              onChange={handleChange}
-              className="form-control my-3 w-96"
-            />
-            <input
-              type="text"
-              placeholder="National Identity Card"
-              name="nic"
-              value={formData.nic}
-              onChange={handleChange}
-              className="form-control my-3 w-96"
-            />
-            
-            <input
-              type="text"
-              placeholder="Address No"
-              name="addressNo"
-              value={formData.addressNo}
-              onChange={handleChange}
-              className="form-control my-3 w-96"
-            />
-            <input
-              type="text"
-              placeholder="Street 1"
-              name="street1"
-              value={formData.street1}
-              onChange={handleChange}
-              className="form-control my-3 w-96"
-            />
-            <input
-              type="text"
-              placeholder="Street 2"
-              name="street2"
-              value={formData.street2}
-              onChange={handleChange}
-              className="form-control my-3 w-96"
-            />
-            <input
-              type="text"
-              placeholder="City"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              className="form-control my-3 w-96"
-            />
-            <input
-              type="text"
-              placeholder="Province"
-              name="province"
-              value={formData.province}
-              onChange={handleChange}
-              className="form-control my-3 w-96"
-            />
-            <Button label="Register" />
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.formGroup}>
+              <input
+                type="email"
+                placeholder="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="First Name"
+                name="fname"
+                value={formData.fname}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="Last Name"
+                name="lname"
+                value={formData.lname}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="National Identity Card"
+                name="nic"
+                value={formData.nic}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="Contact Number"  // Added contact input
+                name="contact"
+                value={formData.contact}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <input
+                type="text"
+                placeholder="Address No"
+                name="addressNo"
+                value={formData.addressNo}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="Street 1"
+                name="street1"
+                value={formData.street1}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="Street 2"
+                name="street2"
+                value={formData.street2}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="City"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="Province"
+                name="province"
+                value={formData.province}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </div>
+            <Button label="Register" className={styles.button} />
           </form>
         </div>
       </div>
