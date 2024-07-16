@@ -29,7 +29,7 @@
 }
 
 .table thead {
-  background: #FFB403;
+  background: #ffb403;
   color: white;
 }
 
@@ -74,34 +74,11 @@
   font-size: 1rem;
 }
 
-.link-button {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.link-button a {
+.link {
   text-decoration: none;
-  background: #FFB403;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  transition: background 0.3s;
+  color: #333;
 }
 
-.link-button a:hover {
-  background: #e0a103;
-}
-
-.statusActive {
-  color: #FFB403;
-}
-
-.statusInactive {
-  color: rgb(255, 0, 0);
-}
-
-.empslotdatafree {
-  text-align: center;
-  color: red;
+.link:hover {
+  text-decoration: underline;
 }

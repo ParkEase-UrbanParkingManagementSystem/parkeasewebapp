@@ -1,4 +1,5 @@
-"use client";
+// Import necessary modules and components
+"use client"
 
 import React, { useState, useEffect } from "react";
 import styles from "./warden.module.css";
@@ -31,14 +32,11 @@ const WardenPage = () => {
           },
         });
 
-        console.log(response);
-
         if (!response.ok) {
           throw new Error("Failed to fetch wardens");
         }
 
         const data = await response.json();
-        console.log(data);
 
         if (Array.isArray(data.data)) {
           setWardens(data.data);
@@ -53,8 +51,6 @@ const WardenPage = () => {
 
     fetchWardens();
   }, []);
-
- 
 
   // Render loading state or handle empty wardens array case
   if (wardens.length === 0) {
@@ -83,9 +79,13 @@ const WardenPage = () => {
             </tr>
           </thead>
           <tbody>
-            {wardens.map((warden, index) => (
-              <tr key={index}>
-                <td className={styles.empnamedata}>{`${warden.fname} ${warden.lname}`}</td>
+            {wardens.map((warden) => (
+              <tr key={warden.id}>
+                <td className={styles.empnamedata}>
+                  <Link href={`/warden/${warden.id}`}>
+                    <div className={styles.link}>{`${warden.fname} ${warden.lname}`}</div>
+                  </Link>
+                </td>
                 <td className={styles.empgenderdata}>{warden.gender}</td>
                 <td className={styles.empagedata}>{warden.age}</td>
                 <td className={styles.empcontactdata}>{warden.contact}</td>
@@ -108,4 +108,3 @@ const WardenPage = () => {
 };
 
 export default WardenPage;
-
