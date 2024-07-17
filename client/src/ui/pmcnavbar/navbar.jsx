@@ -27,7 +27,7 @@ const Navbar = () => {
             alt="User"
           />
         </div>
-        <div className={styles.username}>ABC PMC</div>
+        <div className={styles.username}>PV</div>
       </div>
     </div>
   );

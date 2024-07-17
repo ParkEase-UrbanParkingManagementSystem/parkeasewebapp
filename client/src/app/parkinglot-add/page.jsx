@@ -4,6 +4,7 @@ import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./parkinglot-add.module.css";
 import Button from "../../ui/button/button";
+import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 
 const AddParkingLot = () => {
   const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ const AddParkingLot = () => {
     street1: "",
     street2: "",
     city: "",
-    district: ""
+    district: "",
   });
 
   const router = useRouter();
@@ -36,9 +37,9 @@ const AddParkingLot = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          token:token
+          token: token,
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const parseRes = await response.json();
@@ -61,6 +62,7 @@ const AddParkingLot = () => {
         <div className={styles.formcontent}>
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formGroup}>
+            <span>Parking Details: </span>
               <input
                 type="text"
                 placeholder="Parking Lot Name"
@@ -68,7 +70,8 @@ const AddParkingLot = () => {
                 value={formData.name}
                 onChange={handleChange}
                 className={styles.input}
-              />
+              /><br/>
+              <span>Parking capacity Details: </span>
               <input
                 type="number"
                 placeholder="Bike Capacity"
@@ -103,6 +106,7 @@ const AddParkingLot = () => {
               />
             </div>
             <div className={styles.formGroup}>
+            <span>Parking Address Details: </span>
               <input
                 type="text"
                 placeholder="Address No"
@@ -144,7 +148,9 @@ const AddParkingLot = () => {
                 className={styles.input}
               />
             </div>
-            <Button label="Add Parking Lot" className={styles.button} />
+            <div>
+              <Button label="Add Parking Lot" icon={faSquarePlus} />
+            </div>
           </form>
         </div>
       </div>
