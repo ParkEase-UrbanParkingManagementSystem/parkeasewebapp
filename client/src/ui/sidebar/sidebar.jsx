@@ -6,7 +6,10 @@ import Image from "next/image";
 const sidebar = () => {
   return (
     <div className={styles.sidebarcontainer}>
-      <div className={styles.user}>
+      <div className={styles.logo}>
+        <Image src="/images/ParkEase_logo.png" width="50" height="50" />
+      </div>
+      {/* <div className={styles.user}>
         <Image
           className={styles.userimage}
           src="/images/user.jpg"
@@ -16,9 +19,9 @@ const sidebar = () => {
         <div className={styles.userDetail}>
           <span className={styles.userTitle}>ABC Parking Management Company</span>
         </div>
-      </div>
+      </div> */}
 
-      <div className="links">
+      <div className={styles.links}>
         <Links />
       </div>
     </div>

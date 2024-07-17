@@ -13,10 +13,10 @@ const Links = () => {
   const router = useRouter();
 
   const links = [
-    { title: "View Profile", path: "/profile" },
     { title: "Dashboard", path: "/dashboard" },
     { title: "Parking Lots", path: "/parkingslot" },
-    { title: "Wardens", path: "/warden" }
+    { title: "Wardens", path: "/warden" },
+    { title: "View Profile", path: "/profile" }
   ];
 
   const handleLogout = (e) => {
@@ -27,7 +27,7 @@ const Links = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-2">
+    <div>
       {links.map((link) => (
         <Link 
           href={link.path} 

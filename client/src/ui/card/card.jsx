@@ -15,3 +15,4 @@ const Card = ({ items }) => {
 };
 
 export default Card;
+

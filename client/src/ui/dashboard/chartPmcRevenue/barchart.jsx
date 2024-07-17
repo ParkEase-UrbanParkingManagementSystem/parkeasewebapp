@@ -28,7 +28,7 @@ const BarChartPMC = () => {
                         label: "Total Revenue By Parking Areas (thousands)",
                         data: [34,54,65,34,54,65,34,54,65,34,54,65],
                         backgroundColor: "#ffb403",
-                        borderColor: "#000000",
+                        borderColor: "#ffb403",
                         borderWidth: 1,
                     },
                 ],
