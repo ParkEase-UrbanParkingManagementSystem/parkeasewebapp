@@ -3,7 +3,12 @@
     grid-template-columns: 18% 82%;
 }
   
-.content {
-  padding: 25px;
+.body {
+  display: grid;
+  grid-template-rows: 8% 92%;
+}
+
+.content{
+  padding: 10px;
 }
   
