@@ -11,7 +11,7 @@
 .title {
   font-weight: bold;
   font-size: 1.5rem;
-  color: #333;
+  color: #000000;
 }
 
 .tablecontent {
@@ -46,7 +46,7 @@
 }
 
 .table tbody tr:nth-child(even) {
-  background: #f9f9f9;
+  background: #ffffff;
 }
 
 .table tbody tr:hover {
@@ -56,7 +56,7 @@
 .table td {
   padding: 12px;
   text-align: center;
-  color: #333;
+  color: #000000;
 }
 
 .empidhead,

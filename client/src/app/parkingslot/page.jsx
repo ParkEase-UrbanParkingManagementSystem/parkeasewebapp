@@ -39,7 +39,7 @@ const ParkingLot = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>Parking Lots</div>
+      <div className={styles.title}>Registered Parking Lots</div>
       <div className={styles.cardcontainer}>
         <div className="w-1/3">
           <Card title={title[0]} content={content[0]} />

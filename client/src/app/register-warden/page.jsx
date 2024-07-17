@@ -61,9 +61,10 @@ const Register = () => {
         <div className={styles.formcontent}>
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formGroup}>
+              <span>Warden Account Details: </span>
               <input
                 type="email"
-                placeholder="Email"
+                placeholder="Email Address"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
@@ -76,7 +77,8 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 className={styles.input}
-              />
+              /><br/>
+              <span>Personal Details: </span>
               <input
                 type="text"
                 placeholder="First Name"
@@ -111,6 +113,7 @@ const Register = () => {
               />
             </div>
             <div className={styles.formGroup}>
+            <span>Address Details: </span>
               <input
                 type="text"
                 placeholder="Address No"
@@ -145,14 +148,14 @@ const Register = () => {
               />
               <input
                 type="text"
-                placeholder="Province"
+                placeholder="District"
                 name="province"
                 value={formData.province}
                 onChange={handleChange}
                 className={styles.input}
               />
             </div>
-            <Button label="Register" className={styles.button} />
+            <Button label="Register"/>
           </form>
         </div>
       </div>

@@ -84,6 +84,7 @@ const Profile = () => {
         </div>
         <p>{pmcDetails.pmc.name} Parking Management Company</p>
       </div>
+      <Button label="Edit Profile" icon={faPen}/>
       <div className="flex">
         <div className="w-1/2">
           <Card items={cardItems1} />
@@ -93,7 +94,7 @@ const Profile = () => {
           <Card items={cardItems2} />
         </div>
       </div>
-      <Button label="Edit Profile" icon={faPen}/>
+      
     </div>
   );
 };
