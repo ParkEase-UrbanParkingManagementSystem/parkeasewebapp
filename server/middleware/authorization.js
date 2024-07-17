@@ -3,6 +3,7 @@ require("dotenv").config(); // This gives access to environment variables
 
 module.exports = async (req, res, next) => {
     try {
+        
         // Get the token from the header
         const jwtToken = req.header("token");
 
@@ -16,6 +17,8 @@ module.exports = async (req, res, next) => {
 
         // Attach the user ID from the token payload to the request object
         req.user = payload.user;
+
+        
         
 
         next();

@@ -110,6 +110,23 @@ CREATE TABLE vehicle_type(
     vehicle_type_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     type_name VARCHAR(50) NOT NULL UNIQUE
 );
+-- Insert multiple entries into the vehicle_type table
+INSERT INTO vehicle_type (type_name) VALUES
+('Bicycle'),
+('Bike'),
+('Bus'),
+('Car'),
+('Concrete Mixer'),
+('Container Truck'),
+('Fire Engine'),
+('Fork Lift'),
+('Jeep'),
+('Lorry'),
+('Pick Up'),
+('SUV'),
+('Tractor'),
+('TukTuk'),
+('Van');
 
 CREATE TABLE vehicle(
     vehicle_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
