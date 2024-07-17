@@ -8,7 +8,7 @@ const sidebar = () => {
   return (
     <div className={styles.sidebarcontainer}>
       <div className={styles.logo}>
-        <Image src="/images/Group 178.png" width="150" height="150" />
+        <Image src="/images/Group 178.png" width="160" height="160" />
       </div>
 
       <div className={styles.links}>

@@ -1,99 +1,108 @@
 /* Updated CSS for modern look */
 
 .container {
-    display: grid;
-    grid-template-rows: auto auto 1fr auto;
-    height: 100vh;
-    padding: 20px;
-    gap: 20px;
-  }
-  
-  .title {
-    text-align: center;
-    font-weight: bold;
-    font-size: 2rem;
-    color: #333;
-  }
-  
-  .tablecontent {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    background: #fff;
-    overflow: hidden;
-    padding: 10px;
-    max-height: 70vh;
-    overflow-y: auto;
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .table thead {
-    background: #FFB403;
-    color: white;
-  }
-  
-  .table thead th {
-    padding: 12px;
-    text-align: center;
-    font-weight: bold;
-  }
-  
-  .table tbody tr {
-    border-bottom: 1px solid #ddd;
-    transition: background 0.3s;
-  }
-  
-  .table tbody tr:nth-child(even) {
-    background: #f9f9f9;
-  }
-  
-  .table tbody tr:hover {
-    background: rgba(255, 180, 3, 0.2);
-  }
-  
-  .table td {
-    padding: 12px;
-    text-align: center;
-    color: #333;
-  }
-  
-  .empidhead, .empnamehead, .empgenderhead, .empagehead {
-    width: 25%;
-  }
-  
-  .empiddata, .empnamedata, .empgenderdata, .empagedata {
-    font-size: 1rem;
-  }
-  
-  .link-button {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-  }
-  
-  .link-button a {
-    text-decoration: none;
-    background: #FFB403;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    transition: background 0.3s;
-  }
-  
-  .link-button a:hover {
-    background: #e0a103;
-  }
-  
-  .statusActive {
-    color: #FFB403;
-   
-  }
-  
-  .statusInactive {
-    color: rgb(255, 0, 0);
-    
-  }
-  
+  display: grid;
+  grid-template-rows: 5% 10% 5% 80%;
+  height: 100vh;
+  padding: 20px;
+  gap: 20px;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.tablecontent {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+  padding: 10px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: #000000;
+  color: white;
+}
+
+.table thead th {
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #ddd;
+  transition: background 0.3s;
+}
+
+.table tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.table tbody tr:hover {
+  background: rgba(255, 180, 3, 0.1);
+}
+
+.table td {
+  padding: 12px;
+  text-align: center;
+  color: #333;
+}
+
+.empidhead,
+.empnamehead,
+.empgenderhead,
+.empagehead {
+  width: 25%;
+}
+
+.empiddata,
+.empnamedata,
+.empgenderdata,
+.empagedata {
+  font-size: 1rem;
+}
+
+.link-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.link-button a {
+  text-decoration: none;
+  background: #ffb403;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.link-button a:hover {
+  background: #e0a103;
+}
+
+.statusActive {
+  color: #ffb403;
+}
+
+.statusInactive {
+  color: rgb(255, 0, 0);
+}
+
+/* cards */
+
+.cardcontainer {
+  display: flex;
+  flex-direction: row;
+}

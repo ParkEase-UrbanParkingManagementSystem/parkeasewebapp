@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Import from 'next/navigation'
 import styles from "./profile.module.css";
 import Image from "next/image";
-import Card from "../../ui/card/card";
+import Card from "../../ui/card/verticalcard/card";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import Button from "../../ui/button/button"

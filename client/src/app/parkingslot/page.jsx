@@ -4,42 +4,20 @@ import React from "react";
 import styles from "./parkingSlot.module.css";
 import Button from "../../ui/button/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquarePlus, faCar, faBicycle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSquarePlus,
+  faCar,
+  faBicycle,
+  faSquareParking,
+} from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import Link from "next/link";
+import Card from "../../ui/card/horizontalcard/card";
 
-library.add(faSquarePlus, faCar, faBicycle);
+library.add(faSquarePlus, faCar, faBicycle, faSquareParking);
 
 const ParkingLot = () => {
   const parkingLots = [
-    {
-      name: "Kollupitiya Parking Slot",
-      assignedWarden: "Saman Kumara",
-      carSlots: 50,
-      bikeSlots: 20,
-      status: "Active",
-    },
-    {
-      name: "Bambalapitiya Parking Slot",
-      assignedWarden: "Nimal Perera",
-      carSlots: 30,
-      bikeSlots: 10,
-      status: "Active",
-    },
-    {
-      name: "Wellawatte Parking Slot",
-      assignedWarden: "Ruwan Silva",
-      carSlots: 40,
-      bikeSlots: 15,
-      status: "Inactive",
-    },
-    {
-      name: "Mount-Lavinia Parking Slot",
-      assignedWarden: "Dinal Silva",
-      carSlots: 46,
-      bikeSlots: 32,
-      status: "Maintaining",
-    },
     {
       name: "Koswatta Parking Slot",
       assignedWarden: "Nimal Athapattu",
@@ -56,17 +34,28 @@ const ParkingLot = () => {
     },
     // Add more dummy data as needed
   ];
+  const title = ["Occupied Slots", "Remaining Slots", "Total Slots"];
+  const content = ["100", "300", "400"];
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>
-        <p>Parking Lots</p>
+      <div className={styles.title}>Parking Lots</div>
+      <div className={styles.cardcontainer}>
+        <div className="w-1/3">
+          <Card title={title[0]} content={content[0]} />
+        </div>
+        <div className="w-1/3">
+          <Card title={title[1]} content={content[1]} />
+        </div>
+        <div className="w-1/3">
+          <Card title={title[2]} content={content[2]} />
+        </div>
       </div>
-      
-      <Link href="/parkinglot-add">
+      <div>
+        <Link href="/parkinglot-add">
           <Button label="Add Parking Lot" icon={faSquarePlus} />
         </Link>
-
+      </div>
       <div className={styles.tablecontent}>
         <table className={styles.table}>
           <thead>
@@ -86,7 +75,13 @@ const ParkingLot = () => {
                   <FontAwesomeIcon icon={faCar} /> {lot.carSlots} &nbsp;
                   <FontAwesomeIcon icon={faBicycle} /> {lot.bikeSlots}
                 </td>
-                <td className={lot.status === "Active" ? styles.statusActive : styles.statusInactive}>
+                <td
+                  className={
+                    lot.status === "Active"
+                      ? styles.statusActive
+                      : styles.statusInactive
+                  }
+                >
                   {lot.status}
                 </td>
               </tr>
