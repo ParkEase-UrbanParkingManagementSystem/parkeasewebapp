@@ -25,94 +25,38 @@ const Dashboard = ({ setAuth }) => {
 
   const data = {
     Daily: {
-      cardItemswarden: [
-        { title: "Total Registered Wardens", content: "60" },
-        { title: "Active Wardens", content: "54" },
-        { title: "New Registered Wardens", content: "2" },
-      ],
-      cardItemsparking: [
-        { title: "Total Parking Areas", content: "10" },
-        { title: "New Parking Areas", content: "1" },
-      ],
-      cardItemsslot: [
-        { title: "Total Slots Available", content: "400" },
-        { title: "Occupied Slots", content: "100" },
-        { title: "Remaining Slots", content: "300" },
-      ],
-      cardItemsrate: [
-        { title: "Average Parking Duration", content: "1 hour" },
-        { title: "Turnover Rate", content: "10%" },
-      ],
-      cardItemsrevenue: [{ title: "Total Revenue", content: "300,000" }],
+      cardItemswarden: { title: "Total Registered Wardens", content: "60" },
+      cardItemsparking: { title: "Total Parking Areas", content: "10" },
+      cardItemsslot: { title: "Total Slots Available", content: "400" },
+      cardItemsrate: { title: "Average Parking Duration", content: "1 hour" },
+      cardItemsrevenue: { title: "Total Revenue", content: "300,000" },
       chart1: <BarChart />,
       chart2: <LineChart />,
     },
     Weekly: {
-      cardItemswarden: [
-        { title: "Total Registered Wardens", content: "60" },
-        { title: "Active Wardens", content: "54" },
-        { title: "New Registered Wardens", content: "6" },
-      ],
-      cardItemsparking: [
-        { title: "Total Parking Areas", content: "10" },
-        { title: "New Parking Areas", content: "2" },
-      ],
-      cardItemsslot: [
-        { title: "Total Slots Available", content: "400" },
-        { title: "Occupied Slots", content: "200" },
-        { title: "Remaining Slots", content: "200" },
-      ],
-      cardItemsrate: [
-        { title: "Average Parking Duration", content: "1.5 hours" },
-        { title: "Turnover Rate", content: "15%" },
-      ],
-      cardItemsrevenue: [{ title: "Total Revenue", content: "900,000" }],
+      cardItemswarden: { title: "Total Registered Wardens", content: "60" },
+      cardItemsparking: { title: "Total Parking Areas", content: "10" },
+      cardItemsslot: { title: "Total Slots Available", content: "400" },
+      cardItemsrate: { title: "Average Parking Duration", content: "1.5 hours" },
+      cardItemsrevenue: { title: "Total Revenue", content: "900,000" },
       chart1: <BarChart />,
       chart2: <LineChart />,
     },
     Monthly: {
-      cardItemswarden: [
-        { title: "Total Registered Wardens", content: "60" },
-        { title: "Active Wardens", content: "50" },
-        { title: "New Registered Wardens", content: "10" },
-      ],
-      cardItemsparking: [
-        { title: "Total Parking Areas", content: "10" },
-        { title: "New Parking Areas", content: "3" },
-      ],
-      cardItemsslot: [
-        { title: "Total Slots Available", content: "400" },
-        { title: "Occupied Slots", content: "250" },
-        { title: "Remaining Slots", content: "150" },
-      ],
-      cardItemsrate: [
-        { title: "Average Parking Duration", content: "2 hours" },
-        { title: "Turnover Rate", content: "20%" },
-      ],
-      cardItemsrevenue: [{ title: "Total Revenue", content: "12,000,000" }],
+      cardItemswarden: { title: "Total Registered Wardens", content: "60" },
+      cardItemsparking: { title: "Total Parking Areas", content: "10" },
+      cardItemsslot: { title: "Total Slots Available", content: "400" },
+      cardItemsrate: { title: "Average Parking Duration", content: "2 hours" },
+      cardItemsrevenue: { title: "Total Revenue", content: "12,000,000" },
       chart1: <BarChart />,
       chart2: <LineChart />,
     },
     Yearly: {
-      cardItemswarden: [
-        { title: "Total Registered Wardens", content: "60" },
-        { title: "Active Wardens", content: "40" },
-        { title: "New Registered Wardens", content: "20" },
-      ],
-      cardItemsparking: [
-        { title: "Total Parking Areas", content: "10" },
-        { title: "New Parking Areas", content: "4" },
-      ],
-      cardItemsslot: [
-        { title: "Total Slots Available", content: "400" },
-        { title: "Occupied Slots", content: "300" },
-        { title: "Remaining Slots", content: "100" },
-      ],
-      cardItemsrate: [
-        { title: "Average Parking Duration", content: "3 hours" },
-        { title: "Turnover Rate", content: "25%" },
-      ],
-      cardItemsrevenue: [{ title: "Total Revenue", content: "87,000,000" }],
+      cardItemswarden: { title: "Total Registered Wardens", content: "60" },
+      cardItemsparking: { title: "Total Parking Areas", content: "10" },
+      cardItemsslot: { title: "Total Slots Available", content: "400" },
+      cardItemsrate: { title: "Average Parking Duration", content: "3 hours" },
+      cardItemsrevenue: { title: "Total Revenue", content: "87,000,000" },
       chart1: <BarChart />,
       chart2: <LineChart />,
     },
@@ -124,8 +68,6 @@ const Dashboard = ({ setAuth }) => {
 
   return (
     <div>
-      <h1 className="text-2xl">Dashboard</h1>
-
       <div className="my-2">
         <Dropdown
           options={["Daily", "Weekly", "Monthly", "Yearly"]}
@@ -136,30 +78,25 @@ const Dashboard = ({ setAuth }) => {
 
       <div className="flex flex-row mb-4">
         <div className="w-1/5">
-          <Card items={data[timeFrame].cardItemsslot} icon={faCar} />
+          <Card item={data[timeFrame].cardItemsslot} icon={faCar} />
         </div>
 
         <div className="w-1/5">
-          <Card
-            items={data[timeFrame].cardItemsparking}
-            icon={faSquareParking}
-          />
+          <Card item={data[timeFrame].cardItemsparking} icon={faSquareParking} />
         </div>
 
         <div className="w-1/5">
-          <Card items={data[timeFrame].cardItemswarden} icon={faPerson} />
+          <Card item={data[timeFrame].cardItemswarden} icon={faPerson} />
         </div>
 
         <div className="w-1/5">
-          <Card items={data[timeFrame].cardItemsrate} icon={faPercent} />
+          <Card item={data[timeFrame].cardItemsrate} icon={faPercent} />
         </div>
 
         <div className="w-1/5">
-          <Card
-            items={data[timeFrame].cardItemsrevenue}
-            icon={faHandHoldingDollar}
-          />
+          <Card item={data[timeFrame].cardItemsrevenue} icon={faHandHoldingDollar} />
         </div>
+        
       </div>
 
       <div className="flex flex-row mt-8 space-x-4">

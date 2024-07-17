@@ -25,7 +25,7 @@ const LineChartPMC = () => {
                         label: "Peak parking hours (#ofVehicles)",
                         data: [34, 54, 65, 76, 83, 52, 43, 56, 21, 32, 9, 7,8],
                         backgroundColor: "#ffb403",
-                        borderColor: "#000000",
+                        borderColor: "#ffb403",
                         borderWidth: 1,
                         fill: false, 
                         tension: 0.1 

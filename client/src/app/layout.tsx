@@ -30,7 +30,7 @@ function LayoutWithAuth({ children }: { children: React.ReactNode }) {
   return (
     <>
       {children}
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

@@ -1,0 +1,25 @@
+.active {
+  background-color: #ffb403;
+  color: white;
+}
+
+.link {
+  display: block;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  text-align: justify;
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+
+.link:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgba(229, 231, 235, var(--tw-bg-opacity));
+  color: #000000;
+  font-size: 1.102rem;
+}
+
+.icon{
+  margin-right: 10px;
+}
