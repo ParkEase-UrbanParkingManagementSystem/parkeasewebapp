@@ -47,16 +47,16 @@ const Register = () => {
     <Fragment>
       <div className={styles.register_container}>
         <div className={styles.left}>
-          <div className="m-2">
+          <div className="m-3">
             <Image
-              src="/images/Group 177.png"
+              src="/images/Group 1782.png"
               alt="Description of the image"
-              width={150}
-              height={200}
+              width={160}
+              height={160}
               className={styles.image}
             />
           </div>
-          <div className="text-4xl text-white tracking-widest m-5 font-semibold">
+          <div className="text-4xl text-white tracking-widest m-5">
             Your Gateway to Hassle-free Parking
           </div>
           <div className="justify-self-center">
@@ -154,7 +154,7 @@ const Register = () => {
                   />
                 </div>
 
-                <button className="btn btn-success btn-block w-full">
+                <button className={styles.button}>
                   Register
                 </button>
               </form>

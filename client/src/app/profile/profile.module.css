@@ -1,12 +1,11 @@
 .container {
   display: grid;
-  grid-template-rows: 25% 10% 40%;
-  height: 100vh;
+  height: 100%;
+  grid-template-rows: 25% 15% 40%;
 }
 
 .imagecontainer {
   place-self: center;
-
 }
 
 .userimage {
@@ -23,38 +22,6 @@
 
 .profiledetail {
   grid-template-columns: 50% 50%;
-}
-
-.button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffb403; 
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-  width: 15%;
-  height: 2.5rem;
-}
-
-.button:hover {
-  background-color: #e5a302;
-}
-
-.icon {
-  margin-left: 8px;
-  width: 13px;
-  height: 13px; 
-}
-
-.buttonContainer {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
 }
 
 
