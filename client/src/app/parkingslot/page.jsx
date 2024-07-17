@@ -53,7 +53,7 @@ const ParkingLot = () => {
       </div>
       <div>
         <Link href="/parkinglot-add">
-          <Button label="Add Parking Lot" icon={faSquarePlus} />
+          <Button label="Add New Parking Lots" icon={faSquarePlus} />
         </Link>
       </div>
       <div className={styles.tablecontent}>
