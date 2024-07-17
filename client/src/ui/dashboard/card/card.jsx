@@ -7,7 +7,6 @@ const Card = ({ item, icon }) => {
     <div className={styles.card}>
       <div>
         <FontAwesomeIcon icon={icon} className={styles.icon} />
-
         <p className={styles.content}>{item.content}</p>
         <p className={styles.title}>{item.title}</p>
       </div>

@@ -53,9 +53,10 @@ const BarChartPMC = () => {
     })
 
   return (
-    <div style={{position: "relative", width:"38vw", height:"20vw"}}>
-        <canvas ref={chartRef}/>
-    </div>
+    <div style={{ position: "relative", width: "45vw", height: "25vw" }}>
+  <canvas ref={chartRef} />
+</div>
+
   )
 }
 

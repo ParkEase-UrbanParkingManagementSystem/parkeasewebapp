@@ -13,6 +13,7 @@ import {
   faHandHoldingDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import styles from "./dashboard.module.css";
 
 library.add(faSquareParking);
 library.add(faPerson);
@@ -68,7 +69,7 @@ const Dashboard = ({ setAuth }) => {
 
   return (
     <div>
-      <div className="my-2">
+      <div>
         <Dropdown
           options={["Daily", "Weekly", "Monthly", "Yearly"]}
           selectedOption={timeFrame}
@@ -76,7 +77,7 @@ const Dashboard = ({ setAuth }) => {
         />
       </div>
 
-      <div className="flex flex-row mb-4">
+      <div className={styles.card}>
         <div className="w-1/5">
           <Card item={data[timeFrame].cardItemsslot} icon={faCar} />
         </div>
@@ -99,10 +100,9 @@ const Dashboard = ({ setAuth }) => {
         
       </div>
 
-      <div className="flex flex-row mt-8 space-x-4">
-        <div className="w-1/2">{data[timeFrame].chart1}</div>
-
-        <div className="w-1/2">{data[timeFrame].chart2}</div>
+      <div className={styles.chart}>
+        <div>{data[timeFrame].chart1}</div>
+        <div>{data[timeFrame].chart2}</div>
       </div>
     </div>
   );

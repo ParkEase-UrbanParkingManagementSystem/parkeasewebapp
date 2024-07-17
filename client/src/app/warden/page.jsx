@@ -4,10 +4,10 @@
 import React, { useState, useEffect } from "react";
 import styles from "./warden.module.css";
 import Button from "../../ui/button/button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import Link from "next/link";
+import Card from "../../ui/card/horizontalcard/card";
 
 library.add(faSquarePlus);
 
@@ -57,12 +57,25 @@ const WardenPage = () => {
     return <p>Loading...</p>; // or any other loading indicator
   }
 
+  const title = ["Assigned Wardens", "Not Assigned Wardens", "Total Wardens Count"];
+  const content = ["100", "300", "400"];
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>
         <p>Registered Parking Warden List</p>
       </div>
-
+      <div className={styles.cardcontainer}>
+        <div className="w-1/3">
+          <Card title={title[0]} content={content[0]} />
+        </div>
+        <div className="w-1/3">
+          <Card title={title[1]} content={content[1]} />
+        </div>
+        <div className="w-1/3">
+          <Card title={title[2]} content={content[2]} />
+        </div>
+      </div>
       <Link href="/register-warden">
         <Button label="Register New Wardens" icon={faSquarePlus} />
       </Link>

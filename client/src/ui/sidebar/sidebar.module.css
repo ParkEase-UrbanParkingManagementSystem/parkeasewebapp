@@ -1,7 +1,7 @@
 .sidebarcontainer {
   position: fixed;
-  --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --tw-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2),
+    0 8px 10px -3px rgba(0, 0, 0, 0.1);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
     var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   border-right-width: 1px;
@@ -10,10 +10,9 @@
   top: 0px;
   display: grid;
   grid-template-rows: 10% 70% 20%;
-  --tw-bg-opacity: 1;
-  background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
   z-index: 50;
   width: 18%;
+  background-color: rgba(255, 180, 3, 0.1);
 }
 
 .links {
@@ -22,28 +21,8 @@
   width: 100%;
 }
 
-.logo{
-place-self: center;
+.logo {
+  place-self: center;
 }
 
-/* .userimage {
-  border-radius: 50%;
-  object-fit: cover;
-}
 
-.userDetail {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 5px;
-}
-
-.userTitle {
-  text-align: center;
-}
-
-.user {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-} */

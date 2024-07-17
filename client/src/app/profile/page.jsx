@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Import from 'next/navigation'
 import styles from "./profile.module.css";
 import Image from "next/image";
-import Card from "../../ui/card/card";
+import Card from "../../ui/card/verticalcard/card";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import Button from "../../ui/button/button"
@@ -84,6 +84,7 @@ const Profile = () => {
         </div>
         <p>{pmcDetails.pmc.name} Parking Management Company</p>
       </div>
+      <Button label="Edit Profile" icon={faPen}/>
       <div className="flex">
         <div className="w-1/2">
           <Card items={cardItems1} />
@@ -93,7 +94,7 @@ const Profile = () => {
           <Card items={cardItems2} />
         </div>
       </div>
-      <Button label="Edit Profile" icon={faPen}/>
+      
     </div>
   );
 };

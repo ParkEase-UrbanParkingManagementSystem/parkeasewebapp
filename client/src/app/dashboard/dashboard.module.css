@@ -1,0 +1,13 @@
+.card {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

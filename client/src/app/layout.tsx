@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import { AuthProvider, useAuth } from "../utils/authContext"; // Ensure useAuth is exported from authContext
-import Footer from "../ui/footer/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,7 +29,6 @@ function LayoutWithAuth({ children }: { children: React.ReactNode }) {
   return (
     <>
       {children}
-      {/* <Footer /> */}
     </>
   );
 }

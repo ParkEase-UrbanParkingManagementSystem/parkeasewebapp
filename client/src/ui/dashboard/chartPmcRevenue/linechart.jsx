@@ -49,7 +49,7 @@ const LineChartPMC = () => {
     }, []); 
 
     return (
-        <div style={{ position: "relative", width: "38vw", height: "20vw" }}>
+        <div style={{ position: "relative", width: "45vw", height: "25vw" }}>
             <canvas ref={chartRef} />
         </div>
     );
