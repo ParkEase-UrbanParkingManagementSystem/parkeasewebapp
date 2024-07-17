@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "../sidebar/sidebar.module.css";
-import Links from "@/ui/pmcsidebar/links/links";
+import TopLinks from "../../ui/pmcsidebar/toplinks/TopLinks";
+import BottomLinks from "../../ui/pmcsidebar/bottomlinks/BottomLinks";
 import Image from "next/image";
 
 const sidebar = () => {
@@ -22,7 +23,10 @@ const sidebar = () => {
       </div> */}
 
       <div className={styles.links}>
-        <Links />
+        <TopLinks />
+      </div>
+      <div className={styles.links}>
+        <BottomLinks />
       </div>
     </div>
   );
