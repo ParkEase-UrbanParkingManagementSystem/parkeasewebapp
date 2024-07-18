@@ -1,8 +1,6 @@
-/* Updated CSS for modern look with two-column layout */
-
 .container {
   display: grid;
-  grid-template-rows: 10% 90%;
+  grid-template-rows: 10% 85% 5%;
   padding: 20px;
 }
 
@@ -15,6 +13,7 @@
 
 .formcontent {
   width: 100%;
+  height: 100%;
   background: rgba(255, 180, 3, 0.1);
   padding: 20px;
   border-radius: 10px;
@@ -33,7 +32,8 @@
   gap: 10px;
 }
 
-.input {
+.input,
+.fileInput {
   width: 80%;
   padding: 10px;
   border: 1px solid #ddd;
@@ -42,7 +42,8 @@
   transition: border-color 0.3s;
 }
 
-.input:focus {
+.input:focus,
+.fileInput:focus {
   border-color: #ffb403;
   outline: none;
 }
