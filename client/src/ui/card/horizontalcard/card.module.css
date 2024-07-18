@@ -5,15 +5,17 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   /* height: 100px; */
   position: relative;
-  --tw-space-x-reverse: 0;
-  margin-right: calc(5rem * var(--tw-space-x-reverse));
-  margin-left: calc(5rem * calc(1 - var(--tw-space-x-reverse)));
+  margin-right: 20px;
   padding: 16px;
 }
 
 .title {
-  font-size: 1.2rem;
-  line-height: 2.5rem;
+  font-size: 1rem;
+}
+
+.amount{
+  font-size: 1.4rem;
+  font-weight: 500;
 }
 
 .content{

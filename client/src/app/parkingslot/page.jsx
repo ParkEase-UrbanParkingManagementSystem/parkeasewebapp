@@ -37,21 +37,18 @@ const ParkingLot = () => {
     },
     // Add more dummy data as needed
   ];
-  const title = ["Occupied Slots", "Remaining Slots", "Total Slots"];
-  const content = ["100", "300", "400"];
+  const title = ["Occupied Slots", "Remaining Slots"];
+  const amount = ["10%", "30%"];
 
   return (
     <div className={styles.container}>
       <div className={styles.title}>Registered Parking Lots</div>
       <div className={styles.cardcontainer}>
-        <div className="w-1/3">
-          <Card title={title[0]} content={content[0]} />
+        <div className="w-1/5">
+          <Card title={title[0]} amount={amount[0]} />
         </div>
-        <div className="w-1/3">
-          <Card title={title[1]} content={content[1]} />
-        </div>
-        <div className="w-1/3">
-          <Card title={title[2]} content={content[2]} />
+        <div className="w-1/5">
+          <Card title={title[1]} amount={amount[1]} />
         </div>
       </div>
       <div>
@@ -72,7 +69,7 @@ const ParkingLot = () => {
           <tbody>
             {parkingLots.map((lot, index) => (
               <tr key={index}>
-                <td className={styles.empiddata}>{lot.name}</td>
+                <Link href={""}><td className={styles.empiddata}>{lot.name}</td></Link>                
                 <td className={styles.empnamedata}>{lot.assignedWarden}</td>
                 <td className={styles.empgenderdata}>
                   <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
