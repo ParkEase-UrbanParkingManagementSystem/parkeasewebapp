@@ -99,7 +99,9 @@ const WardenPage = () => {
                 <td className={styles.empgenderdata}>{warden.gender}</td>
                 <td className={styles.empagedata}>{warden.age}</td>
                 <td className={styles.empcontactdata}>{warden.contact}</td>
-                <td
+                <td className={styles.empcontactdata}>Not Assigned</td>
+
+                {/* <td
                   className={
                     warden.assignedSlot === "Not yet assigned"
                       ? styles.empslotdatafree
@@ -107,7 +109,7 @@ const WardenPage = () => {
                   }
                 >
                   {warden.assignedSlot}
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>

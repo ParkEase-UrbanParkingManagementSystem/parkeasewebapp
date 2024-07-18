@@ -5,6 +5,7 @@ const jwtGenerator = require("../utils/jwtGenerator");
 const validInfo = require("../middleware/validInfo");
 // const authoziazation = require("../middleware/authorization");
 const authorization = require("../middleware/authorization");
+const extractAgeAndGenderFromNIC = require("../utils/extractFromNic")
 
 //register
 
@@ -27,11 +28,12 @@ router.post("/registerPMC", validInfo, async (req, res) => {
             const saltRound = 10;
             const salt = await bcrypt.genSalt(saltRound);
             const bcryptPassword = await bcrypt.hash(password, salt);
+            const role_id = 2;
 
             // Insert new user into the users table
             const newUser = await pool.query(
-                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING user_id",
-                [email, bcryptPassword, addressNo, street1, street2, city, district]
+                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province, role_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING user_id",
+                [email, bcryptPassword, addressNo, street1, street2, city, district, role_id]
             );
 
             const userId = newUser.rows[0].user_id;
@@ -59,6 +61,65 @@ router.post("/registerPMC", validInfo, async (req, res) => {
         res.status(500).send("Server Error");
     }
 });
+
+//Driver Registration
+
+router.post("/registerDriver", async(req,res)=>{
+    try {
+        // Destructure the req.body
+        const { fname, lname, nic, email, password, contact, addressNo, street1, street2, city, district } = req.body;
+        const { age, gender } = extractAgeAndGenderFromNIC(nic);
+
+        // Check if the user email already exists
+        const existingUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        if (existingUser.rows.length > 0) {
+            return res.status(409).send("Email already in use");
+        }
+
+        // Start a transaction to ensure data consistency
+        await pool.query('BEGIN');
+
+        try {
+            // Bcrypt the user password
+            const saltRound = 10;
+            const salt = await bcrypt.genSalt(saltRound);
+            const bcryptPassword = await bcrypt.hash(password, salt);
+
+            const role_id = 1;
+
+            // Insert new user into the users table
+            const newUser = await pool.query(
+                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province,contact,role_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING user_id",
+                [email, bcryptPassword, addressNo, street1, street2, city, district, contact, role_id]
+            );
+
+            const userId = newUser.rows[0].user_id;
+
+            // Insert PMC details into the pmc table
+            const newPMC = await pool.query(
+                "INSERT INTO driver (fname, lname, nic, age, gender, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+                [fname, lname, nic, age, gender, userId]
+            );
+
+            // Commit the transaction
+            await pool.query('COMMIT');
+
+            // Generating JWT token
+            const token = jwtGenerator(userId);
+
+            res.json({ token });
+        } catch (error) {
+            // Rollback the transaction in case of any error
+            await pool.query('ROLLBACK');
+            throw error; // Rethrow the error for centralized error handling
+        }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+
+});
+
 
 //Login
 
