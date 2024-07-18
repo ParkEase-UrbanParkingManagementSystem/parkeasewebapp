@@ -17,7 +17,7 @@ const Register = () => {
     street2: "",
     city: "",
     province: "",
-    contact: ""  // Added contact field
+    contact: "", // Added contact field
   });
 
   const router = useRouter();
@@ -32,14 +32,17 @@ const Register = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("http://localhost:5000/wardens/registerWarden", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token: token,
-        },
-        body: JSON.stringify(formData)
-      });
+      const response = await fetch(
+        "http://localhost:5000/wardens/registerWarden",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const parseRes = await response.json();
 
@@ -77,7 +80,8 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 className={styles.input}
-              /><br/>
+              />
+              <br />
               <span>Personal Details: </span>
               <input
                 type="text"
@@ -105,7 +109,7 @@ const Register = () => {
               />
               <input
                 type="text"
-                placeholder="Contact Number"  // Added contact input
+                placeholder="Contact Number" // Added contact input
                 name="contact"
                 value={formData.contact}
                 onChange={handleChange}
@@ -113,7 +117,7 @@ const Register = () => {
               />
             </div>
             <div className={styles.formGroup}>
-            <span>Address Details: </span>
+              <span>Address Details: </span>
               <input
                 type="text"
                 placeholder="Address No"
@@ -155,8 +159,10 @@ const Register = () => {
                 className={styles.input}
               />
             </div>
-            <Button label="Register"/>
           </form>
+        </div>
+        <div className="mt-3">
+          <Button label="Register" />
         </div>
       </div>
     </Fragment>

@@ -35,6 +35,16 @@ const BarChartPMC = () => {
                 },
                     options: {
                         responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    font: {
+                                        size: 16,
+                                        weight: '300'
+                                    }
+                                }
+                            }
+                        },
                         scales:{
                             x: {
                                 type: "category"

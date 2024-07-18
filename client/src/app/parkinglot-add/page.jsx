@@ -148,11 +148,13 @@ const AddParkingLot = () => {
                 className={styles.input}
               />
             </div>
-            <div>
-              <Button label="Add Parking Lot" icon={faSquarePlus} />
-            </div>
+                    
           </form>
         </div>
+        <div className="mt-3">
+          <Button label="Add Parking Lot" icon={faSquarePlus} />   
+        </div>
+         
       </div>
     </Fragment>
   );

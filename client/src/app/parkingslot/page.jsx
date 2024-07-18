@@ -9,12 +9,13 @@ import {
   faCar,
   faBicycle,
   faSquareParking,
+  faTruck,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import Link from "next/link";
 import Card from "../../ui/card/horizontalcard/card";
 
-library.add(faSquarePlus, faCar, faBicycle, faSquareParking);
+library.add(faSquarePlus, faCar, faBicycle, faSquareParking, faTruck);
 
 const ParkingLot = () => {
   const parkingLots = [
@@ -23,6 +24,7 @@ const ParkingLot = () => {
       assignedWarden: "Nimal Athapattu",
       carSlots: 10,
       bikeSlots: 5,
+      lorrySlots: 4,
       status: "Active",
     },
     {
@@ -30,25 +32,23 @@ const ParkingLot = () => {
       assignedWarden: "Kusal Mendis",
       carSlots: 55,
       bikeSlots: 15,
-      status: "Active",
+      lorrySlots: 5,
+      status: "Inactive",
     },
     // Add more dummy data as needed
   ];
-  const title = ["Occupied Slots", "Remaining Slots", "Total Slots"];
-  const content = ["100", "300", "400"];
+  const title = ["Occupied Slots", "Remaining Slots"];
+  const amount = ["10%", "30%"];
 
   return (
     <div className={styles.container}>
       <div className={styles.title}>Registered Parking Lots</div>
       <div className={styles.cardcontainer}>
-        <div className="w-1/3">
-          <Card title={title[0]} content={content[0]} />
+        <div className="w-1/5">
+          <Card title={title[0]} amount={amount[0]} />
         </div>
-        <div className="w-1/3">
-          <Card title={title[1]} content={content[1]} />
-        </div>
-        <div className="w-1/3">
-          <Card title={title[2]} content={content[2]} />
+        <div className="w-1/5">
+          <Card title={title[1]} amount={amount[1]} />
         </div>
       </div>
       <div>
@@ -69,11 +69,21 @@ const ParkingLot = () => {
           <tbody>
             {parkingLots.map((lot, index) => (
               <tr key={index}>
-                <td className={styles.empiddata}>{lot.name}</td>
+                <Link href={""}><td className={styles.empiddata}>{lot.name}</td></Link>                
                 <td className={styles.empnamedata}>{lot.assignedWarden}</td>
                 <td className={styles.empgenderdata}>
-                  <FontAwesomeIcon icon={faCar} /> {lot.carSlots} &nbsp;
-                  <FontAwesomeIcon icon={faBicycle} /> {lot.bikeSlots}
+                  <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
+                  {lot.carSlots} &nbsp;
+                  <FontAwesomeIcon
+                    icon={faBicycle}
+                    className={styles.icon}
+                  />{" "}
+                  {lot.bikeSlots} &nbsp;
+                  <FontAwesomeIcon
+                    icon={faTruck}
+                    className={styles.icon}
+                  />{" "}
+                  {lot.lorrySlots}
                 </td>
                 <td
                   className={

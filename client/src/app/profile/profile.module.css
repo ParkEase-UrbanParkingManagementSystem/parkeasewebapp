@@ -1,7 +1,6 @@
 .container {
   display: grid;
-  height: 100%;
-  grid-template-rows: 25% 15% 40%;
+  grid-template-rows: 25% 15% 60%;
 }
 
 .imagecontainer {
@@ -15,13 +14,8 @@
 }
 
 .imgcnt{
-  
   display: flex;
   justify-content: center;
-}
-
-.profiledetail {
-  grid-template-columns: 50% 50%;
 }
 
 
