@@ -61,7 +61,7 @@ const Register = () => {
     <Fragment>
       <div className={styles.container}>
         <div className={styles.title}>Warden Registration</div>
-        <div className={styles.formcontent}>
+        <div className={styles.formcontent} border-8>
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formGroup}>
               <span>Warden Account Details: </span>
@@ -159,11 +159,15 @@ const Register = () => {
                 className={styles.input}
               />
             </div>
+
+            <div className="mt-3 flex justify-self-start p-2">
+              <Button label="Register" type="submit" />
+            </div>
+            
           </form>
+
         </div>
-        <div className="mt-3">
-          <Button label="Register" />
-        </div>
+        
       </div>
     </Fragment>
   );
