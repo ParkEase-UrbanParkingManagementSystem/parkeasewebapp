@@ -1,6 +1,6 @@
 import styles from "./pmcnavbar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 
 const Navbar = () => {
@@ -17,8 +17,14 @@ const Navbar = () => {
           className={styles.searchicon}
         />
       </div>
+      <div className={styles.notification}>
+      <FontAwesomeIcon
+          icon={faBell}
+          className={styles.notificationicon}
+        />
+      </div>
       <div className={styles.user}>
-        <div>
+        <div className={styles.imagecontainer}>
           <Image
             className={styles.userimage}
             src="/images/user.jpg"
@@ -27,7 +33,7 @@ const Navbar = () => {
             alt="User"
           />
         </div>
-        <div className={styles.username}>PV</div>
+        <div className={styles.username}>PV PMC</div>
       </div>
     </div>
   );

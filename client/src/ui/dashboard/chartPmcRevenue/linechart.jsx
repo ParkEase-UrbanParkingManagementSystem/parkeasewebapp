@@ -1,5 +1,3 @@
-"use client"
-
 import { useRef, useEffect } from "react";
 import { Chart } from "chart.js/auto";
 import React from 'react';
@@ -33,6 +31,16 @@ const LineChartPMC = () => {
                 },
                 options: {
                     responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 16,
+                                    weight: '300'
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         x: {
                             type: "category"

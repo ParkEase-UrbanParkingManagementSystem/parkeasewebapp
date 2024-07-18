@@ -9,12 +9,13 @@ import {
   faCar,
   faBicycle,
   faSquareParking,
+  faTruck,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import Link from "next/link";
 import Card from "../../ui/card/horizontalcard/card";
 
-library.add(faSquarePlus, faCar, faBicycle, faSquareParking);
+library.add(faSquarePlus, faCar, faBicycle, faSquareParking, faTruck);
 
 const ParkingLot = () => {
   const parkingLots = [
@@ -23,6 +24,7 @@ const ParkingLot = () => {
       assignedWarden: "Nimal Athapattu",
       carSlots: 10,
       bikeSlots: 5,
+      lorrySlots: 4,
       status: "Active",
     },
     {
@@ -30,7 +32,8 @@ const ParkingLot = () => {
       assignedWarden: "Kusal Mendis",
       carSlots: 55,
       bikeSlots: 15,
-      status: "Active",
+      lorrySlots: 5,
+      status: "Inactive",
     },
     // Add more dummy data as needed
   ];
@@ -72,8 +75,18 @@ const ParkingLot = () => {
                 <td className={styles.empiddata}>{lot.name}</td>
                 <td className={styles.empnamedata}>{lot.assignedWarden}</td>
                 <td className={styles.empgenderdata}>
-                  <FontAwesomeIcon icon={faCar} /> {lot.carSlots} &nbsp;
-                  <FontAwesomeIcon icon={faBicycle} /> {lot.bikeSlots}
+                  <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
+                  {lot.carSlots} &nbsp;
+                  <FontAwesomeIcon
+                    icon={faBicycle}
+                    className={styles.icon}
+                  />{" "}
+                  {lot.bikeSlots} &nbsp;
+                  <FontAwesomeIcon
+                    icon={faTruck}
+                    className={styles.icon}
+                  />{" "}
+                  {lot.lorrySlots}
                 </td>
                 <td
                   className={

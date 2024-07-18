@@ -72,6 +72,10 @@
   font-size: 1rem;
 }
 
+.icon{
+  color: #ffb403;
+}
+
 .link-button {
   display: flex;
   justify-content: center;
@@ -92,11 +96,11 @@
 }
 
 .statusActive {
-  color: #ffb403;
+  color: green;
 }
 
 .statusInactive {
-  color: rgb(255, 0, 0);
+  color: red;
 }
 
 /* cards */

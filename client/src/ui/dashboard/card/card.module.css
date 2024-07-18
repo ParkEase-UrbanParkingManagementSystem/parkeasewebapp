@@ -1,14 +1,13 @@
 .card {
   border: 1px solid #ddd;
-  border-radius: 30px;
+  border-radius: 20px;
   place-content: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   height: 150px;
   position: relative;
-  --tw-space-x-reverse: 0;
-  margin-right: calc(1.75rem * var(--tw-space-x-reverse));
-  margin-left: calc(1.75rem * calc(1 - var(--tw-space-x-reverse)));
   padding: 16px;
+  margin-right: 20px;
+  margin-left: 20px;
 }
 
 .icon {
