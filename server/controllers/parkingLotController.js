@@ -1,7 +1,7 @@
 const pool  = require('../db'); // Adjust the path as needed
 
 exports.parkingLotAdd = async (req, res) => {
-    console.log("Helloo");
+    
   const client = await pool.connect();
   try {
     const pmc_user_id = req.user;
