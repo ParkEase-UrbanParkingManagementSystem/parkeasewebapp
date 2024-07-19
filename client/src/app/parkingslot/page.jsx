@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSquarePlus,
   faCar,
-  faBicycle,
+  faMotorcycle,
   faSquareParking,
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
@@ -15,7 +15,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import Link from "next/link";
 import Card from "../../ui/card/horizontalcard/card";
 
-library.add(faSquarePlus, faCar, faBicycle, faSquareParking, faTruck);
+library.add(faSquarePlus, faCar, faMotorcycle, faSquareParking, faTruck);
 
 const ParkingLot = () => {
   const parkingLots = [
@@ -69,13 +69,17 @@ const ParkingLot = () => {
           <tbody>
             {parkingLots.map((lot, index) => (
               <tr key={index}>
-                <Link href={""}><td className={styles.empiddata}>{lot.name}</td></Link>                
+                <td className={styles.empiddata}>
+                <Link href={`/parkingslot/${index}`}>
+                    <div className={styles.link}>{`${lot.name}`}</div>
+                  </Link>
+                </td>               
                 <td className={styles.empnamedata}>{lot.assignedWarden}</td>
                 <td className={styles.empgenderdata}>
                   <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
                   {lot.carSlots} &nbsp;
                   <FontAwesomeIcon
-                    icon={faBicycle}
+                    icon={faMotorcycle}
                     className={styles.icon}
                   />{" "}
                   {lot.bikeSlots} &nbsp;

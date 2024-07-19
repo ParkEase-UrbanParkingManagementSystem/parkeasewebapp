@@ -76,24 +76,17 @@
   color: #ffb403;
 }
 
-.link-button {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.link-button a {
+.link {
   text-decoration: none;
-  background: #ffb403;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  transition: background 0.3s;
+  color: #333;
 }
 
-.link-button a:hover {
-  background: #e0a103;
+.link:hover {
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 500;
 }
+
 
 .statusActive {
   color: green;
