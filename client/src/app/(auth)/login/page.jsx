@@ -13,8 +13,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const router = useRouter(); // Using Next.js router
 
-  
-
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -42,7 +40,6 @@ const Login = () => {
 
   return (
     <Fragment>
-      
       <div className={styles.login_container}>
         <div className={styles.left}>
           <div className="m-3">
@@ -69,8 +66,9 @@ const Login = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.center}>
-            <div className="float-left py-10">
-              <h1 className="text-center text-3xl font-extrabold">Log In</h1>
+            <div className="float-left py-7">
+              <h1 className="text-3xl font-extrabold mb-4">Welcome !</h1>
+              <h1 className="text-2xl font-extrabold">Log In</h1>
             </div>
 
             <div>
@@ -91,16 +89,14 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
                 />
-                <button className={styles.button}>
-                  Login
-                </button>
+                <button className={styles.button}>Login</button>
               </form>
             </div>
 
             <div className="text-center mt-3">
               <p>
                 Don't have an account?{" "}
-                <a href="/select-user" className="text-blue-500">
+                <a href="/select-user" className="text-blue-600">
                   Register
                 </a>
               </p>
