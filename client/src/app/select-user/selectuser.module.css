@@ -1,9 +1,71 @@
-.container{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 50px;
-    background-color: rgba(255, 180, 3, 1);
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 150px;
+  background-color: rgba(0, 0, 0, 1);
+  padding: 50px;
+  height: 100vh;
 }
 
+.driver {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 180, 3, 1);
+  width: 30%;
+  padding: 30px;
+  border-radius: 15px;
+  --tw-shadow: 0 25px 50px -12px rgba(255, 255, 255, 0.5);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #ffffff),
+    var(--tw-ring-shadow, 0 0 #ffffff), var(--tw-shadow);
+  height: 55%;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.pmc {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 180, 3, 1);
+  width: 30%;
+  --tw-shadow: 0 25px 50px -12px rgba(255, 255, 255, 0.5);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #ffffff),
+    var(--tw-ring-shadow, 0 0 #ffffff), var(--tw-shadow);
+  padding: 30px;
+  border-radius: 15px;
+  height: 55%;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.userpic {
+  width: 200px;
+  height: 200px;
+}
+
+.title {
+  font-size: xx-large;
+  font-weight: 600;
+  color: black;
+  text-align: center;
+}
+
+.pmc:hover {
+  background-color: white;
+  font-size: xx-large;
+  font-weight: 600;
+  text-align: center;
+  color: black;
+  cursor: pointer;
+}
+
+.driver:hover {
+  background-color: white;
+  font-size: xx-large;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+}
