@@ -69,7 +69,11 @@ const ParkingLot = () => {
           <tbody>
             {parkingLots.map((lot, index) => (
               <tr key={index}>
-                <Link href={""}><td className={styles.empiddata}>{lot.name}</td></Link>                
+                <td className={styles.empiddata}>
+                <Link href={`/parkingslot/${index}`}>
+                    <div className={styles.link}>{`${lot.name}`}</div>
+                  </Link>
+                </td>               
                 <td className={styles.empnamedata}>{lot.assignedWarden}</td>
                 <td className={styles.empgenderdata}>
                   <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
