@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSquarePlus,
   faCar,
-  faBicycle,
+  faMotorcycle,
   faSquareParking,
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
@@ -15,7 +15,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import Link from "next/link";
 import Card from "../../ui/card/horizontalcard/card";
 
-library.add(faSquarePlus, faCar, faBicycle, faSquareParking, faTruck);
+library.add(faSquarePlus, faCar, faMotorcycle, faSquareParking, faTruck);
 
 const ParkingLot = () => {
   const parkingLots = [
@@ -79,7 +79,7 @@ const ParkingLot = () => {
                   <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
                   {lot.carSlots} &nbsp;
                   <FontAwesomeIcon
-                    icon={faBicycle}
+                    icon={faMotorcycle}
                     className={styles.icon}
                   />{" "}
                   {lot.bikeSlots} &nbsp;
