@@ -61,8 +61,8 @@ const AddParkingLot = () => {
         <div className={styles.title}>Add Parking Lot</div>
         <div className={styles.formcontent}>
           <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.formGroup}>
-            <span>Parking Details: </span>
+            <div className={styles.formGroupi}>
+              <span>Parking Details: </span>
               <input
                 type="text"
                 placeholder="Parking Lot Name"
@@ -70,7 +70,8 @@ const AddParkingLot = () => {
                 value={formData.name}
                 onChange={handleChange}
                 className={styles.input}
-              /><br/>
+              />
+              <br />
               <span>Parking capacity Details: </span>
               <input
                 type="number"
@@ -82,7 +83,7 @@ const AddParkingLot = () => {
               />
               <input
                 type="number"
-                placeholder="Two-Wheeler Capacity"
+                placeholder="Three-Wheeler Capacity"
                 name="twCapacity"
                 value={formData.twCapacity}
                 onChange={handleChange}
@@ -104,9 +105,8 @@ const AddParkingLot = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
-            </div>
-            <div className={styles.formGroup}>
-            <span>Parking Address Details: </span>
+              <br />
+              <span>Parking Address Details: </span>
               <input
                 type="text"
                 placeholder="Address No"
@@ -148,13 +148,29 @@ const AddParkingLot = () => {
                 className={styles.input}
               />
             </div>
-                    
+
+            <div className={styles.formGroupii}>
+              <div className={styles.formGrouppic}>
+                <span>Drawn parking lot sketch: </span>
+                <input type="file" accept="image/*" multiple name="skectch" />
+                <br />
+                <span>Add Pictures of the parking lot: </span>
+                <input type="file" accept="image/*" multiple name="images" />
+                <br />
+
+                <span>Mark location on the map: </span>
+                <img src="images/map.png"/>
+              </div>
+              <div>
+                <Button
+                  label="Add Parking Lot"
+                  type="submit"
+                  icon={faSquarePlus}
+                />
+              </div>
+            </div>
           </form>
         </div>
-        <div className="mt-3">
-          <Button label="Add Parking Lot" icon={faSquarePlus} />   
-        </div>
-         
       </div>
     </Fragment>
   );

@@ -140,6 +140,7 @@
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
 .gallery img {
@@ -202,4 +203,12 @@
   color: #ffb403;
   width: 24px;
   height: 24px;
+}
+
+.card strong {
+  font-weight: bold;
+}
+
+.totalSlots {
+  opacity: 0.5; 
 }

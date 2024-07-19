@@ -143,7 +143,7 @@ const WardenDetailsPage = ({ warden }) => {
           </div>
 
           <div className={styles.logcard}>
-              <p className="font-bold">Check warden History: </p>
+              <p className="font-bold">Check Warden History: </p>
               <Button label="View"/>
           </div>
         </div>

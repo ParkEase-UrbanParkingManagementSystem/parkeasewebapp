@@ -89,11 +89,11 @@
 
 
 .statusActive {
-  color: green;
+  color: rgb(16, 147, 16);
 }
 
 .statusInactive {
-  color: red;
+  color: rgb(211, 20, 20);
 }
 
 /* cards */
