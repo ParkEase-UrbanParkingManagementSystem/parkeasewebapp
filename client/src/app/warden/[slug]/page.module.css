@@ -11,29 +11,24 @@
   color: #000000;
 }
 
-.wardendetail{
+.wardendetail {
   display: grid;
   grid-template-columns: 50% 50%;
   margin-top: 10px;
 }
 
-.profile , .assign{
+.profile {
   display: flex;
   flex-direction: column;
 }
 
-.assignlist{
-  border: 2px solid green;
-}
-
 .profileCard {
-  background-color: #fff;
+  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   display: flex;
   align-items: center;
-  /* width: 100%; */
   margin-bottom: 20px;
 }
 
@@ -49,38 +44,43 @@
   flex: 1;
 }
 
-.profileDetails h2 {
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 10px;
+.profileDetails p {
+  font-weight: bold;
 }
 
-.profileDetails p {
-  font-size: 1rem;
-  color: #666;
+.profileDetails h2 {
+  font-size: 1.25rem;
+  color: #000000;
+  margin-bottom: 10px;
 }
 
 .statusActive {
-  color: green;
+  color: white;
+  background-color: green;
+  border-radius: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 3px;
+  padding-bottom: 4px;
+  font-size: 0.75rem;
 }
 
 .statusInactive {
-  color: red;
+  color: white;
+  background-color: red;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 3px;
+  padding-bottom: 4px;
 }
 
 .detailsCard {
-  background-color: #fff;
+  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: 100%;
-  max-width: 600px;
-}
-
-.detailsCard h2 {
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 10px;
 }
 
 .detailColumns {
@@ -100,10 +100,59 @@
 .detail label {
   font-weight: bold;
   margin-bottom: 5px;
-  display: block; /* Ensures each label appears on a new line */
+  display: block; 
 }
 
 .detail p {
-  color: #666;
-  margin: 0;
+  color: rgba(0,0,0,0.65);
+}
+
+.assign {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.assigncard{
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.assignoption p{
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.salarycard{
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.row label {
+  margin-right: 10px; 
+  font-weight: bold;
+}
+
+.row p {
+  margin: 0; 
+  color: rgba(0,0,0,0.65);
+}
+
+.logcard{
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }

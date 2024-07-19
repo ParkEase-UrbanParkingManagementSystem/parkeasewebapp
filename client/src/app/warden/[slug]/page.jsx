@@ -1,13 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import styles from "./page.module.css";
 import Button from "../../../ui/button/button";
-import Dropdown from "../../../ui/dashboard/dropdown/dropdown"
+import Dropdown from "../../../ui/dashboard/dropdown/dropdown";
 
 const WardenDetailsPage = ({ warden }) => {
   // Dummy data for demonstration
   const dummyWarden = {
+    id: "103",
     name: "Saman Perera",
     age: 45,
     location: "Badulla",
@@ -24,11 +25,22 @@ const WardenDetailsPage = ({ warden }) => {
   // Use dummy data if warden prop is not provided
   warden = warden || dummyWarden;
 
+  const wardenAssigned = warden.status;
+
+  const parkingLots = [
+    "Kollupitiya Parking Lot",
+    "Bambalapitiya Parking Lot",
+    "Galle Face Parking Lot",
+    "Dehiwala Parking Lot",
+  ];
+
   return (
     <div className={styles.container}>
+      {/* 10 */}
       <div className={styles.heading}>Warden Details</div>
-
+      {/* 90 */}
       <div className={styles.wardendetail}>
+        {/* 50 */}
         <div className={styles.profile}>
           <div className={styles.profileCard}>
             <img
@@ -37,7 +49,7 @@ const WardenDetailsPage = ({ warden }) => {
               className={styles.profilePic}
             />
             <div className={styles.profileDetails}>
-              <h2>{warden.name}</h2>
+              <h2>{`W${warden.id} - ${warden.name}`}</h2>
               <p>
                 Status:{" "}
                 <span
@@ -93,13 +105,47 @@ const WardenDetailsPage = ({ warden }) => {
             </div>
           </div>
         </div>
+        {/* 50 */}
         <div className={styles.assign}>
-          <div className={styles.assignlist}>
-            <div className="text-xl ml-6">Assign to a Parking Slot :</div>
-            <Dropdown options={["Area_1", "Area_2", "Area_3", "Area_4"]} className="ml-6"/>
-            <Button label="Assign" />
+          <div className={styles.assigncard}>
+            {wardenAssigned === "Assigned" ? (
+              <div className={styles.assignoption}>
+                <p>Change the current parking lot:</p>
+                <Dropdown options={parkingLots} />
+                <Button label="Change" />
+              </div>
+            ) : (
+              <div className={styles.assignoption}>
+                <p>Assign to a parking slot:</p>
+                <Dropdown options={parkingLots} />
+                <Button label="Assign" />
+              </div>
+            )}
           </div>
-          <div>rest</div>
+
+          <div className={styles.salarycard}>
+            <div className={styles.row}>
+              <label>Daily Covered Target: </label>
+              <p>45 vehicles</p>
+            </div>
+            <div className={styles.row}>
+              <label>Daily Earning: </label>
+              <p>900 Rupees</p>
+            </div>
+            <div className={styles.row}>
+              <label>Monthly salary: </label>
+              <p>8000 Rupees</p>
+            </div>
+            <div className={styles.row}>
+              <label>Monthly Total Wage: </label>
+              <p>26,000 Rupees</p>
+            </div>
+          </div>
+
+          <div className={styles.logcard}>
+              <p className="font-bold">Check warden History: </p>
+              <Button label="View"/>
+          </div>
         </div>
       </div>
     </div>
