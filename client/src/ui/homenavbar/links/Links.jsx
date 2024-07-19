@@ -11,16 +11,12 @@ title: "Home",
 path: "/",
 },
 {
-title: "About",
-path: "/about",
-},
-{
-title: "Contact",
+title: "Contact Us",
 path: "/contact",
 },
 {
-title: "Admin",
-path: "/admin",
+title: "Get Started",
+path: "/register",
 },
 ];
 
