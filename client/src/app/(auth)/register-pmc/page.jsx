@@ -8,10 +8,8 @@ import Image from "next/image";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
-  const [nic, setNic] = useState("");
-  const [contact, setContact] = useState("");
+  const [name, setName] = useState("");
+  const [regNo, setRegNo] = useState(""); // New state for registration number
   const [addressNo, setAddressNo] = useState(""); // New state for address number
   const [street1, setStreet1] = useState(""); // New state for street 1
   const [street2, setStreet2] = useState(""); // New state for street 2
@@ -24,9 +22,9 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const body = { email, password, fname, lname, nic, contact, addressNo, street1, street2, city, district };
+      const body = { email, password, name, regNo, addressNo, street1, street2, city, district };
 
-      const response = await fetch(`http://localhost:5000/auth/registerDriver`, {
+      const response = await fetch(`http://localhost:5000/auth/registerPMC`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -74,7 +72,7 @@ const Register = () => {
         <div className={styles.right}>
           <div className={styles.center}>
             <div className="float-left py-3">
-              <h1 className="text-center text-3xl font-extrabold">User Registration</h1>
+              <h1 className="text-center text-3xl font-extrabold">Register</h1>
             </div>
 
             <div>
@@ -97,38 +95,19 @@ const Register = () => {
                 />
                 <input
                   type="text"
-                  placeholder="First Name"
-                  name="fname"
+                  placeholder="Name"
+                  name="name"
                   className="form-control my-3 w-96"
-                  value={fname}
-                  onChange={(e) => setFname(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
-               
-               <input
-                  type="text"
-                  placeholder="Last Name"
-                  name="lname"
-                  className="form-control my-3 w-96"
-                  value={lname}
-                  onChange={(e) => setLname(e.target.value)}
-                />
-
                 <input
                   type="text"
-                  placeholder="NIC Number"
-                  name="nic"
+                  placeholder="Business Registration Number"
+                  name="regNo"
                   className="form-control my-3 w-96"
-                  value={nic}
-                  onChange={(e) => setNic(e.target.value)}
-                />
-
-                <input
-                  type="text"
-                  placeholder="Contact Number"
-                  name="contact"
-                  className="form-control my-3 w-96"
-                  value={contact}
-                  onChange={(e) => setContact(e.target.value)}
+                  value={regNo}
+                  onChange={(e) => setRegNo(e.target.value)}
                 />
 
                 <div>
