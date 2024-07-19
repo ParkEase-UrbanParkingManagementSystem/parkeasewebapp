@@ -139,12 +139,36 @@ const ParkingSlotDetail = ({ parkinglot }) => {
           </div>
         </div>
         {/* 50 */}
+
         <div className={styles.lotpics}>
+          <div className={styles.slotcardcontainer}>
+            <p>Occupied Slots: (right now)</p>
+            <div className={styles.slotcard}>
+              <div className={styles.card}>
+                <FontAwesomeIcon icon={faCar} className={styles.icon} />
+                &nbsp; <strong>{parkinglot.occupiedCarSlots}</strong>:
+                <span className={styles.totalSlots}>{parkinglot.carSlots}</span>
+              </div>
+              <div className={styles.card}>
+                <FontAwesomeIcon icon={faMotorcycle} className={styles.icon} />
+                &nbsp; <strong>{parkinglot.occupiedBikeSlots}</strong>:
+                <span className={styles.totalSlots}>
+                  {parkinglot.bikeSlots}
+                </span>
+              </div>
+              <div className={styles.card}>
+                <FontAwesomeIcon icon={faTruck} className={styles.icon} />
+                &nbsp; <strong>{parkinglot.occupiedLorrySlots}</strong>:
+                <span className={styles.totalSlots}>
+                  {parkinglot.lorrySlots}
+                </span>
+              </div>
+            </div>
+          </div>
           <div className={styles.picscard}>
-            <p>Add More Pictures:</p>
+            <p>Add More Location Pictures:</p>
             <div className={styles.galleryContainer}>
               <div className={styles.gallery}>
-                <img src="/images/parking-lot.jpg" />
                 <img src="/images/parking-lot.jpg" />
                 <img src="/images/parking-lot.jpg" />
                 <img src="/images/parking-lot.jpg" />
@@ -156,14 +180,9 @@ const ParkingSlotDetail = ({ parkinglot }) => {
                 />
               </div>
             </div>
-          </div>
-          <div className={styles.slotcardcontainer}>
-            <p>Occupied Slots: (right now)</p>
-            <div className={styles.slotcard}>
-              <div className={styles.card}><FontAwesomeIcon icon={faCar} className={styles.icon}/> &nbsp; {parkinglot.occupiedCarSlots}:{parkinglot.carSlots}</div>
-              <div className={styles.card}><FontAwesomeIcon icon={faMotorcycle} className={styles.icon}/> &nbsp; {parkinglot.occupiedBikeSlots}:{parkinglot.bikeSlots}</div>
-              <div className={styles.card}><FontAwesomeIcon icon={faTruck} className={styles.icon}/> &nbsp; {parkinglot.occupiedLorrySlots}:{parkinglot.lorrySlots}</div>
-            </div>
+            <p>Parking Lot Location Sketch:</p>
+
+            <img src="/images/lot.png" className="w-72" />
           </div>
         </div>
       </div>
