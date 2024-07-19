@@ -1,25 +1,24 @@
-// app/login/page.jsx
-
-// Mark this component as a Client Component
 "use client";
-import styles from "./login.module.css";
 
+import styles from "./login.module.css";
 import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation"; // Importing Next.js router for navigation
 import Image from "next/image";
+// Correctly importing jwt-decode
+import Link from "next/link"; // Importing Link from next/link for client-side navigation
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter(); // Using Next.js router
 
-  
-
   const onSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form submitted");
 
     try {
       const body = { email, password };
+      console.log("Sending request with body:", body);
 
       const response = await fetch(`http://localhost:5000/auth/login`, {
         method: "POST",
@@ -28,21 +27,33 @@ const Login = () => {
       });
 
       const parseRes = await response.json();
+      console.log("Response:", parseRes); // Debugging response
 
       if (parseRes.token) {
+        console.log("Received token:", parseRes.token); // Debugging received token
         localStorage.setItem("token", parseRes.token);
-        router.push("/dashboard"); // Navigate to a dashboard or home page after login
+
+        const role_id = parseRes.role_id;
+        console.log("Role ID:", role_id); // Debugging decoded token
+        
+
+        if (role_id === 2) {
+          router.push("/dashboard"); // Navigate to dashboard for role 2
+        } else if (role_id === 1) {
+          router.push("/home"); // Navigate to home for role 1
+        } else {
+          alert("Successful login but unknown role");
+        }
       } else {
         alert("Login failed, please check your credentials.");
       }
     } catch (err) {
-      console.error(err.message);
+      console.error("Error during login:", err.message);
     }
   };
 
   return (
     <Fragment>
-      
       <div className={styles.login_container}>
         <div className={styles.left}>
           <div className="m-3">
@@ -55,7 +66,7 @@ const Login = () => {
             ></Image>
           </div>
           <div className="text-4xl text-white tracking-widest m-5">
-            Your Gateway to Hassle - free parking
+            Your Gateway to Hassle-free parking
           </div>
           <div className="justify-self-center">
             <Image
@@ -91,7 +102,7 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
                 />
-                <button className={styles.button}>
+                <button type="submit" className={styles.button}>
                   Login
                 </button>
               </form>
@@ -100,11 +111,14 @@ const Login = () => {
             <div className="text-center mt-3">
               <p>
                 Don't have an account?{" "}
+
+             
+
                 <a href="/users" className="text-blue-500">
+
                   Register
-                </a>
+                </Link>
               </p>
-              {/* Using <a> for navigation */}
             </div>
           </div>
         </div>
