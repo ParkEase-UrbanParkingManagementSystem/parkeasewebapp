@@ -17,9 +17,10 @@ module.exports = async (req, res, next) => {
 
         // Attach the user ID from the token payload to the request object
         req.user = payload.user;
+        req.role = payload.role;
 
-        
-        
+        console.log("User ID:", req.user);
+        console.log("User Role:", req.role);
 
         next();
     } catch (err) {
