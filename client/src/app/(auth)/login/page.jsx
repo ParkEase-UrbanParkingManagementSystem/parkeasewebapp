@@ -115,7 +115,7 @@ const Login = () => {
                 <a href="/select-user" className="text-blue-600">
 
                   Register
-                </Link>
+                </a>
               </p>
             </div>
           </div>
