@@ -17,13 +17,12 @@
   margin-top: 10px;
 }
 
-.profiledetail{
+.profiledetail {
   display: flex;
   flex-direction: column;
 }
 
 .header {
-  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -81,11 +80,10 @@
 
 .headerDescription {
   padding-top: 20px;
-  color: rgba(0,0,0,0.65);
+  color: rgba(0, 0, 0, 0.65);
 }
 
 .details {
-  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -111,10 +109,97 @@
 }
 
 .detail p {
-  color: rgba(0,0,0,0.65);
+  color: rgba(0, 0, 0, 0.65);
 }
 
-.tw{
+.tw {
   display: flex;
   align-items: center;
+}
+
+.lotpics {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.picscard {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.picscard p {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.galleryContainer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.gallery img {
+  margin-right: 16px;
+  flex-shrink: 0;
+  width: 6rem;
+  height: 6rem;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.gallerysquare {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  padding: 4px;
+  width: 5rem;
+  border: dashed 2px rgba(0, 0, 0, 0.35);
+}
+
+.gallerysquare:hover {
+  border: dashed 2px rgba(0, 0, 0, 1);
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.slotcardcontainer p {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.slotcardcontainer {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.slotcard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.card{
+  padding: 15px;
+  width: 33%;
+  font-size: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon{
+  color: #ffb403;
+  width: 24px;
+  height: 24px;
 }

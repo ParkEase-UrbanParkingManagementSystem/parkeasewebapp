@@ -8,6 +8,7 @@ import {
   faMotorcycle,
   faClock,
   faTruck,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
@@ -22,7 +23,8 @@ const ParkingSlotDetail = ({ parkinglot }) => {
     bikeSlots: 20,
     lorrySlots: 10,
     occupiedCarSlots: 15, // Example: Currently occupied slots
-    occupiedBikeSlots: 5, // Example: Currently occupied slots
+    occupiedBikeSlots: 5,
+    occupiedLorrySlots: 3, // Example: Currently occupied slots
     carPricePerHour: "70 LKR",
     bikePricePerHour: "30 LKR",
     lorryPricePerHour: "100 LKR",
@@ -137,7 +139,33 @@ const ParkingSlotDetail = ({ parkinglot }) => {
           </div>
         </div>
         {/* 50 */}
-        <div>rest</div>
+        <div className={styles.lotpics}>
+          <div className={styles.picscard}>
+            <p>Add More Pictures:</p>
+            <div className={styles.galleryContainer}>
+              <div className={styles.gallery}>
+                <img src="/images/parking-lot.jpg" />
+                <img src="/images/parking-lot.jpg" />
+                <img src="/images/parking-lot.jpg" />
+                <img src="/images/parking-lot.jpg" />
+              </div>
+              <div className={styles.gallerysquare}>
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  className="w-16 h-16 opacity-10"
+                />
+              </div>
+            </div>
+          </div>
+          <div className={styles.slotcardcontainer}>
+            <p>Occupied Slots: (right now)</p>
+            <div className={styles.slotcard}>
+              <div className={styles.card}><FontAwesomeIcon icon={faCar} className={styles.icon}/> &nbsp; {parkinglot.occupiedCarSlots}:{parkinglot.carSlots}</div>
+              <div className={styles.card}><FontAwesomeIcon icon={faMotorcycle} className={styles.icon}/> &nbsp; {parkinglot.occupiedBikeSlots}:{parkinglot.bikeSlots}</div>
+              <div className={styles.card}><FontAwesomeIcon icon={faTruck} className={styles.icon}/> &nbsp; {parkinglot.occupiedLorrySlots}:{parkinglot.lorrySlots}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
