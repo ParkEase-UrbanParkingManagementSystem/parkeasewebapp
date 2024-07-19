@@ -22,7 +22,17 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const body = { email, password, name, regNo, addressNo, street1, street2, city, district };
+      const body = {
+        email,
+        password,
+        name,
+        regNo,
+        addressNo,
+        street1,
+        street2,
+        city,
+        district,
+      };
 
       const response = await fetch(`http://localhost:5000/auth/registerPMC`, {
         method: "POST",
@@ -71,52 +81,53 @@ const Register = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.center}>
-            <div className="float-left py-3">
-              <h1 className="text-center text-3xl font-extrabold">Register</h1>
+            <div className="float-left pb-3">
+              <h1 className="text-center text-3xl font-extrabold">
+                Registration
+              </h1>
             </div>
 
             <div>
               <form type="submit" onSubmit={onSubmitForm}>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  name="email"
-                  className="form-control my-3 w-96"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  name="password"
-                  className="form-control my-3 w-96"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="Name"
-                  name="name"
-                  className="form-control my-3 w-96"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="Business Registration Number"
-                  name="regNo"
-                  className="form-control my-3 w-96"
-                  value={regNo}
-                  onChange={(e) => setRegNo(e.target.value)}
-                />
-
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    name="email"
+                    className="form-control my-2 w-96"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    className="form-control my-2 w-96"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    name="name"
+                    className="form-control my-2 w-96"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Business Registration Number"
+                    name="regNo"
+                    className="form-control my-2 w-96"
+                    value={regNo}
+                    onChange={(e) => setRegNo(e.target.value)}
+                  /><br/>
                 <div>
-                  <h2>Address Details:</h2>
+                  <h2 className="text-bold">Address Details:</h2>
                   <input
                     type="text"
                     placeholder="Address No"
                     name="addressNo"
-                    className="form-control my-3 w-96"
+                    className="form-control my-2 w-96"
                     value={addressNo}
                     onChange={(e) => setAddressNo(e.target.value)}
                   />
@@ -124,7 +135,7 @@ const Register = () => {
                     type="text"
                     placeholder="Street 1"
                     name="street1"
-                    className="form-control my-3 w-96"
+                    className="form-control my-2 w-96"
                     value={street1}
                     onChange={(e) => setStreet1(e.target.value)}
                   />
@@ -132,7 +143,7 @@ const Register = () => {
                     type="text"
                     placeholder="Street 2"
                     name="street2"
-                    className="form-control my-3 w-96"
+                    className="form-control my-2 w-96"
                     value={street2}
                     onChange={(e) => setStreet2(e.target.value)}
                   />
@@ -140,7 +151,7 @@ const Register = () => {
                     type="text"
                     placeholder="City"
                     name="city"
-                    className="form-control my-3 w-96"
+                    className="form-control my-2 w-96"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                   />
@@ -148,22 +159,20 @@ const Register = () => {
                     type="text"
                     placeholder="District"
                     name="district"
-                    className="form-control my-3 w-96"
+                    className="form-control my-2 w-96"
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
                   />
                 </div>
 
-                <button className={styles.button}>
-                  Register
-                </button>
+                <button className={styles.button}>Register</button>
               </form>
             </div>
 
             <div className="text-center mt-3">
               <p>
                 Already have an account?{" "}
-                <Link href="/login" className="text-blue-500">
+                <Link href="/login" className="text-blue-600">
                   Login
                 </Link>
               </p>

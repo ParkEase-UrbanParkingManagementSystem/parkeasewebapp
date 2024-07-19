@@ -73,8 +73,8 @@ const Register = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.center}>
-            <div className="float-left py-3">
-              <h1 className="text-center text-3xl font-extrabold">User Registration</h1>
+            <div className="float-left pb-3">
+              <h1 className="text-center text-3xl font-extrabold">Registration</h1>
             </div>
 
             <div>
@@ -83,7 +83,7 @@ const Register = () => {
                   type="email"
                   placeholder="Email"
                   name="email"
-                  className="form-control my-3 w-96"
+                  className="form-control my-2 w-96"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -91,7 +91,7 @@ const Register = () => {
                   type="password"
                   placeholder="Password"
                   name="password"
-                  className="form-control my-3 w-96"
+                  className="form-control my-2 w-96"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -99,7 +99,7 @@ const Register = () => {
                   type="text"
                   placeholder="First Name"
                   name="fname"
-                  className="form-control my-3 w-96"
+                  className="form-control my-2 w-96"
                   value={fname}
                   onChange={(e) => setFname(e.target.value)}
                 />
@@ -108,7 +108,7 @@ const Register = () => {
                   type="text"
                   placeholder="Last Name"
                   name="lname"
-                  className="form-control my-3 w-96"
+                  className="form-control my-2 w-96"
                   value={lname}
                   onChange={(e) => setLname(e.target.value)}
                 />
@@ -117,7 +117,7 @@ const Register = () => {
                   type="text"
                   placeholder="NIC Number"
                   name="nic"
-                  className="form-control my-3 w-96"
+                  className="form-control my-2 w-96"
                   value={nic}
                   onChange={(e) => setNic(e.target.value)}
                 />
@@ -126,10 +126,10 @@ const Register = () => {
                   type="text"
                   placeholder="Contact Number"
                   name="contact"
-                  className="form-control my-3 w-96"
+                  className="form-control my-2 w-96"
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
-                />
+                /><br/>
 
                 <div>
                   <h2>Address Details:</h2>
@@ -137,7 +137,7 @@ const Register = () => {
                     type="text"
                     placeholder="Address No"
                     name="addressNo"
-                    className="form-control my-3 w-96"
+                    className="form-control my-2 w-96"
                     value={addressNo}
                     onChange={(e) => setAddressNo(e.target.value)}
                   />
@@ -145,7 +145,7 @@ const Register = () => {
                     type="text"
                     placeholder="Street 1"
                     name="street1"
-                    className="form-control my-3 w-96"
+                    className="form-control my-2 w-96"
                     value={street1}
                     onChange={(e) => setStreet1(e.target.value)}
                   />
@@ -153,7 +153,7 @@ const Register = () => {
                     type="text"
                     placeholder="Street 2"
                     name="street2"
-                    className="form-control my-3 w-96"
+                    className="form-control my-2 w-96"
                     value={street2}
                     onChange={(e) => setStreet2(e.target.value)}
                   />
@@ -161,7 +161,7 @@ const Register = () => {
                     type="text"
                     placeholder="City"
                     name="city"
-                    className="form-control my-3 w-96"
+                    className="form-control my-2 w-96"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                   />
@@ -169,7 +169,7 @@ const Register = () => {
                     type="text"
                     placeholder="District"
                     name="district"
-                    className="form-control my-3 w-96"
+                    className="form-control my-2 w-96"
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
                   />
@@ -184,7 +184,7 @@ const Register = () => {
             <div className="text-center mt-3">
               <p>
                 Already have an account?{" "}
-                <Link href="/login" className="text-blue-500">
+                <Link href="/login" className="text-blue-600">
                   Login
                 </Link>
               </p>

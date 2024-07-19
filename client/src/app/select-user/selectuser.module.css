@@ -1,9 +1,70 @@
-.container{
+.container {
+  display: grid;
+  grid-template-rows: 5% 95%;
+  /* padding: 50px; */
+  height: 100vh;
+  background-color: black;
+}
+
+.users{
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 50px;
-    background-color: rgba(255, 180, 3, 1);
+    gap: 150px;
 }
 
+.driver {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 180, 3, 1);
+  width: 30%;
+  padding: 30px;
+  border-radius: 15px;
+  --tw-shadow: 0 6px 50px 3px rgba(255, 255, 255, 0.5);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #ffffff),
+    var(--tw-ring-shadow, 0 0 #ffffff), var(--tw-shadow);
+  height: 55%;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.pmc {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 180, 3, 1);
+  width: 30%;
+  --tw-shadow: 0 6px 50px 3px rgba(255, 255, 255, 0.5);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #ffffff),
+    var(--tw-ring-shadow, 0 0 #ffffff), var(--tw-shadow);
+  padding: 30px;
+  border-radius: 15px;
+  height: 55%;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.userpic {
+  width: 200px;
+  height: 200px;
+}
+
+.title {
+  font-size: xx-large;
+  font-weight: 600;
+  color: black;
+  text-align: center;
+}
+
+.pmc:hover {
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+
+.driver:hover {
+  background-color: white;
+  cursor: pointer;
+}
