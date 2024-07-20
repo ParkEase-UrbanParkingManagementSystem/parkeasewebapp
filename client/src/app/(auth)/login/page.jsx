@@ -40,7 +40,7 @@ const Login = () => {
         if (role_id === 2) {
           router.push("/dashboard"); // Navigate to dashboard for role 2
         } else if (role_id === 1) {
-          router.push("/home"); // Navigate to home for role 1
+          router.push("/driver"); // Navigate to home for role 1
         } else {
           alert("Successful login but unknown role");
         }
@@ -117,7 +117,7 @@ const Login = () => {
                 <a href="/users" className="text-blue-500">
 
                   Register
-                </Link>
+                </a>
               </p>
             </div>
           </div>
