@@ -37,7 +37,7 @@ const DriverSearch = () => {
             <p className='text-[20px] font-bold'>Find Parking</p>
             <InputItem type='source'/>
             <InputItem type='destination'/>
-            <button className='p-3 w-full mt-5 text-white rounded-lg' style={{ backgroundColor: '#ffb403' }}
+            <button className='p-2 w-full mt-3 text-white rounded-lg' style={{ backgroundColor: '#ffb403' }}
             onClick={()=>calculateDistance()}
             >Search</button>
         </div>

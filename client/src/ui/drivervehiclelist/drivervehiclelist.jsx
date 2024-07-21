@@ -9,8 +9,8 @@ const DriverVehicleList = () => {
     // const router = useRouter();
 
     return (
-        <div className='mt-3 p-5 overflow-auto h-[250px]'>
-            <h2 className='text-[22px] font-bold'>Choose your ride</h2>
+        <div className='mt-2 p-2 overflow-auto h-[250px] border-[2px] rounded-xl '>
+            <h2 className='text-[20px] font-bold items-center'>Choose your ride</h2>
             {VehicleListData.map((item, index) => (
                 <div
                     key={index}
