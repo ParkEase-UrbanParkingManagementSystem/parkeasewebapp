@@ -34,14 +34,14 @@ const DriverSearch = () => {
     return(
         <div>
         <div className='p-2 md:pd-6 border-[2px] rounded-xl'>
-            <p className='text-[20px] font-bold'>Find Parking</p>
+            <p className='text-[20px] font-bold'>Want to go somewhere and park?</p>
             <InputItem type='source'/>
             <InputItem type='destination'/>
             <button className='p-2 w-full mt-3 text-white rounded-lg' style={{ backgroundColor: '#ffb403' }}
             onClick={()=>calculateDistance()}
             >Search</button>
         </div>
-        {distance?<DriverVehicleList />:null}
+        <DriverVehicleList />
         </div>
         
     );

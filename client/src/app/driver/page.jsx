@@ -8,86 +8,69 @@ import { useState, useEffect } from "react";
 import { SourceContext } from '@/context/SourceContext';
 import { DestinationContext } from '@/context/DestinationContext';
 import { LoadScript } from "@react-google-maps/api";
-import {useRouter} from "next/navigation";
-import { useAuth } from '@/utils/authContext'; // Ensure you import useAuth
+import { useRouter } from "next/navigation";
+import { useAuth } from '@/utils/authContext';
 import QRCode from 'qrcode.react';
 
-
-
-// export const metadata = {
-// title: "Park with Ease",
-// description: "Drivers",
-// };
-
-
-
 const DriverPage = () => {
-
     const [userDetails, setUserDetails] = useState(null);
     const router = useRouter();
 
-    useEffect(()=>{
+    useEffect(() => {
         const fetchUserDetails = async () => {
             const token = localStorage.getItem("token");
 
             try {
-                const response = await fetch ("http://localhost:5000/driver/details", {
+                const response = await fetch("http://localhost:5000/driver/details", {
                     method: "GET",
                     headers: {
-                        "Content-Type" : "application/json",
-                        token:token
+                        "Content-Type": "application/json",
+                        token: token
                     }
                 });
 
                 const parseRes = await response.json();
 
-                if(response.ok){
+                if (response.ok) {
                     setUserDetails(parseRes.data);
-                    
-                }else{
+                } else {
                     console.error("Can't get the details");
                 }
-                
             } catch (error) {
                 console.log(error.message);
             }
         };
-        
-        fetchUserDetails();
-        
-    }, [router])
 
-    const [source, setSource]=useState([]);
-    const [destination, setDestination]=useState([]);
+        fetchUserDetails();
+    }, [router]);
+
+    const [source, setSource] = useState([]);
+    const [destination, setDestination] = useState([]);
 
     return (
-        <SourceContext.Provider value={{source, setSource}}>
-            <DestinationContext.Provider value={{destination, setDestination}}>
+        <SourceContext.Provider value={{ source, setSource }}>
+            <DestinationContext.Provider value={{ destination, setDestination }}>
                 <div>
                     <Navbar />
-
-                    
-                    <LoadScript 
-                    libraries={['places']}
-                    googleMapsApiKey={"AIzaSyAQzkKKubDkwzdBGhdUWrPoiQEuOzxpH4M"}>
-                    <div className='p-6 grid grid-cols-1 md:grid-cols-3 gap-5 ' >
-                        <div className="">
-                        <div className="p-1 mb-3 text-2xl font-bold">
-                                 Hello {userDetails?.driver?.lname},
+                    <LoadScript
+                        libraries={['places']}
+                        googleMapsApiKey={"AIzaSyAQzkKKubDkwzdBGhdUWrPoiQEuOzxpH4M"}>
+                        <div className='p-6 grid grid-cols-1 md:grid-cols-3 gap-5 '>
+                            <div className="">
+                                <div className="p-1 mb-3 text-2xl font-bold">
+                                    Hello {userDetails?.driver?.lname},
+                                </div>
+                                <DriverSearch />
+                            </div>
+                            <div className='cols-span-2 p-2 '>
+                                <GoogleMapSection />
+                            </div>
                         </div>
-
-                            <DriverSearch />
-                        </div>
-                        <div className='cols-span-2 p-2 '>
-                            <GoogleMapSection />
-                        </div>
-                    </div>
                     </LoadScript>
                 </div>
             </DestinationContext.Provider>
         </SourceContext.Provider>
-     
-);
+    );
 };
 
 export default DriverPage;
