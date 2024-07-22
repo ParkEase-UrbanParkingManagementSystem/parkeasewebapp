@@ -11,6 +11,7 @@ const useAuth = () => {
 
   async function isAuth() {
     try {
+      console.log("Is auth eka ayewef diwwa")
       const token = localStorage.getItem('token');
       if (!token) {
         setIsAuthenticated(false);

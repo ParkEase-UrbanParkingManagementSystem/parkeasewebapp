@@ -4,47 +4,73 @@
 import Navbar from "@/ui/homenavbar/homenavbar";
 import DriverSearch from "@/ui/driversearch/driversearch";
 import GoogleMapSection from "@/ui/googlemapsection/googlemapsection";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SourceContext } from '@/context/SourceContext';
 import { DestinationContext } from '@/context/DestinationContext';
 import { LoadScript } from "@react-google-maps/api";
-import RangeSelect from "@/ui/rangeselect/rangeselect";
-
-
-// export const metadata = {
-// title: "Park with Ease",
-// description: "Drivers",
-// };
+import { useRouter } from "next/navigation";
+import { useAuth } from '@/utils/authContext';
+import QRCode from 'qrcode.react';
 
 const DriverPage = () => {
+    const [userDetails, setUserDetails] = useState(null);
+    const router = useRouter();
 
-    const [source, setSource]=useState([]);
-    const [destination, setDestination]=useState([]);
+    useEffect(() => {
+        const fetchUserDetails = async () => {
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch("http://localhost:5000/driver/details", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        token: token
+                    }
+                });
+
+                const parseRes = await response.json();
+
+                if (response.ok) {
+                    setUserDetails(parseRes.data);
+                } else {
+                    console.error("Can't get the details");
+                }
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+
+        fetchUserDetails();
+    }, [router]);
+
+    const [source, setSource] = useState([]);
+    const [destination, setDestination] = useState([]);
 
     return (
-        <SourceContext.Provider value={{source, setSource}}>
-            <DestinationContext.Provider value={{destination, setDestination}}>
+        <SourceContext.Provider value={{ source, setSource }}>
+            <DestinationContext.Provider value={{ destination, setDestination }}>
                 <div>
                     <Navbar />
-                    <LoadScript 
-                    libraries={['places']}
-                    googleMapsApiKey={"AIzaSyAQzkKKubDkwzdBGhdUWrPoiQEuOzxpH4M"}>
-                    <div className='p-6 grid grid-cols-1 md:grid-cols-3 gap-5'>
-                        <div>
-                            <DriverSearch />
-                            <RangeSelect />
+                    <LoadScript
+                        libraries={['places']}
+                        googleMapsApiKey={"AIzaSyAQzkKKubDkwzdBGhdUWrPoiQEuOzxpH4M"}>
+                        <div className='p-6 grid grid-cols-1 md:grid-cols-3 gap-5 '>
+                            <div className="">
+                                <div className="p-1 mb-3 text-2xl font-bold">
+                                    Hello {userDetails?.driver?.lname},
+                                </div>
+                                <DriverSearch />
+                            </div>
+                            <div className='cols-span-2 p-2 '>
+                                <GoogleMapSection />
+                            </div>
                         </div>
-                        <div className='cols-span-2'>
-                            <GoogleMapSection />
-                        </div>
-                    </div>
                     </LoadScript>
                 </div>
             </DestinationContext.Provider>
         </SourceContext.Provider>
-    
-    
-);
+    );
 };
 
 export default DriverPage;
