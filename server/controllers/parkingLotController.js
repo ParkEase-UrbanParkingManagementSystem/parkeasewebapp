@@ -1,15 +1,17 @@
-const pool  = require('../db'); // Adjust the path as needed
+const pool = require("../db"); // Adjust the path as needed
 
 exports.parkingLotAdd = async (req, res) => {
-    
   const client = await pool.connect();
   try {
     const pmc_pmc_user_id = req.user;
 
-    const pmcQuery = await pool.query('SELECT pmc_id FROM pmc WHERE pmc_user_id = $1', [pmc_pmc_user_id]);
+    const pmcQuery = await pool.query(
+      "SELECT pmc_id FROM pmc WHERE pmc_user_id = $1",
+      [pmc_pmc_user_id]
+    );
 
     const pmc_id = pmcQuery.rows[0].pmc_id;
-    
+
     const {
       name,
       bikeCapacity,
@@ -20,7 +22,7 @@ exports.parkingLotAdd = async (req, res) => {
       street1,
       street2,
       city,
-      district
+      district,
     } = req.body;
 
     const insertQuery = `
@@ -40,7 +42,7 @@ exports.parkingLotAdd = async (req, res) => {
       street1,
       street2,
       city,
-      district
+      district,
     ];
 
     const result = await client.query(insertQuery, values);
@@ -54,25 +56,48 @@ exports.parkingLotAdd = async (req, res) => {
   }
 };
 
-
 exports.getParkingLot = async (req, res) => {
+  // Connect to the database
   const client = await pool.connect();
+  
   try {
-    const parkingLotId = req.params.id; // Assuming the parking lot ID is provided as a URL parameter
-
-    const query = 'SELECT * FROM parking_lot WHERE id = $1';
-    const result = await client.query(query, [parkingLotId]);
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Parking lot not found" });
+    // Assuming the pmc_id is provided in the request body
+    const pmcId = req.user;
+    
+    // Check if pmc_id is provided
+    if (!pmcId) {
+      return res.status(400).json({ error: "PMC ID is required" });
     }
-
-    res.status(200).json(result.rows[0]);
+    
+    // Query to get parking lots controlled by the PMC user and the assigned warden name
+    const query = `
+      SELECT 
+        pl.name, 
+        pl.bike_capacity, 
+        pl.car_capacity, 
+        pl.xlvehicle_capacity,
+        wp.name
+      FROM parking_lot pl
+      LEFT JOIN warden_parking_lot wp ON pl.lot_id = wp.lot_id
+      WHERE pl.pmc_id = $1
+    `;
+    
+    // Execute the query
+    const result = await client.query(query, [pmcId]);
+    
+    // Check if any parking lots are found
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No parking lots found for this PMC" });
+    }
+    
+    // Return the parking lot details with the assigned warden name
+    res.status(200).json(result.rows);
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   } finally {
+    // Release the database client
     client.release();
   }
 };
-

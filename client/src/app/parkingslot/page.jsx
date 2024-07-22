@@ -59,9 +59,9 @@ const ParkingLot = () => {
   }, []);
 
   // Render loading state or handle empty wardens array case
-  if (parkingLots.length === 0) {
-    return <p>Loading...</p>; // or any other loading indicator
-  }
+  // if (parkingLots.length === 0) {
+  //   return <p>Loading...</p>; // or any other loading indicator
+  // }
   const title = ["Occupied Slots", "Remaining Slots"];
   const amount = ["10%", "30%"];
 

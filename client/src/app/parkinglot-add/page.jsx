@@ -150,7 +150,7 @@ const AddParkingLot = () => {
             </div>
 
             <div className={styles.formGroupii}>
-              <div className={styles.formGrouppic}>
+              {/* <div className={styles.formGrouppic}>
                 <span>Drawn parking lot sketch: </span>
                 <input type="file" accept="image/*" multiple name="skectch" />
                 <br />
@@ -160,7 +160,7 @@ const AddParkingLot = () => {
 
                 <span>Mark location on the map: </span>
                 <img src="images/map.png"/>
-              </div>
+              </div> */}
               <div>
                 <Button
                   label="Add Parking Lot"
