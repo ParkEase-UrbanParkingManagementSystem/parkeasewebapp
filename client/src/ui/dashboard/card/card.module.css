@@ -8,6 +8,7 @@
   padding: 16px;
   margin-right: 20px;
   margin-left: 20px;
+  overflow: hidden;
 }
 
 .icon {
@@ -23,6 +24,9 @@
   font-size: 2.2rem;
   line-height: 2.5rem;
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .title{

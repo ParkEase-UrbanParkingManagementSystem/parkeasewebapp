@@ -3,11 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Import from 'next/navigation'
 import styles from "./profile.module.css";
-import Image from "next/image";
-import Card from "../../ui/card/verticalcard/card";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import Button from "../../ui/button/button"
 
 library.add(faPen);
 
@@ -54,47 +51,45 @@ const Profile = () => {
     return <div>Loading...</div>; // Show a loading state while fetching data
   }
 
-  const cardItems1 = [
-    
-    { title: "Company Name:", content: `${pmcDetails.pmc.name}` },
-    { title: "Email Address:", content: `${pmcDetails.user.email}` },
-    { title: "Last Accessed Time:", content: "12.30pm 0n 12th July 2024" },
-  ];
-
-  const cardItems2 = [
-    { title: "Business Registration Number:", content: `${pmcDetails.pmc.regno}` },
-    // { title: "Contact Number:", content: "071 466 7655" },
-    {
-      title: "Company Address:",
-      content: `${pmcDetails.user.addressno}, ${pmcDetails.user.street_1}, ${pmcDetails.user.street_2}, ${pmcDetails.user.city}`
-    },
-    { title: "District:", content: `${pmcDetails.user.province}` }
-  ];
-
   return (
     <div className={styles.container}>
-      <div className={styles.imagecontainer}>
-      <div className={styles.imgcnt}>
-        <Image
-          className={styles.userimage}
-          src="/images/user.jpg"
-          width="130"
-          height="130"
-        />
-        </div>
-        <p>{pmcDetails.pmc.name} Parking Management Company</p>
-      </div>
-      <Button label="Edit Profile" icon={faPen}/>
-      <div className="flex">
-        <div className="w-1/2">
-          <Card items={cardItems1} />
+      <div className={styles.profile}>
+        <div className={styles.profileCard}>
+          <img className={styles.profilePic} src="/images/user.jpg" />
+          <div className={styles.profileDetails}>
+            <h2>{pmcDetails.pmc.name} Parking Management Company</h2>
+          </div>
         </div>
 
-        <div className="w-1/2">
-          <Card items={cardItems2} />
+        <div className={styles.detailsCard}>
+          <div className={styles.detailColumns}>
+            <div className={styles.detailColumn}>
+              <div className={styles.detail}>
+                <label>Company Name:</label>
+                <p>{pmcDetails.pmc.name}</p>
+              </div>
+              <div className={styles.detail}>
+                <label>Email Address:</label>
+                <p>{pmcDetails.user.email}</p>
+              </div>
+              <div className={styles.detail}>
+                <label>Last Accessed Time:</label>
+                <p>12.30pm 0n 12th July 2024</p>
+              </div>
+            </div>
+            <div className={styles.detailColumn}>
+              <div className={styles.detail}>
+                <label>Business Registration Number:</label>
+                <p>{pmcDetails.pmc.regno}</p>
+              </div>
+              <div className={styles.detail}>
+                <label>Company Address:</label>
+                <p>{`${pmcDetails.user.addressno}, ${pmcDetails.user.street_1}, ${pmcDetails.user.street_2}, ${pmcDetails.user.city}, ${pmcDetails.user.province}`}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      
     </div>
   );
 };
