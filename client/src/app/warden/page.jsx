@@ -90,26 +90,24 @@ const WardenPage = () => {
           </thead>
           <tbody>
             {wardens.map((warden) => (
-              <tr key={warden.id}>
+              <tr key={warden.warden_id}>
                 <td className={styles.empnamedata}>
-                  <Link href={`/warden/${warden.id}`}>
+                  <Link href={`/warden/${warden.warden_id}`}>
                     <div className={styles.link}>{`${warden.fname} ${warden.lname}`}</div>
                   </Link>
                 </td>
                 <td className={styles.empgenderdata}>{warden.gender}</td>
                 <td className={styles.empagedata}>{warden.age}</td>
                 <td className={styles.empcontactdata}>{warden.contact}</td>
-                <td className={styles.empcontactdata}>Not Assigned</td>
-
-                {/* <td
+                <td
                   className={
-                    warden.assignedSlot === "Not yet assigned"
+                    warden.isassigned === "Not yet assigned"
                       ? styles.empslotdatafree
                       : styles.empslotdata
                   }
                 >
-                  {warden.assignedSlot}
-                </td> */}
+                  {warden.isassigned}
+                </td>
               </tr>
             ))}
           </tbody>

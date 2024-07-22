@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./selectuser.module.css";
 import Image from "next/image";
+import Link from "next/link";
 
 function Users() {
   return (
@@ -14,12 +15,17 @@ function Users() {
       ></Image>
       <div className={styles.users}>
         <div className={styles.driver}>
-          <img src="images/driver user.png" className={styles.userpic} />
-          <h1 className={styles.title}>Driver</h1>
+          <Link href="/register">
+            <img src="images/driver user.png" className={styles.userpic} />
+            <h1 className={styles.title}>Driver</h1>
+          </Link>
         </div>
+
         <div className={styles.pmc}>
-          <img src="images/office-building.png" width={160} height={160} />
-          <h1 className={styles.title}>Parking Management Company</h1>
+          <Link href="/register-pmc">
+            <img src="images/office-building.png" className={styles.userpic} />
+            <h1 className={styles.title}>Parking Management Company</h1>
+          </Link>
         </div>
       </div>
     </div>
