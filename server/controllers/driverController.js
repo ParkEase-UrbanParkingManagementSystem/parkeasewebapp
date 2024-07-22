@@ -20,7 +20,7 @@ exports.getDriverDetails = async (req, res) => {
                 user: userDetails.rows[0]
             }
 
-            console.log(combinedDetails);
+            // console.log(combinedDetails);
 
             res.status(200).json({
                 message: "Success",

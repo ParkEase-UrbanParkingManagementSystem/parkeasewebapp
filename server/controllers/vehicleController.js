@@ -15,7 +15,6 @@ const getVehicles = async (req,res) => {
         
         const driver_id = driverDetails.row[0];
         
-        console.log(driver_id);
 
         //Query to get driver details
 
