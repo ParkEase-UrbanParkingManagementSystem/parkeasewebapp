@@ -13,9 +13,10 @@ const getVehicles = async (req,res) => {
             return res.status(404).json({message: "Driver not found for this user"});
         }    
         
-        const driver_id = driverDetails.row[0];
-        
+        const driver_id = driverDetails.rows[0].driver_id;
 
+        console.log("Hello");
+        
         //Query to get driver details
 
         const result = await pool.query(
