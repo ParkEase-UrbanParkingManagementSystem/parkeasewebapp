@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import VehicleListItem from '@/ui/vehiclelistitem/vehiclelistitem';
 import QRCode from 'qrcode.react';
+import Image from 'next/image';
 
 const DriverVehicleList = () => {
     const [vehicles, setVehicles] = useState([]);  // Initialize as an empty array
@@ -98,6 +99,21 @@ const DriverVehicleList = () => {
             {!showAddVehicleForm && (
                 <>
                     <h2 className='text-[20px] font-bold items-center'>Choose your ride</h2>
+
+                    {vehicles.length === 0 && 
+
+                    <div className='flex flex-col items-center justify-center'>
+                        <Image 
+                        src={"/images/car.png"} 
+                        width={80} 
+                        height={100} 
+                        alt={`image`} 
+                    />
+                    <p className='mb-3'>No Vehicles added. Please add a vehicle
+                    </p>
+                    </div>
+                    }
+
                     {vehicles.map((item, index) => (
                         <div
                             key={index}
