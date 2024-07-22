@@ -80,8 +80,9 @@ const Login = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.center}>
-            <div className="float-left py-10">
-              <h1 className="text-center text-3xl font-extrabold">Log In</h1>
+            <div className="float-left py-7">
+              <h1 className="text-3xl font-extrabold mb-4">Welcome !</h1>
+              <h1 className="text-2xl font-extrabold">Log In</h1>
             </div>
 
             <div>
@@ -111,10 +112,7 @@ const Login = () => {
             <div className="text-center mt-3">
               <p>
                 Don't have an account?{" "}
-
-             
-
-                <a href="/users" className="text-blue-500">
+                <a href="/select-user" className="text-blue-600">
 
                   Register
                 </a>

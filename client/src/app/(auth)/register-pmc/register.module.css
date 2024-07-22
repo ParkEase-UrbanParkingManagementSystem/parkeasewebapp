@@ -1,47 +1,45 @@
 .register_container {
-    display: grid;
-    grid-template-columns: 50% 50%;
-    height: 100vh;
-    background-color: #000000;
-  }
-  
-  .left {
-    display: grid;
-    grid-template-rows: 5% 20% 75%;
-    height: 100vh;
-  }
-  
-  .right {
-    /* flex: 5; */
-    border-top-left-radius: 7%;
-    border-bottom-left-radius: 7%;
-    background-color: white;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .center {
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .image {
-      z-index: 10;
-  }
+  display: grid;
+  grid-template-columns: 50% 50%;
+  height: 100vh;
+  background-color: #000000;
+}
 
-  
-.button{
+.left {
+  display: grid;
+  grid-template-rows: 5% 20% 75%;
+  height: 100vh;
+  border-top-right-radius: 7%;
+  border-bottom-right-radius: 7%;
+}
+
+.right {
+  /* flex: 5; */
+  background-color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.image {
+  z-index: 10;
+}
+
+.button {
   display: block;
   width: 100%;
   background-color: rgba(255, 180, 3, 1);
-  padding: 5px;
+  padding: 7px;
   border-radius: 5px;
 }
 
-.button:hover{
+.button:hover {
   background-color: black;
   color: white;
 }
-  
