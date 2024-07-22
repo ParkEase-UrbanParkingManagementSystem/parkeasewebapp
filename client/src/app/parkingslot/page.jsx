@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./parkingSlot.module.css";
 import Button from "../../ui/button/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,25 +18,50 @@ import Card from "../../ui/card/horizontalcard/card";
 library.add(faSquarePlus, faCar, faMotorcycle, faSquareParking, faTruck);
 
 const ParkingLot = () => {
-  const parkingLots = [
-    {
-      name: "Koswatta Parking Slot",
-      assignedWarden: "Nimal Athapattu",
-      carSlots: 10,
-      bikeSlots: 5,
-      lorrySlots: 4,
-      status: "Active",
-    },
-    {
-      name: "Moratuwa Parking Slot",
-      assignedWarden: "Kusal Mendis",
-      carSlots: 55,
-      bikeSlots: 15,
-      lorrySlots: 5,
-      status: "Inactive",
-    },
-    // Add more dummy data as needed
-  ];
+  const [parkingLots, setparkingLots] = useState([]);
+
+  useEffect(() => {
+    async function fetchParkingLots() {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        Router.push("/login");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5000/parkingslot", {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+            token: token,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch Parking Lots");
+        }
+
+        const data = await response.json();
+
+        if (Array.isArray(data.data)) {
+          setparkingLots(data.data);
+        } else {
+          throw new Error("Data received is not in expected format");
+        }
+      } catch (error) {
+        console.error("Error fetching Parking Lots:", error);
+        // Handle error (e.g., show error message)
+      }
+    }
+
+    fetchParkingLots();
+  }, []);
+
+  // Render loading state or handle empty wardens array case
+  if (parkingLots.length === 0) {
+    return <p>Loading...</p>; // or any other loading indicator
+  }
   const title = ["Occupied Slots", "Remaining Slots"];
   const amount = ["10%", "30%"];
 
@@ -67,27 +92,27 @@ const ParkingLot = () => {
             </tr>
           </thead>
           <tbody>
-            {parkingLots.map((lot, index) => (
-              <tr key={index}>
+            {parkingLots.map((lot) => (
+              <tr key={lot.lot_id}>
                 <td className={styles.empiddata}>
-                <Link href={`/parkingslot/${index}`}>
-                    <div className={styles.link}>{`${lot.name}`}</div>
+                  <Link href={`/parkingslot/${lot.lot_id}`}>
+                    <div className={styles.link}>{lot.name}</div>
                   </Link>
-                </td>               
+                </td>
                 <td className={styles.empnamedata}>{lot.assignedWarden}</td>
                 <td className={styles.empgenderdata}>
                   <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
-                  {lot.carSlots} &nbsp;
+                  {lot.car_capacity} &nbsp;
                   <FontAwesomeIcon
                     icon={faMotorcycle}
                     className={styles.icon}
                   />{" "}
-                  {lot.bikeSlots} &nbsp;
+                  {lot.bike_capacity} &nbsp;
                   <FontAwesomeIcon
                     icon={faTruck}
                     className={styles.icon}
                   />{" "}
-                  {lot.lorrySlots}
+                  {lot.xlvehicle_capacity}
                 </td>
                 <td
                   className={
