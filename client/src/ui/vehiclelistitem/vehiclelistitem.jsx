@@ -4,7 +4,7 @@ import Image from 'next/image'
 const VehicleListItem = ({vehicle}) => {
     return(
         <div>
-            <div className='flex items-center justify-between mt-5'>
+            <div className='flex items-center justify-between mt-2 border-t border-b'>
                 <div className='flex items-center gap-5'>
                     <Image src={vehicle.image} 
                     width={100} height={100}/>
