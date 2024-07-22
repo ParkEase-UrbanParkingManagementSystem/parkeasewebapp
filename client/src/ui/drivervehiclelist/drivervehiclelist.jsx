@@ -57,7 +57,7 @@ const DriverVehicleList = () => {
                     ))}
 
                     <button
-                        className='mt-3 p-2 bg-blue-500 text-white rounded-lg'
+                        className='mt-3 p-2 bg-yellow-500 w-full text-white rounded-lg'
                         onClick={handleOpenAddVehicleForm}
                     >
                         Add Vehicle
@@ -66,44 +66,44 @@ const DriverVehicleList = () => {
             )}
 
             {showAddVehicleForm && (
-                <div className='bg-white p-5 rounded-lg'>
-                    <h2 className='text-2xl mb-4'>Add New Vehicle</h2>
-                    <div className='mb-3'>
+                <div className='bg-white p-5 pt-2 pb-2 rounded-lg'>
+                    {/* <h2 className='text-xl mb-2 font-bold'>Add New Vehicle</h2> */}
+                    <div className='mb-1'>
                         <label className='block mb-1'>Vehicle Name</label>
                         <input
                             type='text'
-                            className='border p-2 w-full'
+                            className='border p-2 w-full rounded-xl'
                             value={newVehicle.name}
                             onChange={(e) => setNewVehicle({ ...newVehicle, name: e.target.value })}
                         />
                     </div>
-                    <div className='mb-3'>
+                    <div className='mb-1'>
                         <label className='block mb-1'>Vehicle Type</label>
                         <input
                             type='text'
-                            className='border p-2 w-full'
+                            className='border p-2 w-full rounded-xl'
                             value={newVehicle.type}
                             onChange={(e) => setNewVehicle({ ...newVehicle, type: e.target.value })}
                         />
                     </div>
-                    <div className='mb-3'>
+                    <div className='mb-1'>
                         <label className='block mb-1'>Vehicle Number</label>
                         <input
                             type='text'
-                            className='border p-2 w-full'
+                            className='border p-2 w-full rounded-xl'
                             value={newVehicle.number}
                             onChange={(e) => setNewVehicle({ ...newVehicle, number: e.target.value })}
                         />
                     </div>
                     <div className='flex justify-end'>
                         <button
-                            className='p-2 bg-red-500 text-white rounded-lg mr-2'
+                            className='p-2 bg-black text-white rounded-lg mr-2'
                             onClick={handleCloseAddVehicleForm}
                         >
                             Cancel
                         </button>
                         <button
-                            className='p-2 bg-green-500 text-white rounded-lg'
+                            className='p-2 bg-yellow-500 text-white rounded-lg'
                             onClick={handleAddVehicle}
                         >
                             Add Vehicle
