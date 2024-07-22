@@ -15,6 +15,7 @@ app.use("/auth", require("./routes/jwtAuth"));
 app.use("/wardens", require("./routes/wardens"));
 app.use("/pmc", require("./routes/pmcRoutes"));
 app.use("/parkinglots", require("./routes/parkingLotRoutes"))
+app.use("/driver", require('./routes/driverRoutes'));
 
 // //Dashboard route
 
