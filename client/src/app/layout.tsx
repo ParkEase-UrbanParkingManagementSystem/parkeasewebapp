@@ -1,11 +1,11 @@
 "use client"; // Marks this file as a Client Component
 
-import { Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import { AuthProvider, useAuth } from "../utils/authContext"; // Ensure useAuth is exported from authContext
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Montserrat({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,

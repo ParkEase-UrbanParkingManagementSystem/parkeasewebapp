@@ -8,6 +8,7 @@ import { useState } from "react";
 import { SourceContext } from '@/context/SourceContext';
 import { DestinationContext } from '@/context/DestinationContext';
 import { LoadScript } from "@react-google-maps/api";
+import RangeSelect from "@/ui/rangeselect/rangeselect";
 
 
 // export const metadata = {
@@ -31,6 +32,7 @@ const DriverPage = () => {
                     <div className='p-6 grid grid-cols-1 md:grid-cols-3 gap-5'>
                         <div>
                             <DriverSearch />
+                            <RangeSelect />
                         </div>
                         <div className='cols-span-2'>
                             <GoogleMapSection />
