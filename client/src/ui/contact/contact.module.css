@@ -1,0 +1,119 @@
+.primary-button {
+padding: 0.9rem 1.75rem;
+background-color: white;
+outline: none;
+border: none;
+border-radius: 5rem;
+font-size: 1.1rem;
+cursor: pointer;
+font-weight: 600;
+transition: 0.2s;
+}
+.primary-button:hover {
+background-color: rgb(234, 234, 234);
+}
+.primary-heading {
+font-size: clamp(2rem, 5vw, 4rem);
+color: #ffffff;
+line-height: 5rem;
+max-width: 600px;
+font-weight: bold;
+}
+.primary-text {
+font-size: clamp(1rem, 3vw, 1.5rem);
+max-width: 500px;
+color: #f1e3e3;
+margin: 1.5rem 0rem;
+}
+.secondary-button {
+padding: 1rem 2.5rem;
+background-color: #fe9e0d;
+outline: none;
+border: none;
+border-radius: 5rem;
+font-size: 1.1rem;
+cursor: pointer;
+font-weight: 600;
+color: white;
+transition: 0.2s;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.secondary-button svg {
+margin-left: 0.75rem;
+font-size: 1.5rem;
+}
+.secondary-button:hover {
+background-color: #e48f0f;
+}
+.primary-subheading {
+font-weight: 700;
+color: #fe9e0d;
+font-size: 1.15rem;
+}
+.contact-page-wrapper h1 {
+max-width: 900px !important;
+}
+.contact-page-wrapper {
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+margin: 6rem 0rem;
+}
+.contact-form-container {
+background-color: white;
+max-width: 700px;
+width: 100%;
+margin-top: 3rem;
+display: flex;
+align-items: center;
+padding: 1rem;
+border-radius: 5rem;
+}
+.contact-form-container input {
+flex: 1;
+height: 100%;
+border: none;
+outline: none;
+font-size: 1.3rem;
+padding: 0.5rem 1rem;
+}
+@media (max-width: 1000px) {
+.primary-button {
+    font-size: 1rem;
+}
+}
+@media (max-width: 800px) {
+.primary-heading {
+    text-align: center;
+    max-width: 90%;
+}
+.primary-text {
+    text-align: center;
+    max-width: 80%;
+}
+.secondary-button {
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    cursor: pointer;
+}
+.primary-subheading {
+    text-align: center;
+}
+.contact-form-container {
+    padding: 0.5rem !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem !important;
+}
+.contact-form-container input {
+    font-size: 1rem !important;
+    max-width: 100%;
+    padding: 0.5rem 1rem !important;
+    margin-bottom: 0.8rem !important;
+    text-align: center;
+}
+}

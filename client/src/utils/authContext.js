@@ -2,7 +2,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Loading from '../ui/loading/loading'; // Import the Loading component
 
 const AuthContext = createContext(null);
@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true); // Loading state to handle the async check
   const router = useRouter();
+  const pathname = usePathname();
 
   const setAuth = (isAuth) => {
     setIsAuthenticated(isAuth);
@@ -18,16 +19,17 @@ export const AuthProvider = ({ children }) => {
 
   async function isAuth() {
     try {
+      
       const token = localStorage.getItem('token');
       if (!token) {
         setIsAuthenticated(false);
         setLoading(false);
         return;
       }
-
+      
       const response = await fetch("http://localhost:5000/auth/is-verify", {
         method: "GET",
-        headers: {baduwa: token }
+        headers: {token: token }
       });
 
       const parseRes = await response.json();
@@ -45,11 +47,17 @@ export const AuthProvider = ({ children }) => {
   },[]);
 
  
-  // useEffect(() => {
-  //   if (!loading && !isAuthenticated) {
-  //     router.push('/login'); // Redirect to login if not authenticated and loading is complete
-  //   }
-  // }, [isAuthenticated, loading, router]);
+  useEffect(() => {
+    if (!loading && 
+      !isAuthenticated && 
+      pathname !== '/' && 
+      pathname !== '/select-user' && 
+      pathname !== '/register-pmc' && 
+      pathname!== '/register' ) {
+
+      router.push('/login'); // Redirect to login if not authenticated and loading is complete
+    }
+  }, [isAuthenticated, loading, router]);
 
   if (loading) {
     return <Loading />; // You can add a better loading UI here

@@ -5,9 +5,9 @@ import { DestinationContext } from "@/context/DestinationContext";
 
 const GoogleMapSection = () => {
 const containerStyle = {
-    width: '1050px',
+    width: '920px',
     // width: '100%',
-    height: window.innerWidth*0.45
+    height: window.innerWidth*0.35
 };
 
 const [center, setCenter] = useState({

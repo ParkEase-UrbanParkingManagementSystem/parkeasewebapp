@@ -67,3 +67,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Reem Kufi", sans-serif !important;
+} */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  /* background-color: #0d0d0d; */
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 90px;
+}

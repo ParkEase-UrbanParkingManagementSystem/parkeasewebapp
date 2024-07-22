@@ -46,7 +46,7 @@ const InputItem = ({type}) => {
         }
 
     return(
-        <div className='bg-slate-200 p-3 rounded-lg mt-3
+        <div className='bg-slate-200 p-3 pt-1 pb-1 rounded-lg mt-3
         flex items-center gap-4'>
             <Image src={type=='source'?'/images/target.png':'/images/target.png'} width={15} height={15}/>
             <GooglePlacesAutocomplete 
