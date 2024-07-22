@@ -1,39 +1,29 @@
 import React from "react";
 import styles from "./selectuser.module.css";
 import Image from "next/image";
-import Link from 'next/link';
-
 
 function Users() {
   return (
     <div className={styles.container}>
-
       <Image
         src="/images/Group 1782.png"
         alt="Description of the image"
         width={160}
         height={160}
         className="m-3"
-      />
-
+      ></Image>
       <div className={styles.users}>
-        <Link href="/register" className={styles.driver}>
-          <div>
-            <img src="images/driver user.png" className={styles.userpic} />
-            <h1 className={styles.title}>Driver</h1>
-          </div>
-        </Link>
-        
-        <Link href="/register-pmc" className={styles.pmc}>
-          <div>
-            <img src="images/office-building.png" width={160} height={160} />
-            <h1 className={styles.title}>Parking Management Company</h1>
-          </div>
-        </Link>
+        <div className={styles.driver}>
+          <img src="images/driver user.png" className={styles.userpic} />
+          <h1 className={styles.title}>Driver</h1>
+        </div>
+        <div className={styles.pmc}>
+          <img src="images/office-building.png" width={160} height={160} />
+          <h1 className={styles.title}>Parking Management Company</h1>
+        </div>
       </div>
-
     </div>
   );
 }
 
-export default Users;
+export default Users
