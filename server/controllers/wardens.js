@@ -71,27 +71,35 @@ exports.getWardens = async (req, res) => {
 
 
 
-exports.getWardenDetails = async (req,res) => {
-    try {
-        const { id } = req.params;
+exports.getWardenDetails = async (req, res) => {
+  const { id } = req.params;
 
-        //Query to get the relevant warden details
-        const result = await pool.query("SELECT * FROM warden WHERE user_id = $1",[id])
+  if (!id) {
+      return res.status(400).json({ message: 'Warden ID is required' });
+  }
 
-        //If there are no matches
-        if(result.rows.length === 0){
+  try {
+      const wardenQuery = `
+          SELECT warden.*, users.*
+          FROM warden
+          JOIN users ON warden.user_id = users.user_id
+          WHERE warden.warden_id = $1
+      `;
 
-        return res.status(404).json({message: "No warden details available"});
+      const { rows } = await pool.query(wardenQuery, [id]);
 
-        }
+      if (rows.length === 0) {
+          return res.status(404).json({ message: 'Warden not found' });
+      }
 
-        //Send the warden details for the frontEnd
-        res.status(200).json(result.rows);
-
-    } catch (error) {
-        console.error("Error fetching the warden's details", error);
-        res.status(500).json({message: "Server Error"})
-    }
+      const warden = rows[0];
+      res.status(200).json(warden);
+  } catch (error) {
+      console.error('Error fetching warden details:', error);
+      if (!res.headersSent) {
+          res.status(500).json({ message: 'Internal Server Error' });
+      }
+  }
 }
 
 exports.registerWarden = async (req, res) => {
