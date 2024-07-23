@@ -16,8 +16,8 @@ const links = [
     path: "/contact",
   },
   {
-    title: "Get Started",
-    path: "/register",
+    title: "Last Visited",
+    path: "/last-visited",
   },
 ];
 
