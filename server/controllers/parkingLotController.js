@@ -120,31 +120,42 @@ exports.getParkingLotDetails = async (req, res) => {
   try {
     const user_id = req.user;
 
+    const pmcID = await pool.query(`SELECT pmc_id FROM pmc WHERE user_id= $1`, [user_id]);
+
+    const PMC_ID = pmcID.rows[0].pmc_id;
+
     const parkinglotDetails = await pool.query(
       `SELECT * FROM parking_lot WHERE pmc_id = $1`,
-      [user_id]
+      [PMC_ID]
     );
+    
+    if (parkinglotDetails.rows.length === 0) {
+      return res.status(404).json({ msg: "Parking Lot details not found" });
+    }
 
     const wardenID = await pool.query(
       `SELECT wp.warden_id
        FROM warden_parking_lot wp
        INNER JOIN parking_lot pl ON pl.lot_id = wp.lot_id
        WHERE pl.pmc_id = $1`,
-      [user_id]
+      [PMC_ID]
     );
 
-    const warden_ID = wardenID.rows[0].warden_id;
+    let wardenDetails = { rows: [] };
 
-    const wardenDetails = await pool.query(`SELECT fname, lname FROM warden WHERE warden_id = $1,`[warden_ID]);
+    if (wardenID.rows.length > 0) {
+      const warden_ID = wardenID.rows[0].warden_id;
+      wardenDetails = await pool.query(
+        `SELECT fname, lname FROM warden WHERE warden_id = $1`,
+        [warden_ID]
+      );
+    }
 
     const slotPrices = await pool.query("SELECT * FROM slot_price");
 
-    if (parkinglotDetails.rows.length === 0) {
-      return res.status(404).json({ msg: "Parking Lot details not found" });
-    }
-
     const combinedDetails = parkinglotDetails.rows.map((lot) => {
-      const warden = wardenDetails.rows.find((w) => w.lot_id === lot.lot_id);
+      const warden =
+        wardenDetails.rows.length > 0 ? wardenDetails.rows[0] : null;
       return {
         lot,
         warden,

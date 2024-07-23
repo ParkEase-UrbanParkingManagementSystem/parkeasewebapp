@@ -1,4 +1,4 @@
-"use client"; // Ensure this component is a client-side component
+"use client";
 
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
@@ -29,13 +29,16 @@ const ParkingSlotDetail = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:5000/parkinglots/details", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-        });
+        const response = await fetch(
+          "http://localhost:5000/parkinglots/details",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              token: token,
+            },
+          }
+        );
 
         const parseRes = await response.json();
 
@@ -52,9 +55,9 @@ const ParkingSlotDetail = () => {
     fetchParkingLotDetails();
   }, [router]);
 
-  // if (!parkingLotDetails) {
-  //   return <div>Loading...</div>; // Show a loading state while fetching data
-  // }
+  if (!parkingLotDetails) {
+    return <div>Loading...</div>; // Show a loading state while fetching data
+  }
 
   return (
     <div className={styles.container}>
@@ -94,13 +97,18 @@ const ParkingSlotDetail = () => {
                 <div className={styles.detailColumn}>
                   <div className={styles.detail}>
                     <label>Assigned Warden</label>
-                    <p>{`${parkinglot.warden.fname} ${parkinglot.warden.lname}`}</p>
+                    {parkinglot.warden ? (
+                      <p>{`${parkinglot.warden.fname} ${parkinglot.warden.lname}`}</p>
+                    ) : (
+                      <p>No Warden Assigned</p>
+                    )}
                   </div>
                   <div className={styles.detail}>
                     <label>Number of Slots</label>
                     <p>Total : {parkinglot.lot.full_capacity}</p>
                     <p>
-                      <FontAwesomeIcon icon={faCar} /> {parkinglot.lot.car_capacity}
+                      <FontAwesomeIcon icon={faCar} />{" "}
+                      {parkinglot.lot.car_capacity}
                     </p>
                     <p>
                       <FontAwesomeIcon icon={faMotorcycle} />{" "}
@@ -117,17 +125,20 @@ const ParkingSlotDetail = () => {
                       <p key={i}>
                         {slot.type === "bike" && (
                           <>
-                            <FontAwesomeIcon icon={faMotorcycle} /> {slot.amount_per_slot}
+                            <FontAwesomeIcon icon={faMotorcycle} />{" "}
+                            {slot.amount_per_slot}
                           </>
                         )}
                         {slot.type === "car" && (
                           <>
-                            <FontAwesomeIcon icon={faCar} /> {slot.amount_per_slot}
+                            <FontAwesomeIcon icon={faCar} />{" "}
+                            {slot.amount_per_slot}
                           </>
                         )}
                         {slot.type === "lorry" && (
                           <>
-                            <FontAwesomeIcon icon={faTruck} /> {slot.amount_per_slot}
+                            <FontAwesomeIcon icon={faTruck} />{" "}
+                            {slot.amount_per_slot}
                           </>
                         )}
                         {slot.type === "tw" && (
@@ -152,7 +163,7 @@ const ParkingSlotDetail = () => {
                   </div>
                   <div className={styles.detail}>
                     <label>Address</label>
-                    <p>{`${parkinglot.lot.addressno}, ${parkinglot.lot.street_1}, ${parkinglot.lot.street_2}, ${parkinglot.lot.city}, ${parkinglot.lot.district}`}</p>
+                    <p>{`${parkinglot.lot.addressno}, ${parkinglot.lot.street_1}, ${parkinglot.lot.street_2}, ${parkinglot.lot.city}, ${parkinglot.lot.district}`}.</p>
                   </div>
                 </div>
               </div>
@@ -165,20 +176,25 @@ const ParkingSlotDetail = () => {
                 <div className={styles.card}>
                   <FontAwesomeIcon icon={faCar} className={styles.icon} />
                   &nbsp; <strong>5</strong>:
-                  <span className={styles.totalSlots}>{parkinglot.lot.car_capacity}</span>
+                  <span className={styles.totalSlots}>
+                    {parkinglot.lot.car_capacity}
+                  </span>
                 </div>
                 <div className={styles.card}>
-                  <FontAwesomeIcon icon={faMotorcycle} className={styles.icon} />
+                  <FontAwesomeIcon
+                    icon={faMotorcycle}
+                    className={styles.icon}
+                  />
                   &nbsp; <strong>6</strong>:
                   <span className={styles.totalSlots}>
-                  {parkinglot.lot.bike_capacity}
+                    {parkinglot.lot.bike_capacity}
                   </span>
                 </div>
                 <div className={styles.card}>
                   <FontAwesomeIcon icon={faTruck} className={styles.icon} />
                   &nbsp; <strong>7</strong>:
                   <span className={styles.totalSlots}>
-                  {parkinglot.lot.xlvehicle_capacity}
+                    {parkinglot.lot.xlvehicle_capacity}
                   </span>
                 </div>
               </div>
