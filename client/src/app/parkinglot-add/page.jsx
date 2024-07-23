@@ -32,6 +32,10 @@ const AddParkingLot = () => {
 
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
 
       const response = await fetch("http://localhost:5000/parkinglots/add", {
         method: "POST",
@@ -51,7 +55,7 @@ const AddParkingLot = () => {
         console.error("Error adding parking lot", parseRes);
       }
     } catch (err) {
-      console.error(err.message);
+      console.error("Request failed", err);
     }
   };
 
@@ -150,7 +154,7 @@ const AddParkingLot = () => {
             </div>
 
             <div className={styles.formGroupii}>
-              <div className={styles.formGrouppic}>
+              {/* <div className={styles.formGrouppic}>
                 <span>Drawn parking lot sketch: </span>
                 <input type="file" accept="image/*" multiple name="skectch" />
                 <br />
@@ -160,7 +164,7 @@ const AddParkingLot = () => {
 
                 <span>Mark location on the map: </span>
                 <img src="images/map.png"/>
-              </div>
+              </div> */}
               <div>
                 <Button
                   label="Add Parking Lot"

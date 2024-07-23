@@ -8,17 +8,17 @@ import {
   faSquarePlus,
   faCar,
   faMotorcycle,
-  faSquareParking,
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import Link from "next/link";
 import Card from "../../ui/card/horizontalcard/card";
+import Router from "next/router"; // Import Router
 
-library.add(faSquarePlus, faCar, faMotorcycle, faSquareParking, faTruck);
+library.add(faSquarePlus, faCar, faMotorcycle, faTruck);
 
 const ParkingLot = () => {
-  const [parkingLots, setparkingLots] = useState([]);
+  const [parkingLots, setParkingLots] = useState([]);
 
   useEffect(() => {
     async function fetchParkingLots() {
@@ -30,7 +30,7 @@ const ParkingLot = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:5000/parkingslot", {
+        const response = await fetch("http://localhost:5000/parkinglots", {
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -44,8 +44,8 @@ const ParkingLot = () => {
 
         const data = await response.json();
 
-        if (Array.isArray(data.data)) {
-          setparkingLots(data.data);
+        if (Array.isArray(data)) {
+          setParkingLots(data);
         } else {
           throw new Error("Data received is not in expected format");
         }
@@ -58,27 +58,25 @@ const ParkingLot = () => {
     fetchParkingLots();
   }, []);
 
-  // Render loading state or handle empty wardens array case
+  // Render loading state or handle empty parking lots array case
   if (parkingLots.length === 0) {
     return <p>Loading...</p>; // or any other loading indicator
   }
-  const title = ["Occupied Slots", "Remaining Slots"];
-  const amount = ["10%", "30%"];
 
   return (
     <div className={styles.container}>
       <div className={styles.title}>Registered Parking Lots</div>
       <div className={styles.cardcontainer}>
         <div className="w-1/5">
-          <Card title={title[0]} amount={amount[0]} />
+          <Card title="Occupied Slots" amount="10%" />
         </div>
         <div className="w-1/5">
-          <Card title={title[1]} amount={amount[1]} />
+          <Card title="Remaining Slots" amount="30%" />
         </div>
       </div>
       <div>
         <Link href="/parkinglot-add">
-          <Button label="Add New Parking Lots" icon={faSquarePlus} />
+          <Button label="Add New Parking Lot" icon={faSquarePlus} />
         </Link>
       </div>
       <div className={styles.tablecontent}>
@@ -99,7 +97,10 @@ const ParkingLot = () => {
                     <div className={styles.link}>{lot.name}</div>
                   </Link>
                 </td>
-                <td className={styles.empnamedata}>{lot.assignedWarden}</td>
+                {/* <td className={styles.empnamedata}>
+                  {lot.fname} {lot.lname}
+                </td> */}
+                <td className={styles.empnamedata}>Pasindi Vindula</td>
                 <td className={styles.empgenderdata}>
                   <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
                   {lot.car_capacity} &nbsp;
@@ -114,7 +115,7 @@ const ParkingLot = () => {
                   />{" "}
                   {lot.xlvehicle_capacity}
                 </td>
-                <td
+                {/* <td
                   className={
                     lot.status === "Active"
                       ? styles.statusActive
@@ -122,7 +123,8 @@ const ParkingLot = () => {
                   }
                 >
                   {lot.status}
-                </td>
+                </td> */}
+                <td className={styles.statusInactive}>Inactive</td>
               </tr>
             ))}
           </tbody>

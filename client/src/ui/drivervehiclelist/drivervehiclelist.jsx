@@ -4,6 +4,7 @@ import QRCode from 'qrcode.react';
 import Image from 'next/image';
 
 const DriverVehicleList = () => {
+    const [driverId, setDriverId] = useState(null);
     const [vehicles, setVehicles] = useState([]);  // Initialize as an empty array
     const [activeIndex, setActiveIndex] = useState(null);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
@@ -33,6 +34,7 @@ const DriverVehicleList = () => {
                 }
 
                 const data = await response.json();
+                setDriverId(data.driver_id);
                 setVehicles(data.data || []);  // Ensure the correct data path and default to an empty array
             } catch (error) {
                 console.error(error);
@@ -188,7 +190,7 @@ const DriverVehicleList = () => {
             {selectedVehicle?.name && showQRCode && (
                 <div className='flex flex-col items-center fixed bottom-5 bg-white p-3 shadow-xl rounded-lg w-full md:w-[30%] border-[1px]'>
                     <h2 className='mb-2'>QR Code for {selectedVehicle.name}</h2>
-                    <QRCode value={`Vehicle: ${selectedVehicle.name}`} size={256} />
+                    <QRCode value={`Vehicle: ${selectedVehicle.vehicle_id}, User: ${driverId}`} size={256} />
                     <button
                         className='mt-3 p-2 bg-red-500 text-white rounded-lg'
                         onClick={handleCloseQRCode}
