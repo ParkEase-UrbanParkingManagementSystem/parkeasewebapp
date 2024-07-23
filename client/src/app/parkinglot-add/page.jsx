@@ -32,6 +32,10 @@ const AddParkingLot = () => {
 
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
 
       const response = await fetch("http://localhost:5000/parkinglots/add", {
         method: "POST",
@@ -51,7 +55,7 @@ const AddParkingLot = () => {
         console.error("Error adding parking lot", parseRes);
       }
     } catch (err) {
-      console.error(err.message);
+      console.error("Request failed", err);
     }
   };
 

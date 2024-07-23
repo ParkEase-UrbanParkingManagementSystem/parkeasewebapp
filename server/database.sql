@@ -5,7 +5,7 @@ CREATE DATABASE parkease;
 --     role_type VARCHAR(50) NOT NULL UNIQUE
 -- );
 
-CREATE TABLE "users"(
+CREATE TABLE users(
     user_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     password VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -16,7 +16,7 @@ CREATE TABLE "users"(
     province VARCHAR(100),
     isVerified BOOLEAN DEFAULT FALSE,
     verification_code VARCHAR(100),
-    role_id INT,
+    role_id INT
 );
 
 CREATE TABLE user_contactno (

@@ -5,10 +5,18 @@ exports.parkingLotAdd = async (req, res) => {
   try {
     const pmc_pmc_user_id = req.user;
 
+    if (!pmc_pmc_user_id) {
+      return res.status(400).json({ error: "User ID is missing from request" });
+    }
+
     const pmcQuery = await pool.query(
-      "SELECT pmc_id FROM pmc WHERE pmc_user_id = $1",
+      "SELECT pmc_id FROM pmc WHERE user_id = $1",
       [pmc_pmc_user_id]
     );
+
+    if (pmcQuery.rows.length === 0) {
+      return res.status(404).json({ error: "PMC ID not found" });
+    }
 
     const pmc_id = pmcQuery.rows[0].pmc_id;
 
@@ -26,7 +34,7 @@ exports.parkingLotAdd = async (req, res) => {
     } = req.body;
 
     const insertQuery = `
-      INSERT INTO parking_lot (pmc_id, name, bike_capacity, tw_capacity, car_capacity, xlvehicle_capacity, addressno, street1, street2, city, district)
+      INSERT INTO parking_lot (pmc_id, name, bike_capacity, tw_capacity, car_capacity, xlvehicle_capacity, addressno, street_1, street_2, city, district)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
       RETURNING *;
     `;
@@ -57,18 +65,26 @@ exports.parkingLotAdd = async (req, res) => {
 };
 
 exports.getParkingLot = async (req, res) => {
-  // Connect to the database
   const client = await pool.connect();
-  
+
   try {
-    // Assuming the pmc_id is provided in the request body
-    const pmcId = req.user;
-    
-    // Check if pmc_id is provided
-    if (!pmcId) {
-      return res.status(400).json({ error: "PMC ID is required" });
+    const user_id = req.user;
+
+    if (!user_id) {
+      return res.status(400).json({ error: "User ID is required" });
     }
+
+    const queryPMC = 'SELECT pmc_id FROM pmc WHERE user_id = $1';
+
+    const resultPMC = await client.query(queryPMC, [user_id]);
+
+    if (resultPMC.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const pmc_id = resultPMC.rows[0].pmc_id;
     
+
     // Query to get parking lots controlled by the PMC user and the assigned warden name
     const query = `
       SELECT 
@@ -76,28 +92,26 @@ exports.getParkingLot = async (req, res) => {
         pl.bike_capacity, 
         pl.car_capacity, 
         pl.xlvehicle_capacity,
-        wp.name
+        w.fname,
+        w.lname
       FROM parking_lot pl
-      LEFT JOIN warden_parking_lot wp ON pl.lot_id = wp.lot_id
+      LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id
+      LEFT JOIN warden w ON wpl.warden_id = w.warden_id
       WHERE pl.pmc_id = $1
     `;
-    
-    // Execute the query
-    const result = await client.query(query, [pmcId]);
-    
-    // Check if any parking lots are found
+
+    const result = await client.query(query, [pmc_id]);
+
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "No parking lots found for this PMC" });
     }
-    
-    // Return the parking lot details with the assigned warden name
+
     res.status(200).json(result.rows);
-    
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   } finally {
-    // Release the database client
     client.release();
   }
 };
+
