@@ -74,7 +74,7 @@ exports.getParkingLot = async (req, res) => {
       return res.status(400).json({ error: "User ID is required" });
     }
 
-    const queryPMC = 'SELECT pmc_id FROM pmc WHERE user_id = $1';
+    const queryPMC = "SELECT pmc_id FROM pmc WHERE user_id = $1";
 
     const resultPMC = await client.query(queryPMC, [user_id]);
 
@@ -83,7 +83,6 @@ exports.getParkingLot = async (req, res) => {
     }
 
     const pmc_id = resultPMC.rows[0].pmc_id;
-    
 
     // Query to get parking lots controlled by the PMC user and the assigned warden name
     const query = `
@@ -103,7 +102,9 @@ exports.getParkingLot = async (req, res) => {
     const result = await client.query(query, [pmc_id]);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: "No parking lots found for this PMC" });
+      return res
+        .status(404)
+        .json({ error: "No parking lots found for this PMC" });
     }
 
     res.status(200).json(result.rows);
@@ -115,3 +116,48 @@ exports.getParkingLot = async (req, res) => {
   }
 };
 
+exports.getParkingLotDetails = async (req, res) => {
+  try {
+    const user_id = req.user;
+
+    const parkinglotDetails = await pool.query(
+      `SELECT * FROM parking_lot WHERE pmc_id = $1`,
+      [user_id]
+    );
+
+    const wardenID = await pool.query(
+      `SELECT wp.warden_id
+       FROM warden_parking_lot wp
+       INNER JOIN parking_lot pl ON pl.lot_id = wp.lot_id
+       WHERE pl.pmc_id = $1`,
+      [user_id]
+    );
+
+    const warden_ID = wardenID.rows[0].warden_id;
+
+    const wardenDetails = await pool.query(`SELECT fname, lname FROM warden WHERE warden_id = $1,`[warden_ID]);
+
+    const slotPrices = await pool.query("SELECT * FROM slot_price");
+
+    if (parkinglotDetails.rows.length === 0) {
+      return res.status(404).json({ msg: "Parking Lot details not found" });
+    }
+
+    const combinedDetails = parkinglotDetails.rows.map((lot) => {
+      const warden = wardenDetails.rows.find((w) => w.lot_id === lot.lot_id);
+      return {
+        lot,
+        warden,
+        slotPrices: slotPrices.rows,
+      };
+    });
+
+    res.status(200).json({
+      message: "success",
+      data: combinedDetails,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+};

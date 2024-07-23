@@ -115,7 +115,7 @@ const ParkingLot = () => {
                   />{" "}
                   {lot.xlvehicle_capacity}
                 </td>
-                {/* <td
+                <td
                   className={
                     lot.status === "Active"
                       ? styles.statusActive
@@ -123,8 +123,8 @@ const ParkingLot = () => {
                   }
                 >
                   {lot.status}
-                </td> */}
-                <td className={styles.statusInactive}>Inactive</td>
+                </td>
+                {/* <td className={styles.statusInactive}>Inactive</td> */}
               </tr>
             ))}
           </tbody>
