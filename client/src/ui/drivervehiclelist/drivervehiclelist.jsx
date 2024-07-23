@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
-import { VehicleListData } from '@/utils/vehicleList';
+import React, { useState, useEffect } from 'react';
 import VehicleListItem from '@/ui/vehiclelistitem/vehiclelistitem';
 import QRCode from 'qrcode.react';
+import Image from 'next/image';
 
 const DriverVehicleList = () => {
-
-
-
+    const [vehicles, setVehicles] = useState([]);  // Initialize as an empty array
     const [activeIndex, setActiveIndex] = useState(null);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
     const [showQRCode, setShowQRCode] = useState(false);
@@ -16,6 +14,33 @@ const DriverVehicleList = () => {
         type: '',
         number: ''
     });
+
+    useEffect(() => {
+        const fetchVehicles = async () => {
+            try {
+                const token = localStorage.getItem("token");
+
+                const response = await fetch('http://localhost:5000/vehicle', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token:token // Use 'Authorization' instead of 'token'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch vehicles');
+                }
+
+                const data = await response.json();
+                setVehicles(data.data || []);  // Ensure the correct data path and default to an empty array
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchVehicles();
+    }, []);
 
     const handleSelectVehicle = (vehicle, index) => {
         setSelectedVehicle(vehicle);
@@ -46,8 +71,7 @@ const DriverVehicleList = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Include the authorization header if required
-                    token:token
+                    token:token  // Use 'Authorization' instead of 'token'
                 },
                 body: JSON.stringify({
                     vehicle_number: newVehicle.number,
@@ -63,7 +87,7 @@ const DriverVehicleList = () => {
             const addedVehicle = await response.json();
 
             // Update the local vehicle list
-            VehicleListData.push(addedVehicle.data);
+            setVehicles((prevVehicles) => [...prevVehicles, addedVehicle.data]);
             handleCloseAddVehicleForm();
         } catch (error) {
             console.error(error);
@@ -75,7 +99,22 @@ const DriverVehicleList = () => {
             {!showAddVehicleForm && (
                 <>
                     <h2 className='text-[20px] font-bold items-center'>Choose your ride</h2>
-                    {VehicleListData.map((item, index) => (
+
+                    {vehicles.length === 0 && 
+
+                    <div className='flex flex-col items-center justify-center'>
+                        <Image 
+                        src={"/images/car.png"} 
+                        width={80} 
+                        height={100} 
+                        alt={`image`} 
+                    />
+                    <p className='mb-3'>No Vehicles added. Please add a vehicle
+                    </p>
+                    </div>
+                    }
+
+                    {vehicles.map((item, index) => (
                         <div
                             key={index}
                             className={`cursor-pointer p-2 rounded-md border-black ${activeIndex === index ? 'border-[2px]' : ''}`}
@@ -105,16 +144,6 @@ const DriverVehicleList = () => {
                             onChange={(e) => setNewVehicle({ ...newVehicle, name: e.target.value })}
                         />
                     </div>
-                    {/* <div className='mb-1'>
-                        <label className='block mb-1'>Vehicle Type</label>
-                        <input
-                            type='text'
-                            className='border p-2 w-full rounded-xl'
-                            value={newVehicle.type}
-                            onChange={(e) => setNewVehicle({ ...newVehicle, type: e.target.value })}
-                        />
-                    </div> */}
-
                     <div className='mb-1'>
                         <label className='block mb-1'>Vehicle Type</label>
                         <select

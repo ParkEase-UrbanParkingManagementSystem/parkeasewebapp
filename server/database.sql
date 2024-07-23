@@ -1,9 +1,9 @@
 CREATE DATABASE parkease;
 
-CREATE TABLE user_role(
-    role_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    role_type VARCHAR(50) NOT NULL UNIQUE
-);
+-- CREATE TABLE user_role(
+--     role_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+--     role_type VARCHAR(50) NOT NULL UNIQUE
+-- );
 
 CREATE TABLE "users"(
     user_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -16,10 +16,7 @@ CREATE TABLE "users"(
     province VARCHAR(100),
     isVerified BOOLEAN DEFAULT FALSE,
     verification_code VARCHAR(100),
-    role_id uuid,
-    CONSTRAINT fk_role
-        FOREIGN KEY(role_id) 
-        REFERENCES user_role(role_id)
+    role_id INT,
 );
 
 CREATE TABLE user_contactno (
@@ -41,7 +38,7 @@ CREATE TABLE pmc(
         REFERENCES "users"(user_id)
 );
 
-CREATE TABLE warden(
+CREATE TABLE warden (
     warden_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     fname VARCHAR(100) NOT NULL,
     lname VARCHAR(100) NOT NULL,
@@ -50,15 +47,17 @@ CREATE TABLE warden(
     age INT,
     gender VARCHAR(10),
     registration_code VARCHAR(100),
-    user_id uuid, -- Change INT to UUID
-    PMC_id uuid, -- Ensure this matches the type in the PMC table
+    user_id uuid,
+    PMC_id uuid,
+    is_assigned BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_user_warden
-        FOREIGN KEY(user_id) 
-        REFERENCES "users"(user_id),
+        FOREIGN KEY (user_id) 
+        REFERENCES users(user_id),
     CONSTRAINT fk_PMC
-        FOREIGN KEY(PMC_id) 
+        FOREIGN KEY (PMC_id) 
         REFERENCES PMC(PMC_id)
 );
+
 
 
 CREATE TABLE driver(
@@ -85,6 +84,11 @@ CREATE TABLE parking_lot(
     XLvehicle_capacity INT,
     full_capacity INT,
     PMC_id uuid, -- Change INT to UUID
+    addressNo VARCHAR(50),
+    street_1 VARCHAR(255),
+    street_2 VARCHAR(255),
+    city VARCHAR(255),
+    district VARCHAR(255),
     CONSTRAINT fk_PMC_parking_lot
         FOREIGN KEY(PMC_id) 
         REFERENCES PMC(PMC_id)
@@ -106,35 +110,36 @@ CREATE TABLE warden_parking_lot(
 );
 
 
-CREATE TABLE vehicle_type(
-    vehicle_type_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+CREATE TABLE vehicle_type (
+    vehicle_type_id INT PRIMARY KEY,
     type_name VARCHAR(50) NOT NULL UNIQUE
 );
--- Insert multiple entries into the vehicle_type table
-INSERT INTO vehicle_type (type_name) VALUES
-('Bicycle'),
-('Bike'),
-('Bus'),
-('Car'),
-('Concrete Mixer'),
-('Container Truck'),
-('Fire Engine'),
-('Fork Lift'),
-('Jeep'),
-('Lorry'),
-('Pick Up'),
-('SUV'),
-('Tractor'),
-('TukTuk'),
-('Van');
 
-CREATE TABLE vehicle(
+-- Insert multiple entries into the vehicle_type table
+-- INSERT INTO vehicle_type (type_name) VALUES
+-- ('Bicycle'),
+-- ('Bike'),
+-- ('Bus'),
+-- ('Car'),
+-- ('Concrete Mixer'),
+-- ('Container Truck'),
+-- ('Fire Engine'),
+-- ('Fork Lift'),
+-- ('Jeep'),
+-- ('Lorry'),
+-- ('Pick Up'),
+-- ('SUV'),
+-- ('Tractor'),
+-- ('TukTuk'),
+-- ('Van');
+
+CREATE TABLE vehicle (
     vehicle_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     vehicle_number VARCHAR(20) NOT NULL UNIQUE,
     name VARCHAR(255),
-    type_id uuid, -- Change INT to UUID
+    type_id INT,
     CONSTRAINT fk_vehicle_type
-        FOREIGN KEY(type_id) 
+        FOREIGN KEY (type_id) 
         REFERENCES vehicle_type(vehicle_type_id)
 );
 
