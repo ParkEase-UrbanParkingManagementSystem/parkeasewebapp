@@ -1,6 +1,45 @@
+"use client";
 import styles from "../profile/page.module.css";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // Ensure this import is correct
 
 const Profile = () => {
+  const [userDetails, setUserDetails] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await fetch("http://localhost:5000/driver/details", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token
+          }
+        });
+
+        const parseRes = await response.json();
+
+        if (response.ok) {
+          setUserDetails(parseRes.data);
+        } else {
+          console.error("Can't get the details");
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    fetchUserDetails();
+  }, [router]);
+
+  // Handle case where userDetails is still null
+  if (!userDetails) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Profile Page</h1>
@@ -9,12 +48,11 @@ const Profile = () => {
         <div className={styles.profileCard}>
           <img src="/images/user-icon.png" alt="Profile Picture" className={styles.profilePic} />
           <div className={styles.profileInfo}>
-            <h2>John Doe</h2>
-            <p>Email: john.doe@example.com</p>
-            <p>Mobile: +1 234 567 890</p>
-            <p>Address: 123 Main St, Apt 4B, New York, NY 10001</p>
-            <p>Hometown: New York, USA</p>
-            <p>NIC: 1234-567890-1</p>
+            <h2>{`${userDetails.fname} ${userDetails.lname}`}</h2>
+            <p>Email: {userDetails.email}</p>
+            <p>Mobile: {userDetails.contact}</p>
+            <p>Address: {userDetails.addressNo}, {userDetails.street1} {userDetails.street2}, {userDetails.city}, {userDetails.district}</p>
+            <p>NIC: {userDetails.nic}</p>
           </div>
         </div>
 
@@ -22,30 +60,19 @@ const Profile = () => {
           <div className={styles.vehicleCard}>
             <h2 className={styles.cardTitle}>Vehicle Information</h2>
             <div className={styles.vehicleGrid}>
-              <div className={styles.vehicleItem}>
-                <img src="/images/tesla-model-s.jpg" alt="Tesla Model S" className={styles.vehiclePic} />
-                <div className={styles.vehicleInfo}>
-                  <p>Tesla Model S</p>
-                 
-                  <p>License Plate: ABC-1234</p>
-                </div>
-              </div>
-              <div className={styles.vehicleItem}>
-                <img src="/images/car.png" alt="BMW 3 Series" className={styles.vehiclePic} />
-                <div className={styles.vehicleInfo}>
-                  <p>BMW 3 Series</p>
-                  
-                  <p>License Plate: XYZ-5678</p>
-                </div>
-              </div>
-              <div className={styles.vehicleItem}>
-                <img src="/images/motorcycle.png" alt="Audi A4" className={styles.vehiclePic} />
-                <div className={styles.vehicleInfo}>
-                  <p>Honda JADE</p>
-                  
-                  <p>License Plate: LMN-9012</p>
-                </div>
-              </div>
+              {userDetails.vehicles && userDetails.vehicles.length > 0 ? (
+                userDetails.vehicles.map((vehicle) => (
+                  <div key={vehicle.licensePlate} className={styles.vehicleItem}>
+                    <img src={vehicle.imageUrl} alt={vehicle.model} className={styles.vehiclePic} />
+                    <div className={styles.vehicleInfo}>
+                      <p>{vehicle.model}</p>
+                      <p>License Plate: {vehicle.licensePlate}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No vehicles registered</p>
+              )}
             </div>
           </div>
         </div>

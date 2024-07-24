@@ -1,5 +1,5 @@
 // Import necessary modules and components
-"use client"
+"use client";
 
 import React, { useState, useEffect } from "react";
 import styles from "./warden.module.css";
@@ -89,27 +89,39 @@ const WardenPage = () => {
             </tr>
           </thead>
           <tbody>
-            {wardens.map((warden) => (
-              <tr key={warden.warden_id}>
-                <td className={styles.empnamedata}>
-                  <Link href={`/warden/${warden.warden_id}`}>
-                    <div className={styles.link}>{`${warden.fname} ${warden.lname}`}</div>
-                  </Link>
-                </td>
-                <td className={styles.empgenderdata}>{warden.gender}</td>
-                <td className={styles.empagedata}>{warden.age}</td>
-                <td className={styles.empcontactdata}>{warden.contact}</td>
-                <td
-                  className={
-                    warden.parking_lot_name === null
-                      ? styles.statusInactive
-                      : styles.statusActive
-                  }
-                >
-                  {warden.parking_lot_name === null ? "Not Assigned" : `${warden.parking_lot_name}`}
+            {wardens.length > 0 ? (
+              wardens.map((warden) => (
+                <tr key={warden.warden_id}>
+                  <td className={styles.empnamedata}>
+                    <Link href={`/warden/${warden.warden_id}`}>
+                      <div
+                        className={styles.link}
+                      >{`${warden.fname} ${warden.lname}`}</div>
+                    </Link>
+                  </td>
+                  <td className={styles.empgenderdata}>{warden.gender}</td>
+                  <td className={styles.empagedata}>{warden.age}</td>
+                  <td className={styles.empcontactdata}>{warden.contact}</td>
+                  <td
+                    className={
+                      warden.parking_lot_name === null
+                        ? styles.statusInactive
+                        : styles.statusActive
+                    }
+                  >
+                    {warden.parking_lot_name === null
+                      ? "Not Assigned"
+                      : `${warden.parking_lot_name}`}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className={styles.noData}>
+                  No wardens registered under this PMC
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
