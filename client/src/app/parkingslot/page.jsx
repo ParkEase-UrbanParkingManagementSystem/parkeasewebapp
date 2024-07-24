@@ -30,13 +30,16 @@ const ParkingLot = () => {
       }
 
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/parkinglots`, {
-          method: "GET",
-          headers: {
-            "Content-type": "application/json",
-            token: token,
-          },
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots`,
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+              token: token,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch Parking Lots");
@@ -90,47 +93,55 @@ const ParkingLot = () => {
             </tr>
           </thead>
           <tbody>
-            {parkingLots.map((lot) => (
-              <tr key={lot.lot_id}>
-                <td className={styles.empiddata}>
-                  <Link href={`/parkingslot/${lot.lot_id}`}>
-                    <div className={styles.link}>{lot.name}</div>
-                  </Link>
-                </td>
-                <td className={styles.empnamedata}>
-                  {lot.wardens && lot.wardens.trim()
-                    ? lot.wardens
-                    : "Not yet assigned"}
-                </td>
-                <td className={styles.empgenderdata}>
-                  <div className={styles.iconContainer}>
-                    <FontAwesomeIcon icon={faCar} className={styles.icon} />
-                    {lot.car_capacity} &nbsp;&nbsp;
-                    <FontAwesomeIcon
-                      icon={faMotorcycle}
-                      className={styles.icon}
-                    />
-                    {lot.bike_capacity} &nbsp;&nbsp;
-                    <FontAwesomeIcon icon={faTruck} className={styles.icon} />
-                    {lot.xlvehicle_capacity} &nbsp;&nbsp;
-                    <img
-                      src="/images/tuk-tuk.png"
-                      className={`${styles.icon} w-6 h-5 mr-1`}
-                    />
-                    {lot.tw_capacity}
-                  </div>
-                </td>
-                <td
-                  className={
-                    lot.status === "Active"
-                      ? styles.statusActive
-                      : styles.statusInactive
-                  }
-                >
-                  {lot.status}
+            {parkingLots.length > 0 ? (
+              parkingLots.map((lot) => (
+                <tr key={lot.lot_id}>
+                  <td className={styles.empiddata}>
+                    <Link href={`/parkingslot/${lot.lot_id}`}>
+                      <div className={styles.link}>{lot.name}</div>
+                    </Link>
+                  </td>
+                  <td className={styles.empnamedata}>
+                    {lot.wardens && lot.wardens.trim()
+                      ? lot.wardens
+                      : "Not yet assigned"}
+                  </td>
+                  <td className={styles.empgenderdata}>
+                    <div className={styles.iconContainer}>
+                      <FontAwesomeIcon icon={faCar} className={styles.icon} />
+                      {lot.car_capacity} &nbsp;&nbsp;
+                      <FontAwesomeIcon
+                        icon={faMotorcycle}
+                        className={styles.icon}
+                      />
+                      {lot.bike_capacity} &nbsp;&nbsp;
+                      <FontAwesomeIcon icon={faTruck} className={styles.icon} />
+                      {lot.xlvehicle_capacity} &nbsp;&nbsp;
+                      <img
+                        src="/images/tuk-tuk.png"
+                        className={`${styles.icon} w-6 h-5 mr-1`}
+                      />
+                      {lot.tw_capacity}
+                    </div>
+                  </td>
+                  <td
+                    className={
+                      lot.status === "Active"
+                        ? styles.statusActive
+                        : styles.statusInactive
+                    }
+                  >
+                    {lot.status}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className={styles.noData}>
+                  No Parking Lots are registered under this PMC
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
