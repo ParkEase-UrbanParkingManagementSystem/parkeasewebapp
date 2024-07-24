@@ -17,10 +17,10 @@ router.get(
   parkingLotController.getParkingLot
 );
 router.get(
-  "/details",
+  "/:id",
   authorization,
   authorizeRole([2]),
-  parkingLotController.getParkingLotDetails
+  parkingLotController.getAParkingLotDetails
 );
 
 module.exports = router;

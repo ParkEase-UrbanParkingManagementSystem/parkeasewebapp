@@ -120,20 +120,26 @@ exports.getParkingLotDetails = async (req, res) => {
   try {
     const user_id = req.user;
 
-    const pmcID = await pool.query(`SELECT pmc_id FROM pmc WHERE user_id= $1`, [user_id]);
+    const pmcIDResult = await pool.query(
+      `SELECT pmc_id FROM pmc WHERE user_id = $1`,
+      [user_id]
+    );
+    const PMC_ID = pmcIDResult.rows[0]?.pmc_id;
 
-    const PMC_ID = pmcID.rows[0].pmc_id;
+    if (!PMC_ID) {
+      return res.status(404).json({ msg: "PMC ID not found" });
+    }
 
-    const parkinglotDetails = await pool.query(
+    const parkingLotDetailsResult = await pool.query(
       `SELECT * FROM parking_lot WHERE pmc_id = $1`,
       [PMC_ID]
     );
-    
-    if (parkinglotDetails.rows.length === 0) {
+
+    if (parkingLotDetailsResult.rows.length === 0) {
       return res.status(404).json({ msg: "Parking Lot details not found" });
     }
 
-    const wardenID = await pool.query(
+    const wardenIDResult = await pool.query(
       `SELECT wp.warden_id
        FROM warden_parking_lot wp
        INNER JOIN parking_lot pl ON pl.lot_id = wp.lot_id
@@ -141,25 +147,27 @@ exports.getParkingLotDetails = async (req, res) => {
       [PMC_ID]
     );
 
-    let wardenDetails = { rows: [] };
+    let wardenDetailsResult = { rows: [] };
 
-    if (wardenID.rows.length > 0) {
-      const warden_ID = wardenID.rows[0].warden_id;
-      wardenDetails = await pool.query(
+    if (wardenIDResult.rows.length > 0) {
+      const warden_ID = wardenIDResult.rows[0].warden_id;
+      wardenDetailsResult = await pool.query(
         `SELECT fname, lname FROM warden WHERE warden_id = $1`,
         [warden_ID]
       );
     }
 
-    const slotPrices = await pool.query("SELECT * FROM slot_price");
+    const slotPricesResult = await pool.query("SELECT * FROM slot_price");
 
-    const combinedDetails = parkinglotDetails.rows.map((lot) => {
+    const combinedDetails = parkingLotDetailsResult.rows.map((lot) => {
       const warden =
-        wardenDetails.rows.length > 0 ? wardenDetails.rows[0] : null;
+        wardenDetailsResult.rows.length > 0
+          ? wardenDetailsResult.rows[0]
+          : null;
       return {
         lot,
         warden,
-        slotPrices: slotPrices.rows,
+        slotPrices: slotPricesResult.rows,
       };
     });
 
@@ -170,5 +178,76 @@ exports.getParkingLotDetails = async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
+  }
+};
+
+exports.getAParkingLotDetails = async (req, res) => {
+  const lotId = req.params.id;
+
+  try {
+    const lotQuery = `
+      SELECT 
+        l.*, 
+        w.fname, w.lname,
+        s.*
+      FROM parking_lot l
+      LEFT JOIN warden_parking_lot wp ON l.lot_id = wp.lot_id
+      LEFT JOIN warden w ON wp.warden_id = w.warden_id
+      LEFT JOIN slot_price s ON l.lot_id = s.lot_id
+      WHERE l.lot_id = $1;
+    `;
+    const lotResult = await pool.query(lotQuery, [lotId]);
+
+    if (lotResult.rows.length === 0) {
+      return res.status(404).json({ message: "Parking lot not found" });
+    }
+
+    // Initialize variables to store parking lot details and slot prices
+    const parkingLotDetails = {
+      lot: null,
+      warden: null,
+      slotPrices: [],
+    };
+
+    // Iterate through the query results
+    lotResult.rows.forEach((row) => {
+      if (!parkingLotDetails.lot) {
+        // Set the parking lot details (only once)
+        parkingLotDetails.lot = {
+          lot_id: row.lot_id,
+          name: row.name,
+          addressno: row.addressno,
+          street_1: row.street_1,
+          street_2: row.street_2,
+          city: row.city,
+          district: row.district,
+          bike_capacity: row.bike_capacity,
+          car_capacity: row.car_capacity,
+          xlVehicle_capacity: row.xlVehicle_capacity,
+          full_capacity: row.full_capacity,
+          description: row.description,
+          status: row.status,
+        };
+
+        parkingLotDetails.warden = {
+          fname: row.fname,
+          lname: row.lname,
+        };
+      }
+
+      // Add slot price details to the array
+      if (row.slot_id) {
+        parkingLotDetails.slotPrices.push({
+          slot_id: row.slot_id,
+          type: row.type,
+          amount_per_slot: row.amount_per_slot,
+        });
+      }
+    });
+
+    res.json({ data: parkingLotDetails });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server error" });
   }
 };

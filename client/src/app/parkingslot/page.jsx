@@ -97,9 +97,9 @@ const ParkingLot = () => {
                     <div className={styles.link}>{lot.name}</div>
                   </Link>
                 </td>
-                {/* <td className={styles.empnamedata}>
+                <td className={styles.empnamedata}>
                   {lot.fname} {lot.lname}
-                </td> */}
+                </td>
                 <td className={styles.empnamedata}>Pasindi Vindula</td>
                 <td className={styles.empgenderdata}>
                   <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
