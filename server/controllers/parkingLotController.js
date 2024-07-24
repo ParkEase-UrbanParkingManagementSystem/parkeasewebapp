@@ -88,16 +88,19 @@ exports.getParkingLot = async (req, res) => {
     // Query to get parking lots controlled by the PMC user and the assigned warden name
     const query = `
      SELECT 
-  pl.name, 
-  pl.bike_capacity, 
-  pl.car_capacity, 
-  pl.xlvehicle_capacity,
-  STRING_AGG(CONCAT(w.fname, ' ', w.lname), ', ') AS wardens
-FROM parking_lot pl
-LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id
-LEFT JOIN warden w ON wpl.warden_id = w.warden_id
-WHERE pl.pmc_id = $1
-GROUP BY pl.lot_id;
+          pl.lot_id,
+          pl.name, 
+          pl.bike_capacity, 
+          pl.car_capacity, 
+          pl.xlvehicle_capacity,
+          STRING_AGG(CONCAT(w.fname, ' ', w.lname), ', ') AS wardens
+        FROM parking_lot pl
+        LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id
+        LEFT JOIN warden w ON wpl.warden_id = w.warden_id
+        WHERE pl.pmc_id = $1
+        GROUP BY pl.lot_id;
+
+
 
     `;
 
@@ -107,6 +110,7 @@ GROUP BY pl.lot_id;
       return res.status(404).json({ error: "No parking lots found for this PMC" });
     }
 
+    console.log(result.rows);
     res.status(200).json(result.rows);
   } catch (error) {
     console.error(error);
@@ -115,4 +119,97 @@ GROUP BY pl.lot_id;
     client.release();
   }
 };
+
+exports.getAParkingLotDetails = async (req, res) => {
+  const { id } = req.params;
+  // console.log(id);
+  
+  if (!id) {
+      return res.status(400).json({ message: 'Lot ID is required or Invalid' });
+  }
+
+  try {
+    const lotQuery = `
+      SELECT 
+        l.*, 
+        w.fname, w.lname
+       -- s.*
+      FROM parking_lot l
+      LEFT JOIN warden_parking_lot wp ON l.lot_id = wp.lot_id
+      LEFT JOIN warden w ON wp.warden_id = w.warden_id
+      -- LEFT JOIN slot_price s ON l.lot_id = s.lot_id 
+      WHERE l.lot_id = $1;
+    `;
+    const lotResult = await pool.query(lotQuery, [id]);
+
+    if (lotResult.rows.length === 0) {
+      return res.status(404).json({ message: "Parking lot not found" });
+    }
+
+    // Initialize variables to store parking lot details and slot prices
+    const parkingLotDetails = {
+      lot: null,
+      warden: null,
+      slotPrices: [],
+    };
+
+    lotResult.rows.forEach((row) => {
+      if (!parkingLotDetails.lot) {
+        // Set the parking lot details (only once)
+        parkingLotDetails.lot = {
+          lot_id: row.lot_id,
+          name: row.name,
+          addressno: row.addressno,
+          street1: row.street1,
+          street2: row.street2,
+          city: row.city,
+          district: row.district,
+          bike_capacity: row.bike_capacity,
+          car_capacity: row.car_capacity,
+          xlvehicle_capacity: row.xlvehicle_capacity,
+          full_capacity: row.full_capacity,
+          description: row.description,
+          status: row.status,
+        };
+
+        parkingLotDetails.warden = {
+          fname: row.fname,
+          lname: row.lname,
+        };
+      }
+
+      // Add slot price details to the array
+      if (row.slot_id) {
+        parkingLotDetails.slotPrices.push({
+          slot_id: row.slot_id,
+          type: row.type,
+          amount_per_slot: row.amount_per_slot,
+        });
+      }
+    });
+
+    console.log(parkingLotDetails)
+    res.json({ data: parkingLotDetails });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server error" });
+  }
+};
+
+
+//Query to get all the parking slots
+// SELECT 
+//     pl.lot_id,
+//     pl.name, 
+//     pl.bike_capacity, 
+//     pl.car_capacity, 
+//     pl.xlvehicle_capacity,
+//     COALESCE(CONCAT(w.fname, ' ', w.lname), 'Not Assigned') AS assigned_warden
+// FROM parking_lot pl
+// LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id
+// LEFT JOIN warden w ON wpl.warden_id = w.warden_id
+// WHERE pl.pmc_id = $1
+// GROUP BY pl.lot_id, pl.name, pl.bike_capacity, pl.car_capacity, pl.xlvehicle_capacity, w.fname, w.lname;
+
+
 

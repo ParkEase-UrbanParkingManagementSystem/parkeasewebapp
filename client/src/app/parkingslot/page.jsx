@@ -84,7 +84,7 @@ const ParkingLot = () => {
           <thead>
             <tr>
               <th className={styles.empidhead}>Name</th>
-              <th className={styles.empnamehead}>Assigned Warden</th>
+              <th className={styles.empnamehead}>Wardens</th>
               <th className={styles.empgenderhead}>Number of Slots</th>
               <th className={styles.empagehead}>Status</th>
             </tr>
@@ -100,7 +100,7 @@ const ParkingLot = () => {
                 {/* <td className={styles.empnamedata}>
                   {lot.fname} {lot.lname}
                 </td> */}
-                <td className={styles.empnamedata}>Pasindi Vindula</td>
+                <td className={styles.empnamedata}>{lot.wardens ? "Assigned" : "Not Assigned"}</td>
                 <td className={styles.empgenderdata}>
                   <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
                   {lot.car_capacity} &nbsp;
@@ -124,7 +124,7 @@ const ParkingLot = () => {
                 >
                   {lot.status}
                 </td> */}
-                <td className={styles.statusInactive}>Inactive</td>
+                <td className={`${styles.statusInactive} font-bold text-green-500`} >Active</td>
               </tr>
             ))}
           </tbody>

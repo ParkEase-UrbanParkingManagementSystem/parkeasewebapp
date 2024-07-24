@@ -28,7 +28,7 @@ const getVehicles = async (req,res) => {
             return res.status(404).json({message: "No vehicles found for this driver"})
         }
 
-        console.log("Data are", user_id);
+        
 
         return res.status(200).json({
             message:"Success",

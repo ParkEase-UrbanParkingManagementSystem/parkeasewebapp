@@ -125,8 +125,9 @@ const WardenDetailsPage = () => {
                             className={styles.profilePic}
                         />
                         <div className={styles.profileDetails}>
-                            <h3>{`W-${warden.warden_id}`}</h3>
-                            <h2 className="font-bold">{`${warden.fname} ${warden.lname}`}</h2>
+                            
+                            <h2 className="font-semibold">{`${warden.fname} ${warden.lname}`}</h2>
+                            <h3 className='mb-2'>{`W-${warden.warden_id}`}</h3>
                             <p>
                             <span>
                             Status:  
@@ -188,17 +189,7 @@ const WardenDetailsPage = () => {
                 </div>
                 <div className={styles.assign}>
                     <div className={styles.assigncard}>
-                        {warden.status === "Assigned" ? (
-                            <div className={styles.assignoption}>
-                                <p>Change the current parking lot:</p>
-                                <Dropdown 
-                                    options={parkingLots} 
-                                    selectedOption={selectedParkingLot}
-                                    onChange={handleDropdownChange}
-                                />
-                                <ActionButton label="Change" onClick={handleAssign} />
-                            </div>
-                        ) : (
+                        {warden.isassigned === false ? (
                             <div className={styles.assignoption}>
                                 <p>Assign to a parking slot:</p>
                                 <Dropdown 
@@ -208,6 +199,16 @@ const WardenDetailsPage = () => {
                                 />
                                 <ActionButton label="Assign" onClick={handleAssign} />
                             </div>
+                        ) : (
+                          <div className={styles.assignoption}>
+                              <p>Change the current parking lot:</p>
+                              <Dropdown 
+                                  options={parkingLots} 
+                                  selectedOption={selectedParkingLot}
+                                  onChange={handleDropdownChange}
+                              />
+                              <ActionButton label="Change" onClick={handleAssign} />
+                          </div>
                         )}
                     </div>
 
