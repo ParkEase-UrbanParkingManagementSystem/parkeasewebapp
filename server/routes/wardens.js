@@ -10,5 +10,6 @@ const authorizeRole = require("../middleware/roleAuthorization")
 router.get("/", authorization, authorizeRole([2]), WardenController.getWardens);
 router.get("/:id", authorization, authorizeRole([2]),  WardenController.getWardenDetails);
 router.post("/registerWarden", authorization, authorizeRole([2]), WardenController.registerWarden);
+router.post("/assign/:id", authorization, authorizeRole([2]),WardenController.assignParkingLot)
 
 module.exports = router;

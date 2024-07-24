@@ -101,12 +101,13 @@ const WardenPage = () => {
                 <td className={styles.empcontactdata}>{warden.contact}</td>
                 <td
                   className={
-                    warden.isassigned === "Not yet assigned"
+                    warden.parking_lot_name
                       ? styles.empslotdatafree
                       : styles.empslotdata
                   }
                 >
-                  {warden.isassigned}
+                  {warden.isassigned === false ? "Not Assigned" :
+                  warden.parking_lot_name}
                 </td>
               </tr>
             ))}

@@ -22,10 +22,12 @@ exports.getWardens = async (req, res) => {
       // Query to get user details
 
       const result = await pool.query(`
-        SELECT w.*, u.*
-        FROM warden w
-        JOIN users u ON w.user_id = u.user_id
-        WHERE w.pmc_id = $1
+       SELECT w.*, u.*, pl.name AS parking_lot_name
+          FROM warden w
+          JOIN users u ON w.user_id = u.user_id
+          LEFT JOIN warden_parking_lot wpl ON w.warden_id = wpl.warden_id
+          LEFT JOIN parking_lot pl ON wpl.lot_id = pl.lot_id
+          WHERE w.pmc_id = $1
     `, [pmc_id]);
     
     if (result.rows.length === 0) {
@@ -64,10 +66,21 @@ exports.getWardenDetails = async (req, res) => {
 
   try {
       const wardenQuery = `
-          SELECT warden.*, users.*
-          FROM warden
-          JOIN users ON warden.user_id = users.user_id
-          WHERE warden.warden_id = $1
+          SELECT 
+              warden.*, 
+              users.*, 
+              parking_lot.name AS parking_lot_name
+          FROM 
+              warden
+          JOIN 
+              users ON warden.user_id = users.user_id
+          LEFT JOIN 
+              warden_parking_lot ON warden.warden_id = warden_parking_lot.warden_id
+          LEFT JOIN 
+              parking_lot ON warden_parking_lot.lot_id = parking_lot.lot_id
+          WHERE 
+              warden.warden_id = $1;
+
       `;
 
       const { rows } = await pool.query(wardenQuery, [id]);
@@ -77,6 +90,7 @@ exports.getWardenDetails = async (req, res) => {
       }
 
       const warden = rows[0];
+      console.log(warden);
       res.status(200).json(warden);
   } catch (error) {
       console.error('Error fetching warden details:', error);
@@ -143,6 +157,83 @@ exports.registerWarden = async (req, res) => {
     res.status(500).json({ msg: "Server Error" });
   } finally {
     client.release();
+  }
+};
+
+exports.assignParkingLot = async (req, res) => {
+  const { id } = req.params;
+  const { parkingLot } = req.body;
+
+  if (!id) {
+      return res.status(400).json({ message: 'Warden ID is required' });
+  }
+
+  if (!parkingLot) {
+      return res.status(400).json({ message: 'Parking lot is required' });
+  }
+
+  const client = await pool.connect();
+
+  try {
+      // Query to get the lot_id from parking_lot
+      const lotQuery = await client.query(
+          `SELECT lot_id FROM parking_lot WHERE name = $1`,
+          [parkingLot]
+      );
+
+      if (lotQuery.rows.length === 0) {
+          return res.status(404).json({ message: 'Parking lot not found' });
+      }
+
+      const lot_id = lotQuery.rows[0].lot_id;
+
+      // Check if the warden is already assigned to another parking lot
+      const currentAssignmentQuery = await client.query(
+          `SELECT * FROM warden_parking_lot WHERE warden_id = $1`,
+          [id]
+      );
+
+      if (currentAssignmentQuery.rows.length > 0) {
+          // Warden is already assigned to a parking lot, update the existing record
+          await client.query(
+              `UPDATE warden_parking_lot
+               SET lot_id = $1, assigned_date = CURRENT_DATE, assigned_time = CURRENT_TIME
+               WHERE warden_id = $2`,
+              [lot_id, id]
+          );
+
+          // Update the warden table's isassigned column
+          await client.query(
+              `UPDATE warden
+               SET isassigned = TRUE
+               WHERE warden_id = $1`,
+              [id]
+          );
+
+          return res.status(200).json({ message: 'Parking lot updated successfully' });
+      } else {
+          // Warden is not assigned, insert a new record
+          await client.query(
+              `INSERT INTO warden_parking_lot (warden_id, lot_id, assigned_date, assigned_time)
+               VALUES ($1, $2, CURRENT_DATE, CURRENT_TIME)`,
+              [id, lot_id]
+          );
+
+          // Update the warden table's isassigned column
+          await client.query(
+              `UPDATE warden
+               SET isassigned = TRUE
+               WHERE warden_id = $1`,
+              [id]
+          );
+
+          return res.status(200).json({ message: 'Parking lot assigned successfully' });
+      }
+  } catch (error) {
+      console.error('Error assigning parking lot:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+      client.release();
   }
 };
 

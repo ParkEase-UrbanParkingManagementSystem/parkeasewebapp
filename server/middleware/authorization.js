@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
         req.user = payload.user;
         req.role = payload.role;
 
-        // console.log("User ID:", req.user);
+        console.log("User ID:", req.user);
         // console.log("User Role:", req.role);
 
         next();
