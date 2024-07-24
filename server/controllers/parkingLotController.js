@@ -124,7 +124,6 @@ exports.getParkingLot = async (req, res) => {
 
 exports.getAParkingLotDetails = async (req, res) => {
   const { id } = req.params;
-  // console.log(id);
   
   if (!id) {
       return res.status(400).json({ message: 'Lot ID is required or Invalid' });
@@ -206,23 +205,5 @@ exports.getAParkingLotDetails = async (req, res) => {
     res.status(500).json({ message: "Internal Server error" });
   }
 };
-
-
-
-//Query to get all the parking slots
-// SELECT 
-//     pl.lot_id,
-//     pl.name, 
-//     pl.bike_capacity, 
-//     pl.car_capacity, 
-//     pl.xlvehicle_capacity,
-//     COALESCE(CONCAT(w.fname, ' ', w.lname), 'Not Assigned') AS assigned_warden
-// FROM parking_lot pl
-// LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id
-// LEFT JOIN warden w ON wpl.warden_id = w.warden_id
-// WHERE pl.pmc_id = $1
-// GROUP BY pl.lot_id, pl.name, pl.bike_capacity, pl.car_capacity, pl.xlvehicle_capacity, w.fname, w.lname;
-
-
 
 
