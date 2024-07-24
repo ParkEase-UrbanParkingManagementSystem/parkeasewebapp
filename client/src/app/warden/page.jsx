@@ -24,7 +24,7 @@ const WardenPage = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:5000/wardens", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/wardens`, {
           method: "GET",
           headers: {
             "Content-type": "application/json",

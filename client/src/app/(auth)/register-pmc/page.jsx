@@ -34,7 +34,7 @@ const Register = () => {
             district,
         };
 
-        const response = await fetch(`http://localhost:5000/auth/registerPMC`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/auth/registerPMC`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),

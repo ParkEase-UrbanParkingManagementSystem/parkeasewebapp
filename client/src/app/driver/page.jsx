@@ -21,7 +21,7 @@ const DriverPage = () => {
             const token = localStorage.getItem("token");
 
             try {
-                const response = await fetch("http://localhost:5000/driver/details", {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/driver/details`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
