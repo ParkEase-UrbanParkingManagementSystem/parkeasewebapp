@@ -23,4 +23,14 @@ router.get(
   parkingLotController.getAParkingLotDetails
 );
 
+
+router.post("/add", authorization, parkingLotController.parkingLotAdd);
+router.get("/", authorization, parkingLotController.getParkingLot);
+router.get(
+    "/:id",
+    authorization,
+    parkingLotController.getAParkingLotDetails
+  );
+
 module.exports = router;
+
