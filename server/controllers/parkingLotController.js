@@ -34,7 +34,7 @@ exports.parkingLotAdd = async (req, res) => {
     } = req.body;
 
     const insertQuery = `
-      INSERT INTO parking_lot (pmc_id, name, bike_capacity, tw_capacity, car_capacity, xlvehicle_capacity, addressno, street_1, street_2, city, district)
+      INSERT INTO parking_lot (pmc_id, name, bike_capacity, tw_capacity, car_capacity, xlvehicle_capacity, addressno, street1, street2, city, district)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
       RETURNING *;
     `;
@@ -87,17 +87,18 @@ exports.getParkingLot = async (req, res) => {
 
     // Query to get parking lots controlled by the PMC user and the assigned warden name
     const query = `
-      SELECT 
-        pl.name, 
-        pl.bike_capacity, 
-        pl.car_capacity, 
-        pl.xlvehicle_capacity,
-        w.fname,
-        w.lname
-      FROM parking_lot pl
-      LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id
-      LEFT JOIN warden w ON wpl.warden_id = w.warden_id
-      WHERE pl.pmc_id = $1
+     SELECT 
+  pl.name, 
+  pl.bike_capacity, 
+  pl.car_capacity, 
+  pl.xlvehicle_capacity,
+  STRING_AGG(CONCAT(w.fname, ' ', w.lname), ', ') AS wardens
+FROM parking_lot pl
+LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id
+LEFT JOIN warden w ON wpl.warden_id = w.warden_id
+WHERE pl.pmc_id = $1
+GROUP BY pl.lot_id;
+
     `;
 
     const result = await client.query(query, [pmc_id]);

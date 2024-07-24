@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import styles from "./page.module.css";
-import Button from "../../../ui/button/button";
-import Dropdown from "../../../ui/dashboard/dropdown/dropdown";
-import { useParams } from "next/navigation";
+import React, { useState, useEffect } from 'react';
+import styles from './page.module.css';
+import ActionButton from '../../../ui/button/newButton'; // Adjust the path as necessary
+import Dropdown from '../../../ui/dashboard/dropdown/dropdown';
+import { useParams } from 'next/navigation';
 
 const WardenDetailsPage = () => {
     const { slug } = useParams();
@@ -12,79 +12,106 @@ const WardenDetailsPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [parkingLots, setParkingLots] = useState([]); 
+    const [selectedParkingLot, setSelectedParkingLot] = useState(null);
+
+    const fetchWardenDetails = async () => {
+      const token = localStorage.getItem('token');
+      try {
+          const response = await fetch(`http://localhost:5000/wardens/${slug}`, {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+                  token: token
+              }
+          });
+
+          if (!response.ok) {
+              throw new Error('Failed to fetch warden details');
+          }
+
+          const data = await response.json();
+          setWarden(data);
+          setLoading(false);
+      } catch (error) {
+          console.error('Error fetching warden details:', error);
+          setError('Failed to load warden details');
+          setLoading(false);
+      }
+  };
+
+  const fetchParkingLots = async () => {
+      const token = localStorage.getItem('token');
+      try {
+          const response = await fetch('http://localhost:5000/parkinglots', {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+                  token: token
+              }
+          });
+
+          if (!response.ok) {
+              throw new Error('Failed to fetch parking lots');
+          }
+
+          const data = await response.json();
+          const parkingLotNames = data.map(lot => lot.name);
+          setParkingLots(parkingLotNames);
+          setSelectedParkingLot(parkingLotNames[0])
+          console.log(parkingLotNames);
+      } catch (error) {
+          console.error('Error fetching parking lots:', error);
+          setError('Failed to load parking lots');
+      }
+  };
 
     useEffect(() => {
-        if (!slug) return; // Do nothing if id is not available
-
-        const fetchWardenDetails = async () => {
-            const token = localStorage.getItem("token");
-            try {
-                const response = await fetch(`http://localhost:5000/wardens/${slug}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        token: token // Use Authorization header for the token
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch warden details');
-                }
-
-                const data = await response.json();
-                setWarden(data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching warden details:', error);
-                setError('Failed to load warden details');
-                setLoading(false);
-            }
-        };
-
-        const fetchParkingLots = async () => {
-          const token = localStorage.getItem("token");
-          try {
-              const response = await fetch('http://localhost:5000/parkinglots', {
-                  method: 'GET',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      token: token
-                  }
-              });
-  
-              if (!response.ok) {
-                  throw new Error('Failed to fetch parking lots');
-              }
-  
-              const data = await response.json();
-              // Extract the 'name' property from each parking lot object
-              const parkingLotNames = data.map(lot => lot.name);
-              setParkingLots(parkingLotNames);
-              console.log(parkingLotNames);
-          } catch (error) {
-              console.error('Error fetching parking lots:', error);
-              setError('Failed to load parking lots');
-          }
-      };
+        if (!slug) return;
         fetchParkingLots();
         fetchWardenDetails();
-
     }, [slug]);
 
-  //   const parkingLotOptions = parkingLots.map(lot => ({
-  //     label: lot.name,
-  //     value: lot.id // Assuming 'id' is a unique identifier if required
-  // }));
+    const handleAssign = async () => {
+        console.log(selectedParkingLot); // Debug log
+        if (!selectedParkingLot) {
+            setError('Please select a parking lot');
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(`http://localhost:5000/wardens/assign/${slug}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    token: token
+                },
+                body: JSON.stringify({ parkingLot: selectedParkingLot })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to assign parking lot');
+            }
+
+            await fetchWardenDetails();
+
+            const data = await response.json();
+            setWarden(prevWarden => ({ ...prevWarden, isassigned: selectedParkingLot }));
+            
+            alert('Parking lot assigned successfully');
+        } catch (error) {
+            console.error('Error assigning parking lot:', error);
+            setError('Failed to assign parking lot');
+        }
+    };
+
+    const handleDropdownChange = (value) => {
+        console.log("Dropdown change:", value); // Debug log
+        setSelectedParkingLot(value);
+    };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
-
-    // const parkingLots = [
-    //     "Kollupitiya Parking Lot",
-    //     "Bambalapitiya Parking Lot",
-    //     "Galle Face Parking Lot",
-    //     "Dehiwala Parking Lot",
-    // ];
 
     return (
         <div className={styles.container}>
@@ -101,15 +128,18 @@ const WardenDetailsPage = () => {
                             <h3>{`W-${warden.warden_id}`}</h3>
                             <h2 className="font-bold">{`${warden.fname} ${warden.lname}`}</h2>
                             <p>
-                                Status:{" "}
-                                <span
+                            <span>
+                            Status:  
+                            </span>
+
+                                <span 
                                     className={
-                                        warden.status === "Assigned"
-                                            ? styles.statusActive
-                                            : styles.statusInactive
+                                      warden.isassigned === false
+                                        ? styles.statusInactive
+                                        : styles.statusActive
                                     }
-                                >
-                                    {warden.status}
+                                  >
+                                    {warden.isassigned === false ? "Not Assigned" : "Assigned"}
                                 </span>
                             </p>
                         </div>
@@ -145,7 +175,8 @@ const WardenDetailsPage = () => {
                                 </div>
                                 <div className={styles.detail}>
                                     <label>Assigned Parking Lot:</label>
-                                    <p>{warden.isassigned || "Unassigned"}</p>
+                                    <p>{warden.isassigned === false? "Not Assigned":
+                                    warden.parking_lot_name}</p>
                                 </div>
                                 <div className={styles.detail}>
                                     <label>Address:</label>
@@ -160,14 +191,22 @@ const WardenDetailsPage = () => {
                         {warden.status === "Assigned" ? (
                             <div className={styles.assignoption}>
                                 <p>Change the current parking lot:</p>
-                                <Dropdown options={parkingLots} />
-                                <Button label="Change" />
+                                <Dropdown 
+                                    options={parkingLots} 
+                                    selectedOption={selectedParkingLot}
+                                    onChange={handleDropdownChange}
+                                />
+                                <ActionButton label="Change" onClick={handleAssign} />
                             </div>
                         ) : (
                             <div className={styles.assignoption}>
                                 <p>Assign to a parking slot:</p>
-                                <Dropdown options={parkingLots} />
-                                <Button label="Assign" />
+                                <Dropdown 
+                                    options={parkingLots} 
+                                    selectedOption={selectedParkingLot}
+                                    onChange={handleDropdownChange}
+                                />
+                                <ActionButton label="Assign" onClick={handleAssign} />
                             </div>
                         )}
                     </div>
@@ -193,7 +232,7 @@ const WardenDetailsPage = () => {
 
                     <div className={styles.logcard}>
                         <p className="font-bold">Check Warden History: </p>
-                        <Button label="View" />
+                        <ActionButton label="View" onClick={() => console.log("View history clicked")} />
                     </div>
                 </div>
             </div>
