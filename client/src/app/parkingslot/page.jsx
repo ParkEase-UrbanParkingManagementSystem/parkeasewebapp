@@ -124,7 +124,7 @@ const ParkingLot = () => {
                 >
                   {lot.status}
                 </td> */}
-                <td className={`${styles.statusInactive} font-bold text-green-500`} >Active</td>
+                <td className={styles.statusInactive} >Active</td>
               </tr>
             ))}
           </tbody>
