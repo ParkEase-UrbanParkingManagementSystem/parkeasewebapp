@@ -19,10 +19,12 @@ library.add(faCar, faMotorcycle, faClock, faTruck);
 const ParkingSlotDetail = () => {
   const [parkingLotDetails, setParkingLotDetails] = useState(null);
   const router = useRouter();
+
   const { slug } = useParams(); // Extract slug from route parameters
 
   useEffect(() => {
     if (!slug) return; // Do nothing if slug is not available
+
 
     const fetchParkingLotDetails = async () => {
       const token = localStorage.getItem("token");
@@ -34,7 +36,9 @@ const ParkingSlotDetail = () => {
 
       try {
         const response = await fetch(
+
           `http://localhost:5000/parkinglots/${slug}`, // Use the slug in the URL
+
           {
             method: "GET",
             headers: {
@@ -56,8 +60,10 @@ const ParkingSlotDetail = () => {
       }
     };
 
+
     fetchParkingLotDetails();
   }, [slug, router]);
+
 
   if (!parkingLotDetails) {
     return <div>Loading...</div>; // Show a loading state while fetching data
@@ -76,18 +82,22 @@ const ParkingSlotDetail = () => {
                 className={styles.headerImage}
               />
               <div className={styles.headerText}>
+
                 <h2 className="font-semibold">{`${parkingLotDetails.lot.name}`}</h2>
                 <h3 className="mb-2">{`L-${parkingLotDetails.lot.lot_id}`}</h3>
+
                 <p>
                   Status:{" "}
                   <span
                     className={
+
                       parkingLotDetails.lot.status === "InActive"
                         ? styles.statusInctive
                         : styles.statusActive
                     }
                   >
                     Active
+
                   </span>
                 </p>
               </div>
@@ -120,7 +130,9 @@ const ParkingSlotDetail = () => {
                   </p>
                   <p>
                     <FontAwesomeIcon icon={faTruck} />{" "}
+
                     {parkingLotDetails.lot.xlvehicle_capacity}
+
                   </p>
                 </div>
                 <div className={styles.detail}>
@@ -167,10 +179,12 @@ const ParkingSlotDetail = () => {
                 </div>
                 <div className={styles.detail}>
                   <label>Address</label>
+
                   <p>
                     {`${parkingLotDetails.lot.addressno}, ${parkingLotDetails.lot.street1}, ${parkingLotDetails.lot.street2}, ${parkingLotDetails.lot.city}, ${parkingLotDetails.lot.district}`}
                     .
                   </p>
+
                 </div>
               </div>
             </div>
@@ -188,7 +202,9 @@ const ParkingSlotDetail = () => {
                 </span>
               </div>
               <div className={styles.card}>
+
                 <FontAwesomeIcon icon={faMotorcycle} className={styles.icon} />
+
                 &nbsp; <strong>6</strong>:
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.bike_capacity}
@@ -196,9 +212,11 @@ const ParkingSlotDetail = () => {
               </div>
               <div className={styles.card}>
                 <FontAwesomeIcon icon={faTruck} className={styles.icon} />
+
                 &nbsp; <strong>1</strong>:
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.xlvehicle_capacity}
+
                 </span>
               </div>
             </div>

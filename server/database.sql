@@ -197,9 +197,9 @@ CREATE TABLE parking_instance (
 );
 
 CREATE TABLE slot_price (
-    slot_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    type VARCHAR(50),
-    amount_per_slot DECIMAL(10, 2)
+    slot_id INT PRIMARY KEY,
+    type VARCHAR(50) NOT NULL,
+    amount_per_slot DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE parkpoints (

@@ -74,7 +74,7 @@ exports.getParkingLot = async (req, res) => {
       return res.status(400).json({ error: "User ID is required" });
     }
 
-    const queryPMC = 'SELECT pmc_id FROM pmc WHERE user_id = $1';
+    const queryPMC = "SELECT pmc_id FROM pmc WHERE user_id = $1";
 
     const resultPMC = await client.query(queryPMC, [user_id]);
 
@@ -83,7 +83,6 @@ exports.getParkingLot = async (req, res) => {
     }
 
     const pmc_id = resultPMC.rows[0].pmc_id;
-    
 
     // Query to get parking lots controlled by the PMC user and the assigned warden name
     const query = `
@@ -107,7 +106,9 @@ exports.getParkingLot = async (req, res) => {
     const result = await client.query(query, [pmc_id]);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: "No parking lots found for this PMC" });
+      return res
+        .status(404)
+        .json({ error: "No parking lots found for this PMC" });
     }
 
     console.log(result.rows);
@@ -119,6 +120,7 @@ exports.getParkingLot = async (req, res) => {
     client.release();
   }
 };
+
 
 exports.getAParkingLotDetails = async (req, res) => {
   const { id } = req.params;
@@ -132,6 +134,7 @@ exports.getAParkingLotDetails = async (req, res) => {
     const lotQuery = `
       SELECT 
         l.*, 
+
         w.fname, w.lname
        -- s.*
       FROM parking_lot l
@@ -141,6 +144,7 @@ exports.getAParkingLotDetails = async (req, res) => {
       WHERE l.lot_id = $1;
     `;
     const lotResult = await pool.query(lotQuery, [id]);
+
 
     if (lotResult.rows.length === 0) {
       return res.status(404).json({ message: "Parking lot not found" });
@@ -153,6 +157,7 @@ exports.getAParkingLotDetails = async (req, res) => {
       slotPrices: [],
     };
 
+
     lotResult.rows.forEach((row) => {
       if (!parkingLotDetails.lot) {
         // Set the parking lot details (only once)
@@ -160,13 +165,17 @@ exports.getAParkingLotDetails = async (req, res) => {
           lot_id: row.lot_id,
           name: row.name,
           addressno: row.addressno,
+
           street1: row.street1,
           street2: row.street2,
+
           city: row.city,
           district: row.district,
           bike_capacity: row.bike_capacity,
           car_capacity: row.car_capacity,
+
           xlvehicle_capacity: row.xlvehicle_capacity,
+
           full_capacity: row.full_capacity,
           description: row.description,
           status: row.status,
@@ -188,13 +197,16 @@ exports.getAParkingLotDetails = async (req, res) => {
       }
     });
 
+
     console.log(parkingLotDetails)
+
     res.json({ data: parkingLotDetails });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server error" });
   }
 };
+
 
 
 //Query to get all the parking slots
@@ -210,6 +222,7 @@ exports.getAParkingLotDetails = async (req, res) => {
 // LEFT JOIN warden w ON wpl.warden_id = w.warden_id
 // WHERE pl.pmc_id = $1
 // GROUP BY pl.lot_id, pl.name, pl.bike_capacity, pl.car_capacity, pl.xlvehicle_capacity, w.fname, w.lname;
+
 
 
 

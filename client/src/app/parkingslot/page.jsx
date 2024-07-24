@@ -97,10 +97,11 @@ const ParkingLot = () => {
                     <div className={styles.link}>{lot.name}</div>
                   </Link>
                 </td>
-                {/* <td className={styles.empnamedata}>
+                <td className={styles.empnamedata}>
                   {lot.fname} {lot.lname}
                 </td> */}
                 <td className={styles.empnamedata}>{lot.wardens ? "Assigned" : "Not Assigned"}</td>
+
                 <td className={styles.empgenderdata}>
                   <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
                   {lot.car_capacity} &nbsp;
@@ -115,7 +116,7 @@ const ParkingLot = () => {
                   />{" "}
                   {lot.xlvehicle_capacity}
                 </td>
-                {/* <td
+                <td
                   className={
                     lot.status === "Active"
                       ? styles.statusActive
@@ -123,8 +124,10 @@ const ParkingLot = () => {
                   }
                 >
                   {lot.status}
+
                 </td> */}
                 <td className={`${styles.statusInactive} font-bold text-green-500`} >Active</td>
+
               </tr>
             ))}
           </tbody>

@@ -34,32 +34,16 @@ exports.getWardens = async (req, res) => {
         return res.status(404).json({ message: "No wardens found for this PMC" });
     }
 
-    // console.log(result.rows);
-
     return res.status(200).json({
       message: "success",
       data: result.rows
     });
-
-    
-    
-
-      // Combine pmc and user details into a single object
-      // const combinedDetails = {
-      //     pmc_id: pmc_id,
-      //     pmc_details: resultPMC.rows,
-      //     user_details: resultUser.rows[0]
-      // };
-
-      
 
       // Send the combined details in the response
       res.status(200).json({
           message: "Success",
           data: combinedDetails
       });
-
-      // console.log(combinedDetails);
 
   } catch (error) {
       console.error("Error fetching warden details:", error);
