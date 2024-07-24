@@ -22,36 +22,37 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const body = {
-        email,
-        password,
-        name,
-        regNo,
-        addressNo,
-        street1,
-        street2,
-        city,
-        district,
-      };
+        const body = {
+            email,
+            password,
+            name,
+            regNo,
+            addressNo,
+            street1,
+            street2,
+            city,
+            district,
+        };
 
-      const response = await fetch(`http://localhost:5000/auth/registerPMC`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+        const response = await fetch(`http://localhost:5000/auth/registerPMC`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+        });
 
-      const parseRes = await response.json();
-
-      if (parseRes.token) {
-        localStorage.setItem("token", parseRes.token);
-        router.push("/dashboard"); // Redirecting to a dashboard or home page after successful registration
-      } else {
-        alert("Registration failed. Please try again.");
-      }
+        if (response.ok) {
+            alert("Registration successful. Please log in.");
+            router.push("/login"); // Redirect to the login page after successful registration
+        } else {
+            const errorMessage = await response.text();
+            alert(errorMessage || "Registration failed. Please try again.");
+        }
     } catch (err) {
-      console.error(err.message);
+        console.error(err.message);
+        alert("An error occurred. Please try again.");
     }
-  };
+};
+
 
   return (
     <Fragment>
