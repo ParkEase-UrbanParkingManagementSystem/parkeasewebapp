@@ -39,18 +39,16 @@ router.post("/registerPMC", validInfo, async (req, res) => {
             const userId = newUser.rows[0].user_id;
 
             // Insert PMC details into the pmc table
-            const newPMC = await pool.query(
-                "INSERT INTO pmc (name, regNo, user_id) VALUES ($1, $2, $3) RETURNING *",
+            await pool.query(
+                "INSERT INTO pmc (name, regNo, user_id) VALUES ($1, $2, $3)",
                 [name, regNo, userId]
             );
 
             // Commit the transaction
             await pool.query('COMMIT');
 
-            // Generating JWT token
-            const token = jwtGenerator(userId);
-
-            res.json({ token });
+            // Send a success message
+            res.status(200).send("Registration successful, please log in.");
         } catch (error) {
             // Rollback the transaction in case of any error
             await pool.query('ROLLBACK');
@@ -62,9 +60,10 @@ router.post("/registerPMC", validInfo, async (req, res) => {
     }
 });
 
+
 //Driver Registration
 
-router.post("/registerDriver", async(req,res)=>{
+router.post("/registerDriver", async (req, res) => {
     try {
         // Destructure the req.body
         const { fname, lname, nic, email, password, contact, addressNo, street1, street2, city, district } = req.body;
@@ -89,25 +88,23 @@ router.post("/registerDriver", async(req,res)=>{
 
             // Insert new user into the users table
             const newUser = await pool.query(
-                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province,contact,role_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING user_id",
+                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province, contact, role_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING user_id",
                 [email, bcryptPassword, addressNo, street1, street2, city, district, contact, role_id]
             );
 
             const userId = newUser.rows[0].user_id;
 
-            // Insert PMC details into the pmc table
-            const newPMC = await pool.query(
-                "INSERT INTO driver (fname, lname, nic, age, gender, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+            // Insert driver details into the driver table
+            await pool.query(
+                "INSERT INTO driver (fname, lname, nic, age, gender, user_id) VALUES ($1, $2, $3, $4, $5, $6)",
                 [fname, lname, nic, age, gender, userId]
             );
 
             // Commit the transaction
             await pool.query('COMMIT');
 
-            // Generating JWT token
-            const token = jwtGenerator(userId);
-
-            res.json({ token });
+            // Send a success message
+            res.status(200).send("Registration successful, please log in.");
         } catch (error) {
             // Rollback the transaction in case of any error
             await pool.query('ROLLBACK');
@@ -117,7 +114,6 @@ router.post("/registerDriver", async(req,res)=>{
         console.error(err.message);
         res.status(500).send("Server Error");
     }
-
 });
 
 

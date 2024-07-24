@@ -102,3 +102,9 @@
   display: flex;
   flex-direction: row;
 }
+
+.noData {
+  text-align: center;
+  color: #999; /* Or any color you prefer for the no-data message */
+  font-style: italic;
+}

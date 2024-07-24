@@ -59,9 +59,9 @@ const ParkingLot = () => {
   }, []);
 
   // Render loading state or handle empty parking lots array case
-  if (parkingLots.length === 0) {
-    return <p>Loading...</p>; // or any other loading indicator
-  }
+  // if (parkingLots.length === 0) {
+  //   return <p>Loading...</p>; // or any other loading indicator
+  // }
 
   return (
     <div className={styles.container}>
@@ -90,43 +90,35 @@ const ParkingLot = () => {
             </tr>
           </thead>
           <tbody>
-            {parkingLots.map((lot) => (
-              <tr key={lot.lot_id}>
-                <td className={styles.empiddata}>
-                  <Link href={`/parkingslot/${lot.lot_id}`}>
-                    <div className={styles.link}>{lot.name}</div>
-                  </Link>
-                </td>
-                {/* <td className={styles.empnamedata}>
-                  {lot.fname} {lot.lname}
-                </td> */}
-                <td className={styles.empnamedata}>{lot.wardens ? "Assigned" : "Not Assigned"}</td>
-                <td className={styles.empgenderdata}>
-                  <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
-                  {lot.car_capacity} &nbsp;
-                  <FontAwesomeIcon
-                    icon={faMotorcycle}
-                    className={styles.icon}
-                  />{" "}
-                  {lot.bike_capacity} &nbsp;
-                  <FontAwesomeIcon
-                    icon={faTruck}
-                    className={styles.icon}
-                  />{" "}
-                  {lot.xlvehicle_capacity}
-                </td>
-                {/* <td
-                  className={
-                    lot.status === "Active"
-                      ? styles.statusActive
-                      : styles.statusInactive
-                  }
-                >
-                  {lot.status}
-                </td> */}
-                <td className={`${styles.statusInactive} font-bold text-green-500`} >Active</td>
-              </tr>
-            ))}
+          {parkingLots.length > 0 ? (
+  parkingLots.map((lot) => (
+    <tr key={lot.lot_id}>
+      <td className={styles.empiddata}>
+        <Link href={`/parkingslot/${lot.lot_id}`}>
+          <div className={styles.link}>{lot.name}</div>
+        </Link>
+      </td>
+      <td className={styles.empnamedata}>
+        {lot.wardens ? "Assigned" : "Not Assigned"}
+      </td>
+      <td className={styles.empgenderdata}>
+        <FontAwesomeIcon icon={faCar} className={styles.icon} /> {lot.car_capacity} &nbsp;
+        <FontAwesomeIcon icon={faMotorcycle} className={styles.icon} /> {lot.bike_capacity} &nbsp;
+        <FontAwesomeIcon icon={faTruck} className={styles.icon} /> {lot.xlvehicle_capacity}
+      </td>
+      <td className={`${styles.statusInactive} font-bold text-green-500`}>
+        Active
+      </td>
+    </tr>
+  ))
+) : (
+  <tr>
+    <td colSpan="4" className={styles.noData}>
+      No parking lots available
+    </td>
+  </tr>
+)}
+
           </tbody>
         </table>
       </div>
