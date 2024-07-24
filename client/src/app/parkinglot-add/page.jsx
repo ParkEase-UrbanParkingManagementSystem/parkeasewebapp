@@ -9,6 +9,7 @@ import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 const AddParkingLot = () => {
   const [formData, setFormData] = useState({
     name: "",
+    description:"",
     bikeCapacity: "",
     twCapacity: "",
     carCapacity: "",
@@ -72,6 +73,14 @@ const AddParkingLot = () => {
                 placeholder="Parking Lot Name"
                 name="name"
                 value={formData.name}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <input
+                type="text"
+                placeholder="Parking Lot Description"
+                name="description"
+                value={formData.description}
                 onChange={handleChange}
                 className={styles.input}
               />
@@ -154,7 +163,7 @@ const AddParkingLot = () => {
             </div>
 
             <div className={styles.formGroupii}>
-              {/* <div className={styles.formGrouppic}>
+              <div className={styles.formGrouppic}>
                 <span>Drawn parking lot sketch: </span>
                 <input type="file" accept="image/*" multiple name="skectch" />
                 <br />
@@ -164,7 +173,7 @@ const AddParkingLot = () => {
 
                 <span>Mark location on the map: </span>
                 <img src="images/map.png"/>
-              </div> */}
+              </div>
               <div>
                 <Button
                   label="Add Parking Lot"

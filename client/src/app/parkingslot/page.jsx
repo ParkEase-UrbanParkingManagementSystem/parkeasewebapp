@@ -97,25 +97,30 @@ const ParkingLot = () => {
                     <div className={styles.link}>{lot.name}</div>
                   </Link>
                 </td>
-                {/* <td className={styles.empnamedata}>
-                  {lot.fname} {lot.lname}
-                </td> */}
-                <td className={styles.empnamedata}>{lot.wardens ? "Assigned" : "Not Assigned"}</td>
-                <td className={styles.empgenderdata}>
-                  <FontAwesomeIcon icon={faCar} className={styles.icon} />{" "}
-                  {lot.car_capacity} &nbsp;
-                  <FontAwesomeIcon
-                    icon={faMotorcycle}
-                    className={styles.icon}
-                  />{" "}
-                  {lot.bike_capacity} &nbsp;
-                  <FontAwesomeIcon
-                    icon={faTruck}
-                    className={styles.icon}
-                  />{" "}
-                  {lot.xlvehicle_capacity}
+                <td className={styles.empnamedata}>
+                  {lot.wardens && lot.wardens.trim()
+                    ? lot.wardens
+                    : "Not yet assigned"}
                 </td>
-                {/* <td
+                <td className={styles.empgenderdata}>
+                  <div className={styles.iconContainer}>
+                    <FontAwesomeIcon icon={faCar} className={styles.icon} />
+                    {lot.car_capacity} &nbsp;&nbsp;
+                    <FontAwesomeIcon
+                      icon={faMotorcycle}
+                      className={styles.icon}
+                    />
+                    {lot.bike_capacity} &nbsp;&nbsp;
+                    <FontAwesomeIcon icon={faTruck} className={styles.icon} />
+                    {lot.xlvehicle_capacity} &nbsp;&nbsp;
+                    <img
+                      src="/images/tuk-tuk.png"
+                      className={`${styles.icon} w-6 h-5 mr-1`}
+                    />
+                    {lot.tw_capacity}
+                  </div>
+                </td>
+                <td
                   className={
                     lot.status === "Active"
                       ? styles.statusActive
@@ -123,8 +128,7 @@ const ParkingLot = () => {
                   }
                 >
                   {lot.status}
-                </td> */}
-                <td className={styles.statusInactive} >Active</td>
+                </td>
               </tr>
             ))}
           </tbody>

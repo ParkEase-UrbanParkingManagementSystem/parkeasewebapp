@@ -72,8 +72,14 @@
   font-size: 1rem;
 }
 
-.icon{
-  color: #ffb403;
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  margin-right: 0.5rem; /* Adjust the spacing as needed */
 }
 
 .link {

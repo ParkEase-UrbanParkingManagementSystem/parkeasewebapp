@@ -31,11 +31,12 @@ exports.parkingLotAdd = async (req, res) => {
       street2,
       city,
       district,
+      description,
     } = req.body;
 
     const insertQuery = `
-      INSERT INTO parking_lot (pmc_id, name, bike_capacity, tw_capacity, car_capacity, xlvehicle_capacity, addressno, street1, street2, city, district)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      INSERT INTO parking_lot (pmc_id, name, bike_capacity, tw_capacity, car_capacity, xlvehicle_capacity, addressno, street1, street2, city, district, description)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       RETURNING *;
     `;
 
@@ -51,6 +52,7 @@ exports.parkingLotAdd = async (req, res) => {
       street2,
       city,
       district,
+      description,
     ];
 
     const result = await client.query(insertQuery, values);
@@ -92,15 +94,14 @@ exports.getParkingLot = async (req, res) => {
           pl.bike_capacity, 
           pl.car_capacity, 
           pl.xlvehicle_capacity,
-          STRING_AGG(CONCAT(w.fname, ' ', w.lname), ', ') AS wardens
+          pl.tw_capacity,
+          pl.status,
+          STRING_AGG(CONCAT(w.fname, ' ', w.lname), ' , ') AS wardens
         FROM parking_lot pl
         LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id
         LEFT JOIN warden w ON wpl.warden_id = w.warden_id
         WHERE pl.pmc_id = $1
         GROUP BY pl.lot_id;
-
-
-
     `;
 
     const result = await client.query(query, [pmc_id]);
@@ -121,29 +122,26 @@ exports.getParkingLot = async (req, res) => {
   }
 };
 
-
 exports.getAParkingLotDetails = async (req, res) => {
   const { id } = req.params;
   
   if (!id) {
-      return res.status(400).json({ message: 'Lot ID is required or Invalid' });
+    return res.status(400).json({ message: 'Lot ID is required or Invalid' });
   }
 
   try {
     const lotQuery = `
       SELECT 
         l.*, 
-
-        w.fname, w.lname
-       -- s.*
+        w.fname, w.lname,
+        s.slot_id, s.type, s.amount_per_slot
       FROM parking_lot l
       LEFT JOIN warden_parking_lot wp ON l.lot_id = wp.lot_id
       LEFT JOIN warden w ON wp.warden_id = w.warden_id
-      -- LEFT JOIN slot_price s ON l.lot_id = s.lot_id 
+      LEFT JOIN slot_price s ON l.lot_id = s.lot_id 
       WHERE l.lot_id = $1;
     `;
     const lotResult = await pool.query(lotQuery, [id]);
-
 
     if (lotResult.rows.length === 0) {
       return res.status(404).json({ message: "Parking lot not found" });
@@ -156,7 +154,6 @@ exports.getAParkingLotDetails = async (req, res) => {
       slotPrices: [],
     };
 
-
     lotResult.rows.forEach((row) => {
       if (!parkingLotDetails.lot) {
         // Set the parking lot details (only once)
@@ -164,17 +161,13 @@ exports.getAParkingLotDetails = async (req, res) => {
           lot_id: row.lot_id,
           name: row.name,
           addressno: row.addressno,
-
           street1: row.street1,
           street2: row.street2,
-
           city: row.city,
           district: row.district,
           bike_capacity: row.bike_capacity,
           car_capacity: row.car_capacity,
-
           xlvehicle_capacity: row.xlvehicle_capacity,
-
           full_capacity: row.full_capacity,
           description: row.description,
           status: row.status,
@@ -196,8 +189,7 @@ exports.getAParkingLotDetails = async (req, res) => {
       }
     });
 
-
-    console.log(parkingLotDetails)
+    console.log(parkingLotDetails);
 
     res.json({ data: parkingLotDetails });
   } catch (error) {
@@ -205,5 +197,6 @@ exports.getAParkingLotDetails = async (req, res) => {
     res.status(500).json({ message: "Internal Server error" });
   }
 };
+
 
 

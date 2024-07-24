@@ -135,12 +135,12 @@ const WardenDetailsPage = () => {
 
                                 <span 
                                     className={
-                                      warden.isassigned === false
+                                      warden.parking_lot_name === null
                                         ? styles.statusInactive
                                         : styles.statusActive
                                     }
                                   >
-                                    {warden.isassigned === false ? "Not Assigned" : "Assigned"}
+                                    {warden.parking_lot_name === null ? "Not Assigned" : "Assigned"}
                                 </span>
                             </p>
                         </div>
@@ -176,12 +176,12 @@ const WardenDetailsPage = () => {
                                 </div>
                                 <div className={styles.detail}>
                                     <label>Assigned Parking Lot:</label>
-                                    <p>{warden.isassigned === false? "Not Assigned":
+                                    <p>{warden.parking_lot_name === null ? "Not Assigned":
                                     warden.parking_lot_name}</p>
                                 </div>
                                 <div className={styles.detail}>
                                     <label>Address:</label>
-                                    <p>{`${warden.addressno}, ${warden.street_1}, ${warden.street_2}, ${warden.city}`}</p>
+                                    <p>{`${warden.addressno}, ${warden.street_1}, ${warden.street_2}, ${warden.city}.`}</p>
                                 </div>
                             </div>
                         </div>
@@ -189,7 +189,7 @@ const WardenDetailsPage = () => {
                 </div>
                 <div className={styles.assign}>
                     <div className={styles.assigncard}>
-                        {warden.isassigned === false ? (
+                        {warden.parking_lot_name === null ? (
                             <div className={styles.assignoption}>
                                 <p>Assign to a parking slot:</p>
                                 <Dropdown 
