@@ -17,7 +17,7 @@ const WardenDetailsPage = () => {
     const fetchWardenDetails = async () => {
       const token = localStorage.getItem('token');
       try {
-          const response = await fetch(`http://localhost:5000/wardens/${slug}`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/wardens/${slug}`, {
               method: 'GET',
               headers: {
                   'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const WardenDetailsPage = () => {
   const fetchParkingLots = async () => {
       const token = localStorage.getItem('token');
       try {
-          const response = await fetch('http://localhost:5000/parkinglots', {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/parkinglots`, {
               method: 'GET',
               headers: {
                   'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ const WardenDetailsPage = () => {
 
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch(`http://localhost:5000/wardens/assign/${slug}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/wardens/assign/${slug}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

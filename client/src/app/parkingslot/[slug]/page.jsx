@@ -37,7 +37,7 @@ const ParkingSlotDetail = () => {
       try {
         const response = await fetch(
 
-          `http://localhost:5000/parkinglots/${slug}`, // Use the slug in the URL
+          `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/${slug}`, // Use the slug in the URL
 
           {
             method: "GET",
