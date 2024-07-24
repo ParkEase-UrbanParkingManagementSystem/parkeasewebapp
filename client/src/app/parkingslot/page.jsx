@@ -90,6 +90,7 @@ const ParkingLot = () => {
             </tr>
           </thead>
           <tbody>
+
           {parkingLots.length > 0 ? (
   parkingLots.map((lot) => (
     <tr key={lot.lot_id}>
@@ -118,6 +119,7 @@ const ParkingLot = () => {
     </td>
   </tr>
 )}
+
 
           </tbody>
         </table>
