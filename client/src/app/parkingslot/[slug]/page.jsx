@@ -25,7 +25,6 @@ const ParkingSlotDetail = () => {
   useEffect(() => {
     if (!slug) return; // Do nothing if slug is not available
 
-
     const fetchParkingLotDetails = async () => {
       const token = localStorage.getItem("token");
 
@@ -36,7 +35,6 @@ const ParkingSlotDetail = () => {
 
       try {
         const response = await fetch(
-
           `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/${slug}`, // Use the slug in the URL
 
           {
@@ -60,10 +58,8 @@ const ParkingSlotDetail = () => {
       }
     };
 
-
     fetchParkingLotDetails();
   }, [slug, router]);
-
 
   if (!parkingLotDetails) {
     return <div>Loading...</div>; // Show a loading state while fetching data
@@ -82,22 +78,20 @@ const ParkingSlotDetail = () => {
                 className={styles.headerImage}
               />
               <div className={styles.headerText}>
-
                 <h2 className="font-semibold">{`${parkingLotDetails.lot.name}`}</h2>
                 <h3 className="mb-2">{`L-${parkingLotDetails.lot.lot_id}`}</h3>
-
                 <p>
-                  Status:{" "}
+                  <span>Status: </span>
                   <span
                     className={
-
-                      parkingLotDetails.lot.status === "InActive"
-                        ? styles.statusInctive
+                      parkingLotDetails.lot.status === "Inactive"
+                        ? styles.statusInactive
                         : styles.statusActive
                     }
                   >
-                    Active
-
+                    {parkingLotDetails.lot.status === "Inactive"
+                      ? "Inactive"
+                      : "Active"}
                   </span>
                 </p>
               </div>
@@ -111,7 +105,9 @@ const ParkingSlotDetail = () => {
               <div className={styles.detailColumn}>
                 <div className={styles.detail}>
                   <label>Assigned Warden</label>
-                  {parkingLotDetails.warden ? (
+                  {parkingLotDetails.warden &&
+                  parkingLotDetails.warden.fname &&
+                  parkingLotDetails.warden.lname ? (
                     <p>{`${parkingLotDetails.warden.fname} ${parkingLotDetails.warden.lname}`}</p>
                   ) : (
                     <p>No Warden Assigned</p>
@@ -128,11 +124,17 @@ const ParkingSlotDetail = () => {
                     <FontAwesomeIcon icon={faMotorcycle} />{" "}
                     {parkingLotDetails.lot.bike_capacity}
                   </p>
+                  <div className="flex items-center opacity-70">
+                    <img
+                      src="/images/tuk-tuk.png"
+                      className="w-6 h-5 mr-1"
+                      alt="Tuk Tuk"
+                    />
+                    <span>{parkingLotDetails.lot.tw_capacity}</span>
+                  </div>
                   <p>
                     <FontAwesomeIcon icon={faTruck} />{" "}
-
                     {parkingLotDetails.lot.xlvehicle_capacity}
-
                   </p>
                 </div>
                 <div className={styles.detail}>
@@ -158,13 +160,13 @@ const ParkingSlotDetail = () => {
                         </>
                       )}
                       {slot.type === "tw" && (
-                        <>
+                        <div className="flex items-center">
                           <img
                             src="/images/tuk-tuk.png"
                             className="w-6 h-5 mr-1 opacity-70"
                           />
                           {slot.amount_per_slot}
-                        </>
+                        </div>
                       )}
                     </p>
                   ))}
@@ -184,7 +186,6 @@ const ParkingSlotDetail = () => {
                     {`${parkingLotDetails.lot.addressno}, ${parkingLotDetails.lot.street1}, ${parkingLotDetails.lot.street2}, ${parkingLotDetails.lot.city}, ${parkingLotDetails.lot.district}`}
                     .
                   </p>
-
                 </div>
               </div>
             </div>
@@ -202,9 +203,7 @@ const ParkingSlotDetail = () => {
                 </span>
               </div>
               <div className={styles.card}>
-
                 <FontAwesomeIcon icon={faMotorcycle} className={styles.icon} />
-
                 &nbsp; <strong>6</strong>:
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.bike_capacity}
@@ -212,11 +211,9 @@ const ParkingSlotDetail = () => {
               </div>
               <div className={styles.card}>
                 <FontAwesomeIcon icon={faTruck} className={styles.icon} />
-
                 &nbsp; <strong>1</strong>:
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.xlvehicle_capacity}
-
                 </span>
               </div>
             </div>
