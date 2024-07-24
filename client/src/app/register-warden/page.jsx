@@ -33,7 +33,7 @@ const Register = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:5000/wardens/registerWarden",
+        `${process.env.NEXT_PUBLIC_API_KEY}/wardens/registerWarden`,
         {
           method: "POST",
           headers: {

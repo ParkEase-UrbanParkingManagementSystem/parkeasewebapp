@@ -26,7 +26,7 @@ const Register = () => {
     try {
         const body = { email, password, fname, lname, nic, contact, addressNo, street1, street2, city, district };
 
-        const response = await fetch(`http://localhost:5000/auth/registerDriver`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/auth/registerDriver`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),

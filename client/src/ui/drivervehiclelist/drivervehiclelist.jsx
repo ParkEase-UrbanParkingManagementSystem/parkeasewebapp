@@ -21,7 +21,7 @@ const DriverVehicleList = () => {
             try {
                 const token = localStorage.getItem("token");
 
-                const response = await fetch('http://localhost:5000/vehicle', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/vehicle`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const DriverVehicleList = () => {
         try {
             const token = localStorage.getItem("token");
 
-            const response = await fetch('http://localhost:5000/vehicle', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/vehicle`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

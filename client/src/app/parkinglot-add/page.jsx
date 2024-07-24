@@ -37,7 +37,7 @@ const AddParkingLot = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/parkinglots/add", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
