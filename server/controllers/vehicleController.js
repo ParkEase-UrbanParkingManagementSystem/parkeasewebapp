@@ -15,7 +15,6 @@ const getVehicles = async (req,res) => {
         
         const driver_id = driverDetails.rows[0].driver_id;
 
-        console.log("Hello");
         
         //Query to get driver details
 
@@ -28,7 +27,7 @@ const getVehicles = async (req,res) => {
             return res.status(404).json({message: "No vehicles found for this driver"})
         }
 
-        
+        console.log(result.rows)
 
         return res.status(200).json({
             message:"Success",
