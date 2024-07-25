@@ -58,7 +58,7 @@ const DriverPage = () => {
                         <div className='p-6 grid grid-cols-1 md:grid-cols-3 gap-5 '>
                             <div className="">
                                 <div className="p-1 mb-3 text-2xl font-bold">
-                                    Hello {userDetails?.driver?.lname},
+                                    Hello {userDetails?.fname},
                                 </div>
                                 <DriverSearch />
                             </div>

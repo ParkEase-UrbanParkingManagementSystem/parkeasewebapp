@@ -51,7 +51,7 @@ const Profile = () => {
             <h2>{`${userDetails.fname} ${userDetails.lname}`}</h2>
             <p>Email: {userDetails.email}</p>
             <p>Mobile: {userDetails.contact}</p>
-            <p>Address: {userDetails.addressNo}, {userDetails.street1} {userDetails.street2}, {userDetails.city}, {userDetails.district}</p>
+            <p>Address: {userDetails.addressNo}, {userDetails.street_1} {userDetails.street_2}, {userDetails.city}, {userDetails.province}</p>
             <p>NIC: {userDetails.nic}</p>
           </div>
         </div>
