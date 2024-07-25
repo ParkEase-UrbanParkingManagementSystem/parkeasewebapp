@@ -68,7 +68,7 @@ const DriverVehicleList = () => {
     };
 
     const handleParkedButton = () => {
-        router.push('/parked-details');
+        router.push('/driver/parked-details');
     };
 
     const handleAddVehicle = async () => {
