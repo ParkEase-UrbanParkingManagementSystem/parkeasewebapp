@@ -249,6 +249,14 @@ CREATE TABLE administrator (
         REFERENCES "users"(user_id)
 );
 
+ALTER TABLE vehicle ADD COLUMN isparked BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE driver ADD COLUMN isparked BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE parking_lot ADD COLUMN status VARCHAR(50) DEFAULT 'active';
+
+ALTER TABLE parking_lot ADD COLUMN description VARCHAR(255);
+
 
 
 
