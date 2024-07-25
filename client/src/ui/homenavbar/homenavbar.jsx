@@ -56,6 +56,7 @@ const arrayWithColors = [
 const handleLogout = () => {
     // Perform logout logic here (e.g., clearing tokens, calling API, etc.)
     console.log('User logged out');
+    localStorage.removeItem("token");
     // Redirect to home page or login page
     router.push('/login');
 };

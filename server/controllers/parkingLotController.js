@@ -165,7 +165,7 @@ exports.getParkingLot = async (req, res) => {
           pl.car_capacity, 
           pl.xlvehicle_capacity,
           pl.tw_capacity,
-          pl.status,
+          
           STRING_AGG(CONCAT(w.fname, ' ', w.lname), ' , ') AS wardens
         FROM parking_lot pl
         LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id
@@ -203,12 +203,11 @@ exports.getAParkingLotDetails = async (req, res) => {
     const lotQuery = `
       SELECT 
         l.*, 
-        w.fname, w.lname,
-        s.slot_id, s.type, s.amount_per_slot
+        w.fname, w.lname
       FROM parking_lot l
       LEFT JOIN warden_parking_lot wp ON l.lot_id = wp.lot_id
       LEFT JOIN warden w ON wp.warden_id = w.warden_id
-      LEFT JOIN slot_price s ON l.lot_id = s.lot_id 
+      
       WHERE l.lot_id = $1;
     `;
     const lotResult = await pool.query(lotQuery, [id]);
