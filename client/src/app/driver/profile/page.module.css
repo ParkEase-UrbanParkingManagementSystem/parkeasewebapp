@@ -3,18 +3,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px 20px;
-    background: linear-gradient(135deg, #f0f4f8, #d9e6f6);
+    
+    background: linear-gradient(135deg, #f0f4f8, #cfd2b0);
     min-height: 100vh;
   }
   
   .title {
-    font-size: 3rem;
+    margin-top: 10px;
+    font-size: 2rem;
     color: #333;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
   }
   
   /* Profile Section */
@@ -22,7 +21,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 20px;
     width: 100%;
     max-width: 1200px;
   }
@@ -37,13 +36,8 @@
     padding: 20px;
     width: 100%;
     max-width: 700px;
-    transition: transform 0.3s, box-shadow 0.3s;
   }
-  
-  .profileCard:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  }
+
   
   .profilePic {
     width: 120px;
@@ -74,7 +68,7 @@
   
   /* Vehicle Section */
   .vehicleSection {
-    width: 80%;
+    width: 40%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -85,17 +79,13 @@
     border-radius: 20px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    transition: transform 0.3s, box-shadow 0.3s;
+  
   }
   
-  .vehicleCard:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  }
-  
+
   .cardTitle {
     font-size: 1.8rem;
-    color: #0070f3;
+    color: #000000;
     margin-bottom: 15px;
     font-weight: 600;
     text-align: left;
@@ -115,14 +105,13 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 15px;
-    transition: transform 0.3s, box-shadow 0.3s;
+    width: max-content;
+    display: flex;
+    gap: 20px;
+  
   }
   
-  .vehicleItem:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  }
-  
+ 
   .vehiclePic {
     width: 140px;
     height: 120px;
