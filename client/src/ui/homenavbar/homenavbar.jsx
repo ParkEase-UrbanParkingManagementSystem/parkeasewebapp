@@ -214,7 +214,7 @@ return (
             <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}>
 
                 {setting === 'Profile' ? (
-                <Link href="/driverprofile" passHref>
+                <Link href="/driver/profile" passHref>
                     <Typography textAlign="center" sx={{ fontFamily: 'Montserrat, sans-serif', textTransform: 'none' }}>
                     {setting}
                     </Typography>

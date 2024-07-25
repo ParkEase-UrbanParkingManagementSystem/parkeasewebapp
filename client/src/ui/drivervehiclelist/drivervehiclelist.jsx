@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import VehicleListItem from '@/ui/vehiclelistitem/vehiclelistitem';
 import QRCode from 'qrcode.react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const DriverVehicleList = () => {
+    const router = useRouter();
     const [driverId, setDriverId] = useState(null);
     const [vehicles, setVehicles] = useState([]);  // Initialize as an empty array
     const [activeIndex, setActiveIndex] = useState(null);
@@ -63,6 +65,10 @@ const DriverVehicleList = () => {
     const handleCloseAddVehicleForm = () => {
         setShowAddVehicleForm(false);
         setNewVehicle({ name: '', type: '', number: '' });
+    };
+
+    const handleParkedButton = () => {
+        router.push('/parked-details');
     };
 
     const handleAddVehicle = async () => {
@@ -195,7 +201,16 @@ const DriverVehicleList = () => {
                         className='mt-3 p-2 bg-red-500 text-white rounded-lg'
                         onClick={handleCloseQRCode}
                     >
+                        
                         Close
+                    </button>
+
+                    <button
+                        className='mt-3 p-2 bg-green-500 text-white rounded-lg'
+                        onClick={handleParkedButton}
+                    >
+                        
+                        Parked
                     </button>
                 </div>
             )}

@@ -165,7 +165,7 @@ exports.getParkingLot = async (req, res) => {
           pl.car_capacity, 
           pl.xlvehicle_capacity,
           pl.tw_capacity,
-          
+          pl.description,
           STRING_AGG(CONCAT(w.fname, ' ', w.lname), ' , ') AS wardens
         FROM parking_lot pl
         LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id
@@ -182,7 +182,7 @@ exports.getParkingLot = async (req, res) => {
         .json({ error: "No parking lots found for this PMC" });
     }
 
-    console.log(result.rows);
+    // console.log(result.rows);
     res.status(200).json(result.rows);
   } catch (error) {
     console.error(error);
