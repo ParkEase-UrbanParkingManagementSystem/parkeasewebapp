@@ -89,11 +89,11 @@ const Profile = () => {
         <Navbar/>
         <div className="container mx-auto my-5 p-2">
             <h1 className="mb-2 text-lg font-bold">Driver Profile</h1>
-                    <div className="md:flex no-wrap md:-mx-2 ">
+                    <div className="md:flex no-wrap md:-mx-2  ">
                         {/* Left Side */}
                         <div className="w-full md:w-3/12 md:mx-2">
                             {/* Profile Card */}
-                            <div className="bg-white p-3 border-t-4 border-yellow-400">
+                            <div className="bg-white p-3 border-t-4 border-yellow-400 rounded-xl">
                                 <div className="image overflow-hidden">
                                     <img className="h-auto w-full mx-auto rounded-full"
                                         src="/images/binura.jpg" 
@@ -118,7 +118,7 @@ const Profile = () => {
                             {/* End of profile card */}
                             <div className="my-4"></div>
                             {/* Friends card */}
-                            <div className="bg-white p-3 hover:shadow">
+                            <div className="bg-white p-3 hover:shadow rounded-xl">
                                 <div className="flex items-center space-x-3 font-semibold text-gray-900 text-xl leading-8">
                                     <span className="text-green-500">
                                         <svg className="h-5 fill-current" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -148,7 +148,7 @@ const Profile = () => {
                         <div className="w-full md:w-9/12 mx-2 h-64">
                             {/* Profile tab */}
                             {/* About Section */}
-                            <div className="bg-white p-3 shadow-sm rounded-sm">
+                            <div className="bg-white p-3 shadow-sm rounded-xl ">
                                 <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
                                     <span clas="text-green-500">
                                         <svg className="h-5"
@@ -204,7 +204,7 @@ const Profile = () => {
                             <div className="my-4"></div>
 
                             {/* Experience and education */}
-                            <div className="bg-white p-3 shadow-sm rounded-sm">
+                            <div className="bg-white p-3 shadow-sm rounded-xl">
   <h1 className="mb-2 text-lg font-bold">Parking Details</h1>
   <div className="grid grid-cols-1 gap-4 p-4">
     <div className="bg-white p-2 rounded-lg shadow-md">

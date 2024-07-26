@@ -59,11 +59,13 @@
     display: flex;
     flex-direction: column;
     text-align: center;
+    gap: 10px;
 }
 
 
 
 .rightSection {
+  gap: 10px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -76,6 +78,8 @@
   padding: 30px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
+  display: flex;
+  flex-direction: column;
   
 }
 
@@ -98,13 +102,13 @@
 }
 
 .wardenDetails{
-    gap: 40px;
+
     display: flex;
     justify-content: space-between;
 }
 
 .parkingLotDetails{
-    gap: 40px;
+
     display: flex;
     justify-content: space-between;
 }
@@ -142,6 +146,7 @@
 }
 
 .button {
+   
     display: inline-block;
     margin-top: 5px;
     padding: 8px 16px;
@@ -154,6 +159,54 @@
     border: none;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+
+  .reviewForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+  }
+  
+  .starRating {
+    display: flex;
+    justify-content: center;
+    
+  }
+  
+  .starRating .on {
+    color: gold;
+  }
+  
+  .starRating .off {
+    color: #ccc;
+  }
+  
+  .starRating button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 40px; /* Increased from 24px */
+    margin: 0 2px;
+  }
+  
+  .reviewInput {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .submitButton {
+    padding: 10px 20px;
+    background-color: #FFB403;
+    color: white;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     cursor: pointer;
   }
 

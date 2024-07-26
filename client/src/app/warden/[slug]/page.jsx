@@ -117,6 +117,39 @@ const WardenDetailsPage = () => {
     }
   };
 
+  const handleUnassign = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_KEY}/wardens/unassign/${slug}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to unassign parking lot");
+      }
+
+      await fetchWardenDetails();
+
+      setWarden((prevWarden) => ({
+        ...prevWarden,
+        isassigned: null,
+        parking_lot_name: null,
+      }));
+
+      alert("Parking lot unassigned successfully");
+    } catch (error) {
+      console.error("Error unassigning parking lot:", error);
+      setError("Failed to unassign parking lot");
+    }
+  };
+
   const handleDropdownChange = (value) => {
     console.log("Dropdown change:", value); // Debug log
     setSelectedParkingLot(value);
@@ -153,6 +186,9 @@ const WardenDetailsPage = () => {
                     : "Assigned"}
                 </span>
               </p>
+              {warden.parking_lot_name !== null && (
+                <ActionButton label="Unassign" onClick={handleUnassign} />
+              )}
             </div>
           </div>
           <div className={styles.detailsCard}>

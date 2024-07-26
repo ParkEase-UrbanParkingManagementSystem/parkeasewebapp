@@ -18,6 +18,7 @@ app.use("/pmc", require("./routes/pmcRoutes"));
 app.use("/parkinglots", require("./routes/parkingLotRoutes"))
 app.use("/driver", require('./routes/driverRoutes'));
 app.use("/vehicle",require('./routes/vehicleRoutes'));
+app.use("/parking",require('./routes/parkingRoute'));
 
 // //Dashboard route
 

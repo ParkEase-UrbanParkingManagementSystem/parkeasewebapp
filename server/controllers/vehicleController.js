@@ -43,6 +43,7 @@ const getVehicles = async (req,res) => {
 }
 
 const addVehicle = async (req, res) => {
+    
     try {
         const user_id = req.user; // Assuming req.user contains the user_id of the logged-in user
         const { vehicle_number, name, type_id } = req.body;

@@ -47,6 +47,8 @@ const ParkingLot = () => {
 
         const data = await response.json();
 
+        console.log(data);
+
         if (Array.isArray(data)) {
           setParkingLots(data);
         } else {
@@ -126,12 +128,12 @@ const ParkingLot = () => {
                   </td>
                   <td
                     className={
-                      lot.status === "Active"
+                      lot.status === "active"
                         ? styles.statusActive
                         : styles.statusInactive
                     }
                   >
-                    {lot.status}
+                    {lot.status === "active" ? "Active" : "Inactive"}
                   </td>
                 </tr>
               ))
