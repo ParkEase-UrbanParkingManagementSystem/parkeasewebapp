@@ -97,22 +97,21 @@ const DriverVehicleList = () => {
     };
 
     return (
-        <div className='mt-4 p-2 overflow-auto h-[220px] border-[2px] rounded-xl '>
+        <div className='mt-4 p-2 overflow-auto h-[300px] border-[2px] rounded-xl '>
             {!showAddVehicleForm && (
                 <>
                     <h2 className='text-[20px] font-bold items-center'>Choose your ride</h2>
 
                     {vehicles.length === 0 && 
 
-                    <div className='flex flex-col items-center justify-center'>
+                    <div className='flex flex-col items-center justify-center mt-4'>
                         <Image 
-                        src={"/images/car.png"} 
+                        src={"/images/question-mark.png"} 
                         width={80} 
                         height={100} 
                         alt={`image`} 
                     />
-                    <p className='mb-3'>No Vehicles added. Please add a vehicle
-                    </p>
+                    <p className='text-[15px]  mb-1 mt-3 text-center'>No Vehicles added. Please add a vehicle</p>
                     </div>
                     }
 
@@ -127,7 +126,7 @@ const DriverVehicleList = () => {
                     ))}
 
                     <button
-                        className='mt-3 p-2 bg-yellow-500 w-full text-white rounded-lg'
+                        className='mt-3 p-2 w-full text-white rounded-lg ' style={{ backgroundColor: '#ffb403' }}
                         onClick={handleOpenAddVehicleForm}
                     >
                         Add Vehicle
@@ -172,13 +171,14 @@ const DriverVehicleList = () => {
                     </div>
                     <div className='flex justify-end'>
                         <button
-                            className='p-2 bg-black text-white rounded-lg mr-2'
+                            className='p-2 bg-black text-white rounded-lg mr-2 mt-1'
                             onClick={handleCloseAddVehicleForm}
                         >
                             Cancel
                         </button>
                         <button
-                            className='p-2 bg-yellow-500 text-white rounded-lg'
+                            className='p-2 text-white rounded-lg mt-1'
+                            style={{ backgroundColor: '#ffb403' }}
                             onClick={handleAddVehicle}
                         >
                             Add Vehicle

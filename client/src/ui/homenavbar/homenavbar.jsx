@@ -15,7 +15,7 @@
 
 // export default Navbar
 'use client'
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link"
 import { useRouter } from "next/navigation";
 import LetteredAvatar from 'react-lettered-avatar';
@@ -38,10 +38,39 @@ const pages = ['Home', 'Contact Us', 'Last Visited'];
 const settings = ['Profile', 'Logout'];
 
 const Navbar = () => {
-const [anchorElNav, setAnchorElNav] = React.useState(null);
-const [anchorElUser, setAnchorElUser] = React.useState(null);
-const [driverDetails, setDriverDetails] = React.useState(null);
+const [anchorElNav, setAnchorElNav] = useState(null);
+const [anchorElUser, setAnchorElUser] = useState(null);
+const [userDetails, setUserDetails] = useState(null);
 const router = useRouter();
+
+useEffect(() => {
+    const fetchUserDetails = async () => {
+        const token = localStorage.getItem("token");
+
+        try {
+            const response = await fetch("http://localhost:5000/driver/details", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    token: token
+                }
+            });
+
+            const parseRes = await response.json();
+
+            if (response.ok) {
+                setUserDetails(parseRes.data);
+            } else {
+                console.error("Can't get the details");
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
+    fetchUserDetails();
+}, [router]);
+
 
 const arrayWithColors = [
     '#2ecc71',
@@ -149,7 +178,7 @@ return (
             ))}
         </Menu>
         </Box>
-        <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+        {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
         <Typography
         variant="h5"
         noWrap
@@ -159,14 +188,14 @@ return (
             mr: 2,
             display: { xs: 'flex', md: 'none' },
             flexGrow: 1,
-            fontFamily: 'monospace',
+            fontFamily: 'Montserrat, sans-serif',
             fontWeight: 700,
-            letterSpacing: '.3rem',
             color: 'inherit',
             textDecoration: 'none',
+            textTransform: 'none',
         }}
         >
-        LOGO
+        ParkEase
         </Typography>
         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, ml: 'auto', justifyContent: 'flex-end' }}>
         {pages.map((page) => (
@@ -184,8 +213,8 @@ return (
         <Tooltip title="View More">
             <IconButton onClick={handleOpenUserMenu} sx={{ paddingLeft: 4 }}>
             <LetteredAvatar
-                // name={driverDetails.driver.fname}
-                name="Chandana"
+                name={userDetails?.driver?.fname}
+                // name="Chandana"
                 size={40}
                 radius={50}
                 color="#fff"
@@ -213,7 +242,7 @@ return (
             <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}>
 
                 {setting === 'Profile' ? (
-                <Link href="/driverprofile" passHref>
+                <Link href="/driver/profile" passHref>
                     <Typography textAlign="center" sx={{ fontFamily: 'Montserrat, sans-serif', textTransform: 'none' }}>
                     {setting}
                     </Typography>
