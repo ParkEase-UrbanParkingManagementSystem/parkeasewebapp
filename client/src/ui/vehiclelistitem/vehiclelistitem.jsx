@@ -12,7 +12,7 @@ const VehicleListItem = ({ vehicle }) => {
             imageSrc = '/images/motorcycle.png';
             break;
         case 3:
-            imageSrc = '/images/tuktuk.png';
+            imageSrc = '/images/tw.png';
             break;
         case 4:
             imageSrc = '/images/lorry.png';

@@ -3,16 +3,25 @@
 'use client'
 import Navbar from "@/ui/homenavbar/homenavbar";
 import DriverSearch from "@/ui/driversearch/driversearch";
+import CategoryList from "@/ui/categorylist/categorylist";
+import ParkingList from "@/ui/parkinglist/parkinglist";
 import GoogleMapSection from "@/ui/googlemapsection/googlemapsection";
+import ParkingToast from "@/ui/parkingtoast/parkingtoast";
 import { useState, useEffect } from "react";
 import { SourceContext } from '@/context/SourceContext';
 import { DestinationContext } from '@/context/DestinationContext';
+import { UserLocationContext } from '@/context/UserLocationContext';
+import { ParkingListContext } from '@/context/ParkingListContext';
+import { SelectedParkingContext } from '@/context/SelectedParkingContext';
 import { LoadScript } from "@react-google-maps/api";
 import { useRouter } from "next/navigation";
 import { useAuth } from '@/utils/authContext';
 import QRCode from 'qrcode.react';
+import GlobalApi from "@/services/GlobalApi";
 
 const DriverPage = () => {
+
+    //To get driver details
     const [userDetails, setUserDetails] = useState(null);
     const router = useRouter();
 
@@ -44,8 +53,53 @@ const DriverPage = () => {
         fetchUserDetails();
     }, [router]);
 
+    //To get the user's current location
+    const [userLocation, setUserLocation] = useState([]);
+
+    useEffect(() => {
+        getUserLocation();
+    }, [])
+    const getUserLocation = () => {
+        navigator.geolocation.getCurrentPosition(function (pos) {
+            console.log(pos);
+            setUserLocation({
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude
+            })
+        })
+    }
+
     const [source, setSource] = useState([]);
     const [destination, setDestination] = useState([]);
+    // const [radius, setRadius] = useState(25);
+    const [parkingList, setParkingList] = useState([]);
+    const [selectedParking,setSelectedParking]=useState([]);
+
+    //To get nearby places
+    useEffect(() => {
+        if (userLocation)
+            getNearByPlace('parking');
+
+
+    }, [userLocation])
+
+    const getNearByPlace = (category) => {
+        GlobalApi.getNearByPlace(category, userLocation?.lat, userLocation.lng)
+            .then(resp => {
+                // console.log(resp.data.results);
+                setParkingList(resp.data.results);
+            })
+    }
+
+
+    // useEffect(()=>{
+    //     getGooglePlace();
+    // },[radius])
+    // const getGooglePlace=()=>{
+    //     GlobalApi.getGooglePlace(radius).then(resp=>{
+    //         console.log(resp.data.product.results)
+    //     })
+    // }
 
     return (
         <UserLocationContext.Provider value={{ userLocation, setUserLocation }}>
