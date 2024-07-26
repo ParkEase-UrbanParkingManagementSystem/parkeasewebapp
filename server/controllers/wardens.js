@@ -1,5 +1,6 @@
 // const Warden = require("../models/wardenModel");
 const extractAgeAndGenderFromNIC = require ('../utils/extractFromNic');
+const bcrypt = require('bcryptjs');
 
 
 const pool = require("../db");
@@ -122,16 +123,21 @@ exports.registerWarden = async (req, res) => {
 
     // Extract age and gender from NIC
     const { age, gender } = extractAgeAndGenderFromNIC(nic);
+    const role_id = 3;
 
     const pmcQuery = await pool.query('SELECT pmc_id FROM pmc WHERE user_id = $1', [pmc_user_id]);
     const pmc_id = pmcQuery.rows[0].pmc_id;
+
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     await client.query('BEGIN');
 
     // Insert into users table and get the generated user_id
     const newWardenUser = await client.query(
-      "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province, contact) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING user_id",
-      [email, password, addressNo, street1, street2, city, province, contact]
+      "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province, contact, role_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING user_id",
+      [email, hashedPassword, addressNo, street1, street2, city, province, contact, role_id]
     );
 
     const user_id = newWardenUser.rows[0].user_id;

@@ -43,7 +43,7 @@ const Profile = () => {
 
         const data = await response.json();
         setVehicleDetails(data.data);  // Ensure the correct data path and default to an empty array
-        console.log("Maru details bn",data.data)
+        // console.log("Maru details bn",data.data)
     } catch (error) {
         console.error(error);
     }
@@ -205,97 +205,46 @@ const Profile = () => {
 
                             {/* Experience and education */}
                             <div className="bg-white p-3 shadow-sm rounded-sm">
-
-                            <h1 className="mb-2 text-lg font-bold">Reviews & Ratings</h1>
-
-                              <div className="grid grid-cols-1 gap-4 p-4">
-  <div className="bg-white p-2 rounded-lg shadow-md">
-    <div className="flex items-center space-x-5 mb-2">
-      <div className="flex">
-        <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-      </div>
-      <div className="ml-2">
-        <div className="font-semibold">John Doe</div>
-        <div className="text-gray-500 text-xs">March 2024</div>
-        <p className="text-gray-700 mt-1">Great experience, Such a nice person!</p>
+  <h1 className="mb-2 text-lg font-bold">Parking Details</h1>
+  <div className="grid grid-cols-1 gap-4 p-4">
+    <div className="bg-white p-2 rounded-lg shadow-md">
+      <h2 className="font-semibold mb-2">Summary</h2>
+      <div className="space-y-2">
+        <div className="flex justify-between">
+          <span>Total Times Parked:</span>
+          <span>167 Times</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Average Parking Time:</span>
+          <span>52 mins</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Average Parkings in a Month:</span>
+          <span>11 Times</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Total Parkings This Month:</span>
+          <span>14 Times</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div className="bg-white p-2 rounded-lg shadow-md">
-    <div className="flex items-center space-x-5 mb-2">
-      <div className="flex">
-        <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-      </div>
-      <div className="ml-2">
-        <div className="font-semibold">Emily Johnson</div>
-        <div className="text-gray-500 text-xs">April 2024</div>
-        <p className="text-gray-700 mt-1">Excellent service, Really kind and nice gentleman. Also tipped me with 100Rs. Really satisfied</p>
-      </div>
-    </div>
-  </div>
-
- 
-
- 
-
-  <div className="bg-white p-2 rounded-lg shadow-md">
-    <div className="flex items-center space-x-5 mb-2">
-      <div className="flex">
-        <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-        <svg className="h-5 w-5 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927a1 1 0 011.902 0l2.007 4.09a1 1 0 00.755.546l4.518.657a1 1 0 01.555 1.707l-3.272 3.189a1 1 0 00-.287.887l.772 4.48a1 1 0 01-1.45 1.054L12 18.027l-4.016 2.111a1 1 0 01-1.45-1.054l.772-4.48a1 1 0 00-.287-.887L3.036 9.99a1 1 0 01.555-1.707l4.518-.657a1 1 0 00.755-.546l2.007-4.09z" />
-        </svg>
-      </div>
-      <div className="ml-2">
-        <div className="font-semibold">Saman Perera</div>
-        <div className="text-gray-500 text-xs">April 2024</div>
-        <p className="text-gray-700 mt-1">Good overall, Good service.</p>
+    <div className="bg-white p-2 rounded-lg shadow-md">
+      <h2 className="font-semibold mb-2">Cost Details</h2>
+      <div className="space-y-2">
+        <div className="flex justify-between">
+          <span>Total Cost for Parkings:</span>
+          <span>Rs. 9573.00/=</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Average Cost for a Month:</span>
+          <span> Rs. 1973.25/=</span>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-                            </div>
                             {/* End of profile tab */}
                         </div>
                     </div>

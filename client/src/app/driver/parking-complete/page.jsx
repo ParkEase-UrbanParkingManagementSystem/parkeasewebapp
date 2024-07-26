@@ -8,22 +8,20 @@ import QRCode from 'qrcode.react';
 import Button from '../../../ui/button/button'
 import { useRouter } from 'next/navigation';
 
+const ParkedComplete = () => {
+  const handleButtonClick = () => {
+    router.push('/driver');
+  };
 
+  const router = useRouter();
 
-const ParkedDetails = () => {
-
-    const handleButtonClick = () => {
-        router.push('/driver/parking-complete');
-      };
-      
-    const router = useRouter();  
   return (
     <div className={styles.container}>
       <Navbar />
       <div className={styles.maincont}>
         <div className={styles.vehicleDetails}>
-          <h1 className={styles.heading}>Your Toyota Corolla is Parked</h1>
-          <h1 className={styles.heading}>In Nugegoda Parking Lot</h1>
+          <h1 className={styles.heading}>Parking Complete!</h1>
+          <h1 className={styles.heading}>Enjoy your day!</h1>
           <Image
             src="/images/home.png"
             alt="Profile Picture"
@@ -38,35 +36,29 @@ const ParkedDetails = () => {
             <h3>Vehicle Number</h3>
             <p>KN - 5410</p>
           </div>
-          <div className={styles.infoBlock}>
-            <h3>Parked Time</h3>
-            <p>12:53 PM</p>
-          </div>
+          
           <div className={styles.infoBlock}>
             <h3>Vehicle Type</h3>
             <p>Car</p>
           </div>
+
           <div className={styles.infoBlock}>
-            <h3>Price per Hour</h3>
+            <h3>Total Parked Time</h3>
+            <p>52 Minutes</p>
+          </div>
+
+          <div className={styles.infoBlock}>
+            <h3>Price</h3>
             <p>Rs.70/=</p>
           </div>
      </div>
 
      <div className={styles.qr}>
-       
-     <QRCode
-        value="https://play.google.com/store/apps/details?id=your_app_package_name"
-        size={200}
-        includeMargin={true}
-        />
 
 <div className={styles.qrpara}>
 
-    <p> Finished Parking?</p>
-    <p>Get scanned this QR Code </p>
-    <button className={styles.button} onClick={handleButtonClick}>
-      Done
-    </button>
+    
+    <button className={styles.button} onClick={handleButtonClick}>Proceed to payment</button>
     </div>
      </div>
 
@@ -134,4 +126,4 @@ const ParkedDetails = () => {
   );
 };
 
-export default ParkedDetails;
+export default ParkedComplete;
