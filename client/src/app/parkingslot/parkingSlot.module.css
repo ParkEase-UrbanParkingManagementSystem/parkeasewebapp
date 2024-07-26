@@ -96,6 +96,7 @@
 
 .statusActive {
   color: rgb(16, 147, 16);
+  background-color: rgb(255, 247, 137);
 }
 
 .statusInactive {

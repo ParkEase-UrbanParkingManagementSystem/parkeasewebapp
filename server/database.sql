@@ -249,6 +249,31 @@ CREATE TABLE administrator (
         REFERENCES "users"(user_id)
 );
 
+-- New tables
+
+CREATE TABLE ParkingLotReviews (
+    id SERIAL PRIMARY KEY,
+    driver_id UUID NOT NULL,
+    lot_id UUID NOT NULL,
+    rating INT CHECK (rating >= 1 AND rating <= 5),
+    review TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (driver_id) REFERENCES driver(driver_id),
+    FOREIGN KEY (lot_id) REFERENCES parking_lot(lot_id)
+);
+
+
+CREATE TABLE ParkingLotReviews (
+     id SERIAL PRIMARY KEY,
+     driver_id UUID NOT NULL,
+     lot_id UUID NOT NULL,
+     rating INT CHECK (rating >= 1 AND rating <= 5),
+     review TEXT,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (driver_id) REFERENCES driver(driver_id),
+     FOREIGN KEY (parking_lot_id) REFERENCES parking_lot(lot_id)
+);
+
 --Alter queries
 
 ALTER TABLE vehicle ADD COLUMN isparked BOOLEAN DEFAULT FALSE;
@@ -260,4 +285,7 @@ ALTER TABLE parking_lot ADD COLUMN status VARCHAR(50) DEFAULT 'active';
 ALTER TABLE parking_lot ADD COLUMN description VARCHAR(255);
 
 ALTER TABLE vehicle ADD COLUMN isdeleted BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE driver ADD COLUMN description TEXT;
+
 

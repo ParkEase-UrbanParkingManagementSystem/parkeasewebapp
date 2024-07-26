@@ -13,6 +13,7 @@ import {
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation"; // Import useParams
+import ToggleSwitch from "@/ui/toggleSwitch/ToggleSwitch"
 
 library.add(faCar, faMotorcycle, faClock, faTruck);
 

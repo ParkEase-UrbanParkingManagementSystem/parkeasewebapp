@@ -166,6 +166,7 @@ exports.getParkingLot = async (req, res) => {
           pl.xlvehicle_capacity,
           pl.tw_capacity,
           pl.description,
+          pl.status,
           STRING_AGG(CONCAT(w.fname, ' ', w.lname), ' , ') AS wardens
         FROM parking_lot pl
         LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id

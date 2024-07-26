@@ -56,6 +56,54 @@ exports.getWardens = async (req, res) => {
 };
 
 
+exports.unassignParkingLot = async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      // Start a transaction
+      await pool.query('BEGIN');
+  
+      // Update the warden's isassigned column to false
+      const updateWardenQuery = `
+        UPDATE warden
+        SET isassigned = false
+        WHERE warden_id = $1
+        RETURNING *;
+      `;
+  
+      const updateResult = await pool.query(updateWardenQuery, [id]);
+  
+      if (updateResult.rows.length === 0) {
+        await pool.query('ROLLBACK');
+        return res.status(404).json({ message: 'Warden not found' });
+      }
+  
+      // Delete the warden's entry from warden_parking_lot table
+      const deleteWardenParkingLotQuery = `
+        DELETE FROM warden_parking_lot
+        WHERE warden_id = $1
+        RETURNING *;
+      `;
+  
+      const deleteResult = await pool.query(deleteWardenParkingLotQuery, [id]);
+  
+      // Commit the transaction
+      await pool.query('COMMIT');
+  
+      res.status(200).json({
+        message: 'Parking lot unassigned successfully',
+        warden: updateResult.rows[0],
+        deletedWardenParkingLot: deleteResult.rows[0]
+      });
+    } catch (error) {
+      // Rollback the transaction in case of error
+      await pool.query('ROLLBACK');
+      console.error('Error unassigning parking lot:', error);
+      res.status(500).json({ message: 'Failed to unassign parking lot' });
+    }
+  };
+
+
 
 
 exports.getWardenDetails = async (req, res) => {
