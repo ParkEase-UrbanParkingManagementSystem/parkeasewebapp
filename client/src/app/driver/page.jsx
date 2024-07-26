@@ -48,28 +48,40 @@ const DriverPage = () => {
     const [destination, setDestination] = useState([]);
 
     return (
-        <SourceContext.Provider value={{ source, setSource }}>
-            <DestinationContext.Provider value={{ destination, setDestination }}>
-                <div>
-                    <Navbar />
-                    <LoadScript
-                        libraries={['places']}
-                        googleMapsApiKey={"AIzaSyAQzkKKubDkwzdBGhdUWrPoiQEuOzxpH4M"}>
-                        <div className='p-6 grid grid-cols-1 md:grid-cols-3 gap-5 '>
-                            <div className="">
-                                <div className="p-1 mb-3 text-2xl font-bold">
-                                    Hello {userDetails?.fname},
-                                </div>
-                                <DriverSearch />
+        <UserLocationContext.Provider value={{ userLocation, setUserLocation }}>
+            <SelectedParkingContext.Provider value={{ selectedParking, setSelectedParking }}>
+                <ParkingListContext.Provider value={{ parkingList, setParkingList }}>
+                    <SourceContext.Provider value={{ source, setSource }}>
+                        <DestinationContext.Provider value={{ destination, setDestination }}>
+                            <div>
+                                <Navbar />
+                                <LoadScript
+                                    libraries={['places']}
+                                    googleMapsApiKey={"AIzaSyAQzkKKubDkwzdBGhdUWrPoiQEuOzxpH4M"}>
+                                    <div className='p-6 grid grid-cols-1 md:grid-cols-4 gap-5 '>
+                                        <div className="col-span-1 p-2">
+                                            <div className="p-1 mb-3 text-2xl font-bold">
+                                                Hello {userDetails?.driver?.fname}!
+                                            </div>
+                                            <CategoryList setSelectedCategory={(category) =>
+                                                getNearByPlace(category)} />
+                                            <ParkingList parkingListData={parkingList} />
+                                        </div>
+                                        <div className="col-span-1 p-2 mt-14">
+                                            <DriverSearch />
+                                        </div>
+                                        <div className='col-span-2 p-2'>
+                                            <GoogleMapSection />
+                                            <ParkingToast userLocation={userLocation}/>
+                                        </div>
+                                    </div>
+                                </LoadScript>
                             </div>
-                            <div className='cols-span-2 p-2 '>
-                                <GoogleMapSection />
-                            </div>
-                        </div>
-                    </LoadScript>
-                </div>
-            </DestinationContext.Provider>
-        </SourceContext.Provider>
+                        </DestinationContext.Provider>
+                    </SourceContext.Provider>
+                </ParkingListContext.Provider>
+            </SelectedParkingContext.Provider>
+        </UserLocationContext.Provider>
     );
 };
 
