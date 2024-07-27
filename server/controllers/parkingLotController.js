@@ -183,7 +183,7 @@ exports.getParkingLot = async (req, res) => {
         .json({ error: "No parking lots found for this PMC" });
     }
 
-    // console.log(result.rows);
+    
     res.status(200).json(result.rows);
   } catch (error) {
     console.error(error);
@@ -260,7 +260,7 @@ exports.getAParkingLotDetails = async (req, res) => {
       }
     });
 
-    console.log(parkingLotDetails);
+    
 
     res.json({ data: parkingLotDetails });
   } catch (error) {
