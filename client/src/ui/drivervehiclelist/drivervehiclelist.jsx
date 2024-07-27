@@ -103,7 +103,8 @@ const DriverVehicleList = () => {
     };
 
     return (
-        <div className='mt-4 p-2 overflow-auto h-[300px] border-[2px] rounded-xl '>
+        <div className='mt-4 p-2 overflow-auto max-h-[470px] border-[2px] rounded-xl'>
+
             {!showAddVehicleForm && (
                 <>
                     <h2 className='text-[20px] font-bold items-center'>Choose your ride</h2>
@@ -194,25 +195,19 @@ const DriverVehicleList = () => {
             )}
 
             {selectedVehicle?.name && showQRCode && (
-                <div className='flex flex-col items-center fixed bottom-5 bg-white p-3 shadow-xl rounded-lg w-full md:w-[30%] border-[1px]'>
-                    <h2 className='mb-2'>QR Code for {selectedVehicle.name}</h2>
-                    <QRCode value={`Vehicle: ${selectedVehicle.vehicle_id}, User: ${driverId}`} size={256} />
-                    <button
-                        className='mt-3 p-2 bg-red-500 text-white rounded-lg'
-                        onClick={handleCloseQRCode}
-                    >
-                        
-                        Close
-                    </button>
-
-                    <button
-                        className='mt-3 p-2 bg-green-500 text-white rounded-lg'
-                        onClick={handleParkedButton}
-                    >
-                        
-                        Parked
-                    </button>
+                <div className='fixed inset-0 flex items-center justify-center z-10'>
+                <div className='flex flex-col items-center bg-white p-3 shadow-xl rounded-lg w-full md:w-[30%] border-[1px]'>
+                  <h2 className='mb-2'>QR Code for {selectedVehicle.name}</h2>
+                  <QRCode value={`Vehicle: ${selectedVehicle.vehicle_id}, User: ${driverId}`} size={256} />
+                  <button className='mt-3 p-2 bg-red-500 text-white rounded-lg' onClick={handleCloseQRCode}>
+                    Close
+                  </button>
+                  <button className='mt-3 p-2 bg-green-500 text-white rounded-lg' onClick={handleParkedButton}>
+                    Parked
+                  </button>
                 </div>
+              </div>
+              
             )}
         </div>
     );

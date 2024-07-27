@@ -112,7 +112,7 @@ const DriverPage = () => {
                                 <LoadScript
                                     libraries={['places']}
                                     googleMapsApiKey={"AIzaSyAQzkKKubDkwzdBGhdUWrPoiQEuOzxpH4M"}>
-                                    <div className='p-6 grid grid-cols-1 md:grid-cols-4 gap-5 '>
+                                    <div className='p-2 grid grid-cols-1 md:grid-cols-4 gap-2 '>
                                         <div className="col-span-1 p-2">
                                             <div className="p-1 mb-3 text-2xl font-bold">
                                                 Hello {userDetails?.fname}!
@@ -124,10 +124,13 @@ const DriverPage = () => {
                                         <div className="col-span-1 p-2 mt-14">
                                             <DriverSearch />
                                         </div>
-                                        <div className='col-span-2 p-2'>
-                                            <GoogleMapSection />
-                                            <ParkingToast userLocation={userLocation}/>
-                                        </div>
+                                        <div className='col-span-2 p-4 bg-white shadow-lg rounded-xl'>
+                                            <div>
+                                                <GoogleMapSection />
+                                            </div>
+                                            <ParkingToast userLocation={userLocation} />
+                                            </div>
+
                                     </div>
                                 </LoadScript>
                             </div>
