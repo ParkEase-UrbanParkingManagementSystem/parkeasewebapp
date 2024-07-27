@@ -115,7 +115,7 @@ const DriverPage = () => {
                                     <div className='p-6 grid grid-cols-1 md:grid-cols-4 gap-5 '>
                                         <div className="col-span-1 p-2">
                                             <div className="p-1 mb-3 text-2xl font-bold">
-                                                Hello {userDetails?.driver?.fname}!
+                                                Hello {userDetails?.fname}!
                                             </div>
                                             <CategoryList setSelectedCategory={(category) =>
                                                 getNearByPlace(category)} />
