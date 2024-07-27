@@ -237,8 +237,175 @@ const ParkingSlotDetail = () => {
             <p>Parking Lot Location Sketch:</p>
             <img src="/images/lot.png" className="w-72" />
           </div>
+          
         </div>
+
+       
+
+
+
+
       </div>
+
+      <h1 className="text-[20px] font-semibold">Reviews and Ratings for {parkingLotDetails.lot.name}</h1>
+<div className=" mt-3">
+        <div className="flex items-center mb-2 ">
+        <svg
+          className="w-8 h-8 text-yellow-300 me-1"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 22 20"
+        >
+          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+        </svg>
+        <svg
+          className="w-8 h-8 text-yellow-300 me-1"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 22 20"
+        >
+          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+        </svg>
+        <svg
+          className="w-8 h-8 text-yellow-300 me-1"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 22 20"
+        >
+          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+        </svg>
+        <svg
+          className="w-8 h-8 text-yellow-300 me-1"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 22 20"
+        >
+          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+        </svg>
+        <svg
+          className="w-8 h-8 text-gray-300 me-1 dark:text-gray-500"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 22 20"
+        >
+          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+        </svg>
+        <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">4.95</p>
+        <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">out of</p>
+        <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">5</p>
+      </div>
+      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">19 ratings</p>
+      <div className="flex items-center mt-4">
+        <a href="#" className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">
+          5 star
+        </a>
+        <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+          <div className="h-5 bg-yellow-300 rounded" style={{ width: "70%" }}></div>
+        </div>
+        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">70%</span>
+      </div>
+      <div className="flex items-center mt-4">
+        <a href="#" className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">
+          4 star
+        </a>
+        <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+          <div className="h-5 bg-yellow-300 rounded" style={{ width: "17%" }}></div>
+        </div>
+        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">17%</span>
+      </div>
+      <div className="flex items-center mt-4">
+        <a href="#" className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">
+          3 star
+        </a>
+        <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+          <div className="h-5 bg-yellow-300 rounded" style={{ width: "8%" }}></div>
+        </div>
+        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">8%</span>
+      </div>
+      <div className="flex items-center mt-4">
+        <a href="#" className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">
+          2 star
+        </a>
+        <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+          <div className="h-5 bg-yellow-300 rounded" style={{ width: "4%" }}></div>
+        </div>
+        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">4%</span>
+      </div>
+      <div className="flex items-center mt-4">
+        <a href="#" className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">
+          1 star
+        </a>
+        <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+          <div className="h-5 bg-yellow-300 rounded" style={{ width: "1%" }}></div>
+        </div>
+        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">1%</span>
+      </div>
+
+      </div>
+
+      <div className="space-y-4 mt-5 mb-5">
+      {/* Review Card 1 */}
+      <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
+        <div className="flex items-center mb-2">
+          <img className="w-10 h-10 rounded-full mr-4" src="https://via.placeholder.com/100" alt="User Avatar" />
+          <div>
+            <h3 className="text-lg font-semibold">Jane Doe</h3>
+            <div className="flex items-center mt-1">
+              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
+              </svg>
+              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
+              </svg>
+              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
+              </svg>
+              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
+              </svg>
+              <svg className="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <p className="text-gray-600">This is an amazing parking lot with great facilities. The staff are friendly and the location is perfect.</p>
+      </div>
+
+      {/* Review Card 2 */}
+      <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
+        <div className="flex items-center mb-2">
+          <img className="w-10 h-10 rounded-full mr-4" src="https://via.placeholder.com/100" alt="User Avatar" />
+          <div>
+            <h3 className="text-lg font-semibold">John Smith</h3>
+            <div className="flex items-center mt-1">
+              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
+              </svg>
+              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
+              </svg>
+              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
+              </svg>
+              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
+              </svg>
+              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <p className="text-gray-600">Good experience overall. The location was convenient, but the parking spaces were a bit tight.</p>
+      </div>
+    </div>
+
     </div>
   );
 };
