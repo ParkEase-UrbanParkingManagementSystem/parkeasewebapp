@@ -214,7 +214,7 @@ return (
         <Tooltip title="View More">
             <IconButton onClick={handleOpenUserMenu} sx={{ paddingLeft: 4 }}>
             <LetteredAvatar
-                name={userDetails?.driver?.fname}
+                name={userDetails?.fname}
                 // name="Chandana"
                 size={40}
                 radius={50}

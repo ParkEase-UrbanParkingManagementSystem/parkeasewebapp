@@ -37,7 +37,7 @@ const VehicleListItem = ({ vehicle }) => {
                         <p>{vehicle.vehicle_number}</p>
                     </div>
                 </div>
-                <h2 className='text-[15px] font-semibold'>Rs.{vehicle.amount} /h</h2>
+                
             </div>
         </div>
     );
