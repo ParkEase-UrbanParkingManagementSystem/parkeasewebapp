@@ -64,7 +64,7 @@ const WardenDetailsPage = () => {
       const parkingLotNames = data.map((lot) => lot.name);
       setParkingLots(parkingLotNames);
       setSelectedParkingLot(parkingLotNames[0]);
-      console.log(parkingLotNames);
+      
     } catch (error) {
       console.error("Error fetching parking lots:", error);
       setError("Failed to load parking lots");
@@ -78,7 +78,7 @@ const WardenDetailsPage = () => {
   }, [slug]);
 
   const handleAssign = async () => {
-    console.log(selectedParkingLot); // Debug log
+   
     if (!selectedParkingLot) {
       setError("Please select a parking lot");
       return;

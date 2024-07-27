@@ -9,6 +9,23 @@
  
 }
 
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh; /* Center the message vertically */
+  text-align: center;
+}
+
+.message p {
+  font-size: 18px;
+  color: #ff0000; /* Red color to grab attention */
+  background-color: #fff4f4; /* Light red background */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 .maincont {
   display: flex;
   flex: 1;

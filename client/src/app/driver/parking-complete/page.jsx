@@ -1,12 +1,20 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './parked-details.module.css';
 import Navbar from '../../../ui/homenavbar/homenavbar';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+
 const ParkedComplete = () => {
+
+  const [details, setDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const router = useRouter();
+  
   const [parkingRating, setParkingRating] = useState(0);
   const [parkingReview, setParkingReview] = useState("");
   const [wardenRating, setWardenRating] = useState(0);
@@ -42,7 +50,47 @@ const ParkedComplete = () => {
     router.push('/driver');
   };
 
-  const router = useRouter();
+  const token = localStorage.getItem("token");
+    useEffect(() => {
+        const fetchDetails = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/parking/parking-details`, {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    token:token
+                  }
+                }); 
+
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setDetails(data.data);
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDetails();
+    }, []);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error loading details</p>;
+
+
+    const formatTime = (dateString) => {
+      const date = new Date(dateString);
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = hours % 12 || 12;
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
 
   return (
     <div className={styles.container}>

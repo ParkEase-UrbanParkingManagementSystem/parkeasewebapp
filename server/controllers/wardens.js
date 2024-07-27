@@ -139,7 +139,7 @@ exports.getWardenDetails = async (req, res) => {
       }
 
       const warden = rows[0];
-      console.log(warden);
+      
       res.status(200).json(warden);
   } catch (error) {
       console.error('Error fetching warden details:', error);

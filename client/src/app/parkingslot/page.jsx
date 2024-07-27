@@ -47,8 +47,6 @@ const ParkingLot = () => {
 
         const data = await response.json();
 
-        console.log(data);
-
         if (Array.isArray(data)) {
           setParkingLots(data);
         } else {
