@@ -1,0 +1,7 @@
+/* styles.css or any other CSS file */
+.bg-custom {
+    background-image: url('./../../../../public//images/home1.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  

@@ -18,6 +18,19 @@ import ToggleSwitch from "@/ui/toggleSwitch/ToggleSwitch"
 library.add(faCar, faMotorcycle, faClock, faTruck);
 
 const ParkingSlotDetail = () => {
+
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span key={i} className={i <= rating ? styles.starOn : styles.starOff}>
+          &#9733;
+        </span>
+      );
+    }
+    return stars;
+  };
+  
   const [parkingLotDetails, setParkingLotDetails] = useState(null);
   const router = useRouter();
 
@@ -62,9 +75,12 @@ const ParkingSlotDetail = () => {
     fetchParkingLotDetails();
   }, [slug, router]);
 
+  
+
   if (!parkingLotDetails) {
     return <div>Loading...</div>; // Show a loading state while fetching data
   }
+
 
   return (
     <div className={styles.container}>
@@ -247,8 +263,8 @@ const ParkingSlotDetail = () => {
 
       </div>
 
-      <h1 className="text-[20px] font-semibold">Reviews and Ratings for {parkingLotDetails.lot.name}</h1>
-<div className=" mt-3">
+      
+{/* <div className=" mt-3">
         <div className="flex items-center mb-2 ">
         <svg
           className="w-8 h-8 text-yellow-300 me-1"
@@ -346,65 +362,25 @@ const ParkingSlotDetail = () => {
         <span className="text-sm font-medium text-gray-500 dark:text-gray-400">1%</span>
       </div>
 
-      </div>
+      </div> */}
 
-      <div className="space-y-4 mt-5 mb-5">
-      {/* Review Card 1 */}
-      <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
-        <div className="flex items-center mb-2">
-          <img className="w-10 h-10 rounded-full mr-4" src="https://via.placeholder.com/100" alt="User Avatar" />
-          <div>
-            <h3 className="text-lg font-semibold">Jane Doe</h3>
-            <div className="flex items-center mt-1">
-              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
-              </svg>
-              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
-              </svg>
-              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
-              </svg>
-              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
-              </svg>
-              <svg className="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
-              </svg>
+<div className={styles.reviewsOuterCont}>
+      {parkingLotDetails.reviews && parkingLotDetails.reviews.length > 0 && (
+        <div className={styles.reviewsContainer}>
+          <h1 className="text-[20px] font-semibold">Reviews and Ratings for {parkingLotDetails.lot.name}</h1>
+          {parkingLotDetails.reviews.map((review) => (
+            <div key={review.id} className={styles.reviewCard}>
+              <h4 className={styles.reviewRating}>Rating: {renderStars(review.rating)}</h4>
+              <p className={styles.reviewText}>{review.review}</p>
+              <p className={styles.reviewDate}>Reviewed on: {new Date(review.created_at).toLocaleDateString()}</p>
             </div>
-          </div>
+          ))}
         </div>
-        <p className="text-gray-600">This is an amazing parking lot with great facilities. The staff are friendly and the location is perfect.</p>
-      </div>
-
-      {/* Review Card 2 */}
-      <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
-        <div className="flex items-center mb-2">
-          <img className="w-10 h-10 rounded-full mr-4" src="https://via.placeholder.com/100" alt="User Avatar" />
-          <div>
-            <h3 className="text-lg font-semibold">John Smith</h3>
-            <div className="flex items-center mt-1">
-              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
-              </svg>
-              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
-              </svg>
-              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
-              </svg>
-              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
-              </svg>
-              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 15l-3.09 1.626.589-3.437L3 8.675l3.447-.502L10 2.5l1.553 3.673L15 8.675l-4.499 4.514.589 3.437L10 15z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-        <p className="text-gray-600">Good experience overall. The location was convenient, but the parking spaces were a bit tight.</p>
-      </div>
+      )}
     </div>
+
+
+
 
     </div>
   );
