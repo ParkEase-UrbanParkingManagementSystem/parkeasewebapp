@@ -11,6 +11,8 @@
 
 .message {
   display: flex;
+  flex-direction: column;
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 80vh; /* Center the message vertically */
@@ -18,12 +20,26 @@
 }
 
 .message p {
-  font-size: 18px;
-  color: #ff0000; /* Red color to grab attention */
+  font-size: 26px;
+  
+   /* Red color to grab attention */
   background-color: #fff4f4; /* Light red background */
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.images {
+  display: flex;
+  gap: 10px; /* Space between the images */
+  margin-bottom: 15px; /* Space between the images and the message */
+}
+
+.image {
+  width: 400px; /* Adjust as needed */
+  height: auto; /* Adjust as needed */
+  object-fit: cover; /* Ensures the images maintain aspect ratio */
+   /* Optional: adds rounded corners */
 }
 
 .maincont {

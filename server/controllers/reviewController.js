@@ -55,10 +55,18 @@ const postParkingReview = async (req, res) => {
     }
   
     try {
-      const result = await pool.query(
-        `SELECT * FROM parkinglotreviews WHERE lot_id = $1 ORDER BY created_at DESC`,
-        [lot_id]
-      );
+        const result = await pool.query(
+            `SELECT pr.*, 
+                    d.fname AS driver_fname, 
+                    d.lname AS driver_lname, 
+                    d.profile_pic 
+             FROM parkinglotreviews pr 
+             JOIN driver d ON pr.driver_id = d.driver_id
+             WHERE pr.lot_id = $1 
+             ORDER BY pr.created_at DESC`,
+            [lot_id]
+          );
+          
   
       return res.status(200).json({ reviews: result.rows });
     } catch (err) {
