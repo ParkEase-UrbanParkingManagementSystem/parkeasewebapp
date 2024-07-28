@@ -367,15 +367,23 @@ const ParkingSlotDetail = () => {
 <div className={styles.reviewsOuterCont}>
       {parkingLotDetails.reviews && parkingLotDetails.reviews.length > 0 && (
         <div className={styles.reviewsContainer}>
-          <h1 className="text-[20px] font-semibold">Reviews and Ratings for {parkingLotDetails.lot.name}</h1>
+          <h1 className="text-[20px] font-semibold">Reviews and Ratings for {parkingLotDetails.lot.name} ({parkingLotDetails.lot.review_count})</h1>
           {parkingLotDetails.reviews.map((review) => (
             <div key={review.id} className={styles.reviewCard}>
-              <h4 className={styles.reviewRating}>Rating: {renderStars(review.rating)}</h4>
+              <h4 className={styles.reviewRating}>{review.driver_fname} {review.driver_lname}:   {renderStars(review.rating)}</h4>
               <p className={styles.reviewText}>{review.review}</p>
               <p className={styles.reviewDate}>Reviewed on: {new Date(review.created_at).toLocaleDateString()}</p>
             </div>
           ))}
+
+          <div>
+          <a href="#" className="px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-400 transition-colors duration-300 ease-in-out">
+                See all reviews
+              </a>
+
+          </div>
         </div>
+        
       )}
     </div>
 
