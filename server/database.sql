@@ -288,4 +288,16 @@ ALTER TABLE vehicle ADD COLUMN isdeleted BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE driver ADD COLUMN description TEXT;
 
+ALTER TABLE users ADD COLUMN contact VARCHAR(10);
+
+ALTER TABLE parking_lot DROP COLUMN street_1;
+ALTER TABLE parking_lot DROP COLUMN street_2;
+ALTER TABLE parking_lot ADD COLUMN street1 VARCHAR(255);
+ALTER TABLE parking_lot ADD COLUMN street2 VARCHAR(255);
+
+ALTER TABLE parking_lot DROP COLUMN location;
+
+ALTER TABLE warden DROP COLUMN is_assigned;
+ALTER TABLE warden ADD COLUMN isassigned BOOLEAN DEFAULT FALSE;
+
 
