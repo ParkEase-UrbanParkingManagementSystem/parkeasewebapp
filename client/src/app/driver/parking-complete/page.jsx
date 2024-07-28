@@ -6,15 +6,13 @@ import Navbar from '../../../ui/homenavbar/homenavbar';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-
 const ParkedComplete = () => {
-
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const router = useRouter();
-  
+
   const [parkingRating, setParkingRating] = useState(0);
   const [parkingReview, setParkingReview] = useState("");
   const [wardenRating, setWardenRating] = useState(0);
@@ -36,14 +34,60 @@ const ParkedComplete = () => {
     setWardenReview(e.target.value);
   };
 
-  const handleParkingSubmit = (e) => {
+  const handleParkingSubmit = async (e) => {
     e.preventDefault();
-    // Handle parking review form submission logic here
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/reviews/parking`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: localStorage.getItem('token')
+        },
+        body: JSON.stringify({
+          driver_id: details.driver_id,
+          lot_id: details.lot_id,
+          rating: parkingRating,
+          review: parkingReview
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit parking review');
+      }
+
+      alert('Parking review submitted successfully');
+    } catch (err) {
+      console.error(err);
+      alert('Error submitting parking review');
+    }
   };
 
-  const handleWardenSubmit = (e) => {
+  const handleWardenSubmit = async (e) => {
     e.preventDefault();
-    // Handle warden review form submission logic here
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/reviews/warden`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: localStorage.getItem('token')
+        },
+        body: JSON.stringify({
+          driver_id: details.driver_id,
+          warden_id: details.warden_id,
+          rating: wardenRating,
+          review: wardenReview
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit warden review');
+      }
+
+      alert('Warden review submitted successfully');
+    } catch (err) {
+      console.error(err);
+      alert('Error submitting warden review');
+    }
   };
 
   const handleButtonClick = () => {
@@ -51,45 +95,43 @@ const ParkedComplete = () => {
   };
 
   const token = localStorage.getItem("token");
-    useEffect(() => {
-        const fetchDetails = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/parking/parking-details`, {
-                  method: 'GET',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    token:token
-                  }
-                }); 
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/parking/parking-details`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token
+          }
+        });
 
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setDetails(data.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                setDetails(data.data);
-            } catch (err) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
+    fetchDetails();
+  }, []);
 
-        fetchDetails();
-    }, []);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error loading details</p>;
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error loading details</p>;
-
-
-    const formatTime = (dateString) => {
-      const date = new Date(dateString);
-      const hours = date.getHours();
-      const minutes = date.getMinutes();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const formattedHours = hours % 12 || 12;
-      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-      return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  const formatTime = (dateString) => {
+    const date = new Date(dateString);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    return `${formattedHours}:${formattedMinutes} ${ampm}`;
   };
 
   return (
@@ -97,7 +139,7 @@ const ParkedComplete = () => {
       <Navbar />
       <div className={styles.maincont}>
         <div className={styles.vehicleDetails}>
-          <h1 className={styles.heading}>Parking Complete!</h1>
+          <h1 className={styles.heading}>{details.vehicle_name} - Parking Complete!</h1>
           <Image
             src="/images/Parking-rafiki 1.png"
             alt="Profile Picture"
@@ -109,11 +151,19 @@ const ParkedComplete = () => {
             <div className={styles.vehicleBasicInfo}>
               <div className={styles.infoBlock}>
                 <h3>Vehicle Number</h3>
-                <p>KN - 5410</p>
+                <p>{details.vehicle_number}</p>
               </div>
               <div className={styles.infoBlock}>
                 <h3>Vehicle Type</h3>
-                <p>Car</p>
+                <p>{details.type_id === 1
+                  ? "Car"
+                  : details.type_id === 2
+                    ? "Motorcycle"
+                    : details.type_id === 3
+                      ? "Three-Wheeler"
+                      : details.type_id === 4
+                        ? "Large Vehicle"
+                        : "Unknown Vehicle Type"}</p>
               </div>
               <div className={styles.infoBlock}>
                 <h3>Total Parked Time</h3>
@@ -140,7 +190,7 @@ const ParkedComplete = () => {
         </div>
         <div className={styles.rightSection}>
           <div className={styles.parkingLotDetails}>
-            <h2 className={styles.subHeading}>Nugegoda Parking Lot</h2>
+            <h2 className={styles.subHeading}>{details.lot_name}</h2>
             <p>You can add a rating and a review based on your experience</p>
             <form onSubmit={handleParkingSubmit} className={styles.reviewForm}>
               <div className={styles.starRating}>
@@ -170,7 +220,7 @@ const ParkedComplete = () => {
             </form>
           </div>
           <div className={styles.wardenDetails}>
-            <h2 className={styles.subHeading}>Saman Perera</h2>
+            <h2 className={styles.subHeading}>{details.warden_fname} {details.warden_lname}</h2>
             <p>You can add a rating and a review for the warden based on your experience</p>
             <form onSubmit={handleWardenSubmit} className={styles.reviewForm}>
               <div className={styles.starRating}>

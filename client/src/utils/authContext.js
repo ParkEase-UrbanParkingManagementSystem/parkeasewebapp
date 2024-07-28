@@ -53,7 +53,8 @@ export const AuthProvider = ({ children }) => {
       pathname !== '/' && 
       pathname !== '/select-user' && 
       pathname !== '/register-pmc' &&
-      pathname !== '/contact' &&  
+      pathname !== '/contact' && 
+      pathname !== '/adminc' &&  
       pathname!== '/register' ) {
 
       router.push('/login'); // Redirect to login if not authenticated and loading is complete

@@ -193,9 +193,10 @@ exports.getParkingLot = async (req, res) => {
   }
 };
 
+
 exports.getAParkingLotDetails = async (req, res) => {
   const { id } = req.params;
-  
+
   if (!id) {
     return res.status(400).json({ message: 'Lot ID is required or Invalid' });
   }
@@ -204,11 +205,13 @@ exports.getAParkingLotDetails = async (req, res) => {
     const lotQuery = `
       SELECT 
         l.*, 
-        w.fname, w.lname
+        w.fname, w.lname,
+        r.id AS review_id,
+        r.driver_id, r.rating as review_rating, r.review as review_text, r.created_at as review_created_at
       FROM parking_lot l
       LEFT JOIN warden_parking_lot wp ON l.lot_id = wp.lot_id
       LEFT JOIN warden w ON wp.warden_id = w.warden_id
-      
+      LEFT JOIN parkinglotreviews r ON l.lot_id = r.lot_id
       WHERE l.lot_id = $1;
     `;
     const lotResult = await pool.query(lotQuery, [id]);
@@ -217,11 +220,12 @@ exports.getAParkingLotDetails = async (req, res) => {
       return res.status(404).json({ message: "Parking lot not found" });
     }
 
-    // Initialize variables to store parking lot details and slot prices
+    // Initialize variables to store parking lot details, slot prices, and reviews
     const parkingLotDetails = {
       lot: null,
       warden: null,
       slotPrices: [],
+      reviews: [],
     };
 
     lotResult.rows.forEach((row) => {
@@ -258,10 +262,19 @@ exports.getAParkingLotDetails = async (req, res) => {
           amount_per_slot: row.amount_per_slot,
         });
       }
+
+      // Add reviews to the array
+      if (row.review_id) {
+        parkingLotDetails.reviews.push({
+          id: row.review_id,
+          driver_id: row.driver_id,
+          rating: row.review_rating,
+          review: row.review_text,
+          created_at: row.review_created_at,
+        });
+      }
     });
-
-    
-
+    console.log(parkingLotDetails);
     res.json({ data: parkingLotDetails });
   } catch (error) {
     console.error(error);
