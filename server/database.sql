@@ -304,3 +304,22 @@ INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (1, 'Car');
 INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (2, 'Bike');
 INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (3, 'ThreeWheeler');
 INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (4, 'Large Vehicle');
+
+--calculate full_capacity
+-- Create the trigger function
+CREATE OR REPLACE FUNCTION calculate_full_capacity() 
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.full_capacity := COALESCE(NEW.bike_capacity, 0) + 
+                         COALESCE(NEW.tw_capacity, 0) + 
+                         COALESCE(NEW.car_capacity, 0) + 
+                         COALESCE(NEW.xlvehicle_capacity, 0);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create the trigger
+CREATE TRIGGER set_full_capacity
+BEFORE INSERT OR UPDATE ON parking_lot
+FOR EACH ROW
+EXECUTE FUNCTION calculate_full_capacity();
