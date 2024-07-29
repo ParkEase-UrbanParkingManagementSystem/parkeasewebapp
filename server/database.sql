@@ -304,3 +304,5 @@ INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (1, 'Car');
 INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (2, 'Bike');
 INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (3, 'ThreeWheeler');
 INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (4, 'Large Vehicle');
+
+

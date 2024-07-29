@@ -202,6 +202,7 @@ exports.getAParkingLotDetails = async (req, res) => {
   }
 
   try {
+    // Query to get parking lot details and related data
     const lotQuery = `
       SELECT 
         l.*, 
@@ -254,15 +255,6 @@ exports.getAParkingLotDetails = async (req, res) => {
         };
       }
 
-      // Add slot price details to the array
-      if (row.slot_id) {
-        parkingLotDetails.slotPrices.push({
-          slot_id: row.slot_id,
-          type: row.type,
-          amount_per_slot: row.amount_per_slot,
-        });
-      }
-
       // Add reviews to the array
       if (row.review_id) {
         parkingLotDetails.reviews.push({
@@ -274,6 +266,17 @@ exports.getAParkingLotDetails = async (req, res) => {
         });
       }
     });
+
+    // Fetch slot prices
+    const slotPricesQuery = `SELECT * FROM slot_price;`; // Note: Adjusted query to fetch all slot prices
+    const slotPricesResult = await pool.query(slotPricesQuery);
+
+    parkingLotDetails.slotPrices = slotPricesResult.rows.map((row) => ({
+      slot_id: row.slot_id,
+      type: row.type,
+      amount_per_slot: row.amount_per_slot,
+    }));
+
     console.log(parkingLotDetails);
     res.json({ data: parkingLotDetails });
   } catch (error) {
@@ -281,6 +284,7 @@ exports.getAParkingLotDetails = async (req, res) => {
     res.status(500).json({ message: "Internal Server error" });
   }
 };
+
 
 
 
