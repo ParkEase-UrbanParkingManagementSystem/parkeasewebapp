@@ -2,7 +2,7 @@ import styles from "../layout.module.css";
 import Sidebar from "../../ui/sidebar/sidebar";
 import Navbar from "../../ui/pmcnavbar/navbar";
 
-const ParkingLayout = ({ children }) => {
+const PaymentLayout = ({ children }) => {
   return (
     <div className={styles.container}>
       <div>
@@ -18,4 +18,4 @@ const ParkingLayout = ({ children }) => {
   );
 };
 
-export default ParkingLayout;
+export default PaymentLayout;

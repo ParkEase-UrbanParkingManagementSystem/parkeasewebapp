@@ -323,3 +323,11 @@ CREATE TRIGGER set_full_capacity
 BEFORE INSERT OR UPDATE ON parking_lot
 FOR EACH ROW
 EXECUTE FUNCTION calculate_full_capacity();
+=======
+INSERT INTO slot_price (slot_id, type, amount_per_slot)
+VALUES
+  (1, 'bike', 30.00),
+  (2, 'tw', 50.00),
+  (3, 'car', 70.00),
+  (4, 'lorry', 100.00);
+

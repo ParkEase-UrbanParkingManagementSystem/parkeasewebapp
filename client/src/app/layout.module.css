@@ -1,15 +1,29 @@
 .container {
-    display: grid; 
-    grid-template-columns: 18% 82%;
+  display: grid; 
+  grid-template-columns: 18% 82%;
+  height: 100vh; /* Ensure container takes full viewport height */
 }
-  
+
 .body {
   display: grid;
   grid-template-rows: 8% 92%;
+  width: 100%; /* Ensure main content takes full width */
+  overflow: hidden; /* Hide any overflow from child elements */
 }
 
-.content{
+.navbar {
+  position: fixed;
+  width: calc(100% - 18%); /* Adjust width to account for the sidebar */
+  top: 0; /* Fix to the top */
+  z-index: 1000; /* Ensure navbar is on top of other content */
+}
+
+.content {
   padding-left: 20px;
   padding-right: 20px;
+  margin-top: 8%; /* Push content below the fixed navbar */
+  height: 100vh;
+  overflow-y: auto; /* Enable vertical scrolling */
 }
+
   
