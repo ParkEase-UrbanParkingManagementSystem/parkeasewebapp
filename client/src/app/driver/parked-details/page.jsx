@@ -7,6 +7,8 @@ import Image from 'next/image';
 import QRCode from 'qrcode.react';
 import Button from '../../../ui/button/button';
 import { useRouter } from 'next/navigation';
+import {image1} from '../../../../public/images/home.png'
+import {image2} from '../../../../public/images/question-mark.png'
 
 const ParkedDetails = () => {
     const [details, setDetails] = useState(null);
@@ -48,15 +50,23 @@ const ParkedDetails = () => {
     }, []);
 
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error loading details</p>;
+    // if (error) return <p>Error loading details</p>;
 
     if (!details) {
       return (
           <div className={styles.container}>
               <Navbar />
               <div className={styles.message}>
-                  <p>Your Vehicle does not seem to be parked. Ask the parking warden to scan your vehicle QR.</p>
-              </div>
+                        <div className={styles.images}>
+                            <img
+                            src="/images/home.png"  // Replace with your image path
+                            alt="First Illustration"
+                            className={styles.image}
+                            />
+                            
+                        </div>
+                        <p>Your vehicle does not seem to be parked. Ask the parking warden to scan your vehicle QR.</p>
+                        </div>
           </div>
       );
   }

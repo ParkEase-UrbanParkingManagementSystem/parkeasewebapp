@@ -204,18 +204,31 @@ exports.getAParkingLotDetails = async (req, res) => {
   try {
     // Query to get parking lot details and related data
     const lotQuery = `
-      SELECT 
-        l.*, 
-        w.fname, w.lname,
-        r.id AS review_id,
-        r.driver_id, r.rating as review_rating, r.review as review_text, r.created_at as review_created_at
-      FROM parking_lot l
-      LEFT JOIN warden_parking_lot wp ON l.lot_id = wp.lot_id
-      LEFT JOIN warden w ON wp.warden_id = w.warden_id
-      LEFT JOIN parkinglotreviews r ON l.lot_id = r.lot_id
-      WHERE l.lot_id = $1;
-    `;
+  SELECT 
+    l.*, 
+    w.fname AS warden_fname, 
+    w.lname AS warden_lname,
+    r.id AS review_id,
+    r.driver_id, 
+    r.rating AS review_rating, 
+    r.review AS review_text, 
+    r.created_at AS review_created_at,
+    d.fname AS driver_fname, 
+    d.lname AS driver_lname,
+    d.profile_pic AS driver_profile_pic,
+    (SELECT COUNT(*) FROM parkinglotreviews WHERE lot_id = l.lot_id) AS review_count
+  FROM parking_lot l
+  LEFT JOIN warden_parking_lot wp ON l.lot_id = wp.lot_id
+  LEFT JOIN warden w ON wp.warden_id = w.warden_id
+  LEFT JOIN parkinglotreviews r ON l.lot_id = r.lot_id
+  LEFT JOIN driver d ON r.driver_id = d.driver_id
+  WHERE l.lot_id = $1;
+`;
+
+
     const lotResult = await pool.query(lotQuery, [id]);
+
+    console.log(lotResult.rows);
 
     if (lotResult.rows.length === 0) {
       return res.status(404).json({ message: "Parking lot not found" });
@@ -247,11 +260,12 @@ exports.getAParkingLotDetails = async (req, res) => {
           full_capacity: row.full_capacity,
           description: row.description,
           status: row.status,
+          review_count: row.review_count
         };
 
         parkingLotDetails.warden = {
-          fname: row.fname,
-          lname: row.lname,
+          fname: row.warden_fname,
+          lname: row.warden_lname,
         };
       }
 
@@ -263,6 +277,9 @@ exports.getAParkingLotDetails = async (req, res) => {
           rating: row.review_rating,
           review: row.review_text,
           created_at: row.review_created_at,
+          driver_fname: row.driver_fname,
+          driver_lname: row.driver_lname,
+          profile_pic: row.driver_profile_pic
         });
       }
     });
