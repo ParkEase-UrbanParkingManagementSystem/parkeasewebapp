@@ -1,29 +1,36 @@
 .container {
-  display: grid; 
-  grid-template-columns: 18% 82%;
+  display: flex;
   height: 100vh; /* Ensure container takes full viewport height */
+  overflow: hidden; /* Prevent container from scrolling */
 }
 
-.body {
-  display: grid;
-  grid-template-rows: 8% 92%;
-  width: 100%; /* Ensure main content takes full width */
-  overflow: hidden; /* Hide any overflow from child elements */
+.container > div:first-child {
+  width: 18%; /* Sidebar width */
+}
+
+.container > div:last-child {
+  display: flex;
+  flex-direction: column;
+  width: 82%; /* Main content width */
 }
 
 .navbar {
+  width: 82%;
   position: fixed;
-  width: calc(100% - 18%); /* Adjust width to account for the sidebar */
   top: 0; /* Fix to the top */
   z-index: 1000; /* Ensure navbar is on top of other content */
 }
 
-.content {
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-top: 8%; /* Push content below the fixed navbar */
-  height: 100vh;
-  overflow-y: auto; /* Enable vertical scrolling */
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Take the remaining height */
+  margin-top: 68px; /* Height of the navbar to avoid overlap */
+  overflow: hidden; /* Prevent body from scrolling */
 }
 
-  
+.content {
+  flex: 1; /* Take the remaining space */
+  padding: 20px;
+  overflow-y: auto; /* Enable vertical scrolling within content */
+}

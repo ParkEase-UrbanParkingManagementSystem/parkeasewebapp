@@ -37,11 +37,12 @@ const Links = () => {
                 e.preventDefault();
                 handleLogout();
               }}
+              className="font-semibold"
             >
               {link.title}
             </a>
           ) : (
-            <Link href={link.path}>
+            <Link href={link.path} className="font-semibold">
               {link.title}
             </Link>
           )}
