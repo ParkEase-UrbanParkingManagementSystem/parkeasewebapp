@@ -98,7 +98,7 @@ const ParkedComplete = () => {
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/parking/parking-details`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/parking/parked-details`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -165,10 +165,10 @@ const ParkedComplete = () => {
                         ? "Large Vehicle"
                         : "Unknown Vehicle Type"}</p>
               </div>
-              <div className={styles.infoBlock}>
+              {/* <div className={styles.infoBlock}>
                 <h3>Total Parked Time</h3>
-                <p>52 Minutes</p>
-              </div>
+                <p>{details.out_time}</p>
+              </div> */}
               <div className={styles.infoBlock}>
                 <h3>Price</h3>
                 <p>Rs.70/=</p>
