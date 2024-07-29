@@ -6,7 +6,8 @@ const reviewController =  require("../controllers/reviewController")
 
 router.post("/parking", authorization, authorizeRole([1]), reviewController.postParkingReview);
 router.get("/parking", authorization, authorizeRole([1]), reviewController.getParkingLotReviews);
-router.post("/warden", authorization, authorizeRole([1]), reviewController.postWardenReview)
+router.post("/warden", authorization, authorizeRole([1]), reviewController.postWardenReview);
+router.get("/warden", authorization, authorizeRole([1]), reviewController.getParkingLotReviews);
 
 
 module.exports = router;

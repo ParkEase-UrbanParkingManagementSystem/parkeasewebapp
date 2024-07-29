@@ -14,6 +14,20 @@ const WardenDetailsPage = () => {
   const [parkingLots, setParkingLots] = useState([]);
   const [selectedParkingLot, setSelectedParkingLot] = useState(null);
 
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+  
+    return (
+      <>
+        {'★'.repeat(fullStars)}
+        {halfStar && '☆'}
+        {'☆'.repeat(emptyStars)}
+      </>
+    );
+  };
+
   const fetchWardenDetails = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -298,7 +312,50 @@ const WardenDetailsPage = () => {
             />
           </div>
         </div>
+
+       
+
+
       </div>
+      <h1 className="text-[20px] font-semibold mt-4">
+            Reviews and Ratings for Warden {warden.fname} {warden.lname}
+          </h1>
+
+      <div className={styles.reviewsOuterCont}>
+      {warden.reviews && warden.reviews.length > 0 ? (
+        
+        <div className={styles.reviewsContainer}>
+          
+          {warden.reviews.map((review) => (
+            <div key={review.id} className={styles.reviewCard}>
+              <h4 className={styles.reviewRating}>
+                Rating: {renderStars(review.rating)}
+              </h4>
+              <p className={styles.reviewText}>{review.review}</p>
+              <p className={styles.reviewDate}>
+                Reviewed on: {new Date(review.created_at).toLocaleDateString()}
+              </p>
+              {review.profile_pic && (
+                <img
+                  src={review.profile_pic}
+                  alt={`${review.driver_fname} ${review.driver_lname}`}
+                  className={styles.driverProfilePic}
+                />
+              )}
+              <p className={styles.driverName}>
+                Reviewed by: {review.driver_fname} {review.driver_lname}
+              </p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No reviews available for this warden.</p>
+      )}
+    </div>
+
+
+
+
     </div>
   );
 };

@@ -106,48 +106,85 @@ exports.unassignParkingLot = async (req, res) => {
 
 
 
-exports.getWardenDetails = async (req, res) => {
-  const { id } = req.params;
-
-  if (!id) {
+  exports.getWardenDetails = async (req, res) => {
+    const { id } = req.params;
+  
+    if (!id) {
       return res.status(400).json({ message: 'Warden ID is required' });
-  }
-
-  try {
+    }
+  
+    try {
+      // Query to get warden details
       const wardenQuery = `
-          SELECT 
-              warden.*, 
-              users.*, 
-              parking_lot.name AS parking_lot_name
-          FROM 
-              warden
-          JOIN 
-              users ON warden.user_id = users.user_id
-          LEFT JOIN 
-              warden_parking_lot ON warden.warden_id = warden_parking_lot.warden_id
-          LEFT JOIN 
-              parking_lot ON warden_parking_lot.lot_id = parking_lot.lot_id
-          WHERE 
-              warden.warden_id = $1;
-
+        SELECT 
+          warden.*, 
+          users.*, 
+          parking_lot.name AS parking_lot_name
+        FROM 
+          warden
+        JOIN 
+          users ON warden.user_id = users.user_id
+        LEFT JOIN 
+          warden_parking_lot ON warden.warden_id = warden_parking_lot.warden_id
+        LEFT JOIN 
+          parking_lot ON warden_parking_lot.lot_id = parking_lot.lot_id
+        WHERE 
+          warden.warden_id = $1;
       `;
-
-      const { rows } = await pool.query(wardenQuery, [id]);
-
-      if (rows.length === 0) {
-          return res.status(404).json({ message: 'Warden not found' });
+  
+      // Query to get warden reviews
+      const reviewsQuery = `
+        SELECT 
+          wr.*, 
+          d.fname AS driver_fname, 
+          d.lname AS driver_lname, 
+          d.profile_pic 
+        FROM 
+          wardenreviews wr
+        JOIN 
+          driver d ON wr.driver_id = d.driver_id
+        WHERE 
+          wr.warden_id = $1 
+        ORDER BY 
+          wr.created_at DESC;
+      `;
+  
+      // Execute both queries concurrently
+      const [wardenResult, reviewsResult] = await Promise.all([
+        pool.query(wardenQuery, [id]),
+        pool.query(reviewsQuery, [id])
+      ]);
+  
+      // Check if warden exists
+      if (wardenResult.rows.length === 0) {
+        return res.status(404).json({ message: 'Warden not found' });
       }
-
-      const warden = rows[0];
+  
+      // Extract data from the query results
+      const warden = wardenResult.rows[0];
+      const reviews = reviewsResult.rows;
+  
+      // Combine warden details with reviews
+      const response = {
+        ...warden,
+        reviews
+      };
       
-      res.status(200).json(warden);
-  } catch (error) {
-      console.error('Error fetching warden details:', error);
+      console.log(response)
+      res.status(200).json(response);
+    } catch (error) {
+      console.error('Error fetching warden details and reviews:', error);
       if (!res.headersSent) {
-          res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).json({ message: 'Internal Server Error' });
       }
-  }
-}
+    }
+  };
+  
+
+
+
+
+  //register Warden
 
 exports.registerWarden = async (req, res) => {
   const client = await pool.connect();
