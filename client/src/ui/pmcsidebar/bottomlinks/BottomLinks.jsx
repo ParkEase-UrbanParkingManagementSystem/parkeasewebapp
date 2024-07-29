@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
-import styles from "../toplinks/links.module.css";
+import styles from "./links.module.css";
 import { usePathname } from "next/navigation";
 import { useAuth } from "../../../utils/authContext";
 import { useRouter } from "next/navigation";
@@ -37,11 +37,12 @@ const Links = () => {
                 e.preventDefault();
                 handleLogout();
               }}
+              className="font-semibold"
             >
               {link.title}
             </a>
           ) : (
-            <Link href={link.path}>
+            <Link href={link.path} className="font-semibold">
               {link.title}
             </Link>
           )}

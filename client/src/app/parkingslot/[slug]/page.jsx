@@ -9,12 +9,14 @@ import {
   faClock,
   faTruck,
   faPlus,
+  faEdit, // Import the edit icon
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
+import ActionButton from "../../../ui/button/newButton";
 
-library.add(faCar, faMotorcycle, faClock, faTruck);
+library.add(faCar, faMotorcycle, faClock, faTruck, faPlus, faEdit);
 
 const ParkingSlotDetail = () => {
   const renderStars = (rating) => {
@@ -71,6 +73,78 @@ const ParkingSlotDetail = () => {
     fetchParkingLotDetails();
   }, [slug, router]);
 
+  const handleStatus = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/inactive/${slug}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to set parking lot status to inactive");
+      }
+
+      // Fetch the updated parking lot details
+      await fetchParkingLotDetails();
+
+      // Update the state to reflect the new status
+      setParkingLotDetails((prevDetails) => ({
+        ...prevDetails,
+        lot: {
+          ...prevDetails.lot,
+          status: "Inactive",
+        },
+      }));
+      alert("Parking lot status set to Inactive successfully");
+    } catch (error) {
+      console.error("Error setting parking lot status to inactive:", error);
+      // setError("Failed to set parking lot status to inactive");
+    }
+  };
+
+  const handleActivate = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/active/${slug}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to set parking lot status to active");
+      }
+
+      // Fetch the updated parking lot details
+      await fetchParkingLotDetails();
+
+      // Update the state to reflect the new status
+      setParkingLotDetails((prevDetails) => ({
+        ...prevDetails,
+        lot: {
+          ...prevDetails.lot,
+          status: "Active",
+        },
+      }));
+      alert("Parking lot status set to Active successfully");
+    } catch (error) {
+      console.error("Error setting parking lot status to active:", error);
+      // setError("Failed to set parking lot status to active");
+    }
+  };
+
   if (!parkingLotDetails) {
     return <div>Loading...</div>;
   }
@@ -89,25 +163,31 @@ const ParkingSlotDetail = () => {
               />
               <div className={styles.headerText}>
                 <h2 className="font-semibold">{parkingLotDetails.lot.name}</h2>
-                <h3 className="mb-2">L-{parkingLotDetails.lot.lot_id}</h3>
+                <h3 className="mb-2">Parking Lot ID - <span className="font-bold">L{`${parkingLotDetails.lot.lot_id.substring(0,4).toUpperCase()}`}</span></h3>
                 <p>
                   <span>Status: </span>
                   <span
                     className={
-                      parkingLotDetails.lot.status === "Inactive"
-                        ? styles.statusInactive
-                        : styles.statusActive
+                      parkingLotDetails.lot.status === "active"
+                        ? styles.statusActive
+                        : styles.statusInactive
                     }
                   >
-                    {parkingLotDetails.lot.status === "Inactive"
-                      ? "Inactive"
-                      : "Active"}
+                    {parkingLotDetails.lot.status === "active"
+                      ? "Active"
+                      : "Inactive"}
                   </span>
                 </p>
               </div>
             </div>
             <div className={styles.headerDescription}>
               <p>{parkingLotDetails.lot.description}</p>
+              {parkingLotDetails.lot.status === "active" && (
+                <ActionButton label="Inactive" onClick={handleStatus} />
+              )}
+              {parkingLotDetails.lot.status === "Inactive" && (
+                <ActionButton label="Activate" onClick={handleActivate} />
+              )}
             </div>
           </div>
           <div className={styles.details}>
@@ -148,6 +228,14 @@ const ParkingSlotDetail = () => {
                   </p>
                 </div>
                 <div className={styles.detail}>
+                  <label>Active Time</label>
+                  <p>
+                    <FontAwesomeIcon icon={faClock} /> 8.00AM to 8.00PM
+                  </p>
+                </div>
+              </div>
+              <div className={styles.detailColumn}>
+              <div className={styles.detail}>
                   <label>Prices per Hour</label>
                   {parkingLotDetails.slotPrices.map((slot, i) => (
                     <p key={i}>
@@ -181,14 +269,7 @@ const ParkingSlotDetail = () => {
                     </p>
                   ))}
                 </div>
-              </div>
-              <div className={styles.detailColumn}>
-                <div className={styles.detail}>
-                  <label>Active Time</label>
-                  <p>
-                    <FontAwesomeIcon icon={faClock} /> 8.00AM to 8.00PM
-                  </p>
-                </div>
+                
                 <div className={styles.detail}>
                   <label>Address</label>
                   <p>
@@ -205,17 +286,24 @@ const ParkingSlotDetail = () => {
             <p>Occupied Slots: (right now)</p>
             <div className={styles.slotcard}>
               <div className={styles.card}>
-                <FontAwesomeIcon icon={faCar} className={styles.icon} />
-                &nbsp; <strong>5</strong>:
-                <span className={styles.totalSlots}>
-                  {parkingLotDetails.lot.car_capacity}
-                </span>
-              </div>
-              <div className={styles.card}>
                 <FontAwesomeIcon icon={faMotorcycle} className={styles.icon} />
                 &nbsp; <strong>6</strong>:
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.bike_capacity}
+                </span>
+              </div>
+              <div className={styles.card}>
+                <img src="/images/tuk-tuk.png" className={styles.icon} />
+                &nbsp; <strong>6</strong>:
+                <span className={styles.totalSlots}>
+                  {parkingLotDetails.lot.tw_capacity}
+                </span>
+              </div>
+              <div className={styles.card}>
+                <FontAwesomeIcon icon={faCar} className={styles.icon} />
+                &nbsp; <strong>5</strong>:
+                <span className={styles.totalSlots}>
+                  {parkingLotDetails.lot.car_capacity}
                 </span>
               </div>
               <div className={styles.card}>

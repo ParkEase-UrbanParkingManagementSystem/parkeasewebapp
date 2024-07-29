@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
-import styles from "./links.module.css"; // Adjust path as needed
+import styles from "./links.module.css";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -19,22 +19,25 @@ const Links = () => {
     { title: "Dashboard", path: "/dashboard", icon: faChartBar, subLinks: [] },
     {
       title: "Parking Lots",
-      path: "/parkingslot",
+      path: "",
       icon: faParking,
       subLinks: [
+        { title: "Manage Parking Lot", path: "/parkingslot" },
         { title: "Add Parking Lot", path: "/parkinglot-add" },
-        { title: "Manage Parking Lot", path: "/parkingslot/manage" },
       ],
     },
     {
       title: "Wardens",
-      path: "/warden",
+      path: "",
       icon: faUser,
-      subLinks: [{ title: "Add Warden", path: "/register-warden" }],
+      subLinks: [
+        { title: "Manage Wardens", path: "/warden" },
+        { title: "Add Warden", path: "/register-warden" },
+      ],
     },
     {
       title: "Payments",
-      path: "/handle-payment",
+      path: "",
       icon: faMoneyCheckDollar,
       subLinks: [
         { title: "Park Points", path: "/parkpoints" },
@@ -49,15 +52,21 @@ const Links = () => {
         <div
           key={link.title}
           className={`${styles.link} ${
-            pathname === link.path || link.subLinks.some(sub => pathname === sub.path)
+            link.subLinks.some((sub) => pathname === sub.path)
+              ? ""
+              : pathname === link.path
               ? styles.active
               : ""
-          }`}
+          } ${link.subLinks.length === 0 ? styles.noSubLinks : ""}`}
         >
           <FontAwesomeIcon icon={link.icon} className={styles.icon} />
-          <Link href={link.path}>
-            {link.title}
-          </Link>
+          {link.subLinks.length > 0 ? (
+            <span className="font-semibold">{link.title}</span>
+          ) : (
+            <Link href={link.path} className="font-semibold">
+              {link.title}
+            </Link>
+          )}
           {link.subLinks.length > 0 && (
             <div className={styles.subLinks}>
               {link.subLinks.map((subLink) => (
@@ -65,9 +74,7 @@ const Links = () => {
                   key={subLink.title}
                   href={subLink.path}
                   className={
-                    pathname === subLink.path
-                      ? styles.subLinkActive
-                      : ""
+                    pathname === subLink.path ? styles.subLinkActive : ""
                   }
                 >
                   {subLink.title}

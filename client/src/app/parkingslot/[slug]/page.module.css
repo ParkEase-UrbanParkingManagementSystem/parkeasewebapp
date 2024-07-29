@@ -204,9 +204,10 @@
 }
 
 .icon{
-  color: #ffb403;
+  /* color: #ffb403; */
   width: 24px;
   height: 24px;
+  opacity: 60%;
 }
 
 .card strong {
@@ -263,3 +264,4 @@
   padding-top: 20px;
   padding-bottom: 20px;
 }
+

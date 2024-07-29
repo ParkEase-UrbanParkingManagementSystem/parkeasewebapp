@@ -19,8 +19,11 @@
   border-radius: 8px;
   background: #fff;
   overflow: hidden;
-  padding: 10px;
-  overflow-y: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+  margin-top: 10px;
+  overflow: auto;
 }
 
 .table {
@@ -29,8 +32,11 @@
 }
 
 .table thead {
+  position: sticky;
+  top: 0;
   background: #000000;
   color: white;
+  z-index: 1;
 }
 
 .table thead th {
@@ -93,17 +99,26 @@
   font-weight: 500;
 }
 
-
 .statusActive {
-  color: rgb(16, 147, 16);
-  background-color: rgb(255, 247, 137);
+  color: rgb(13, 194, 13) !important;
+  font-weight: 500;
 }
 
 .statusInactive {
-  color: rgb(211, 20, 20);
+  color: rgb(236, 38, 38) !important;
+  font-weight: 500;
 }
 
-/* cards */
+.notAssigned {
+  color: rgb(236, 38, 38) !important;
+  font-weight: 500;
+}
+
+.assigned {
+  color: #000000; 
+}
+
+/* Cards */
 
 .cardcontainer {
   display: flex;

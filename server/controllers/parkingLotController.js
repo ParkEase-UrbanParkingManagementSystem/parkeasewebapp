@@ -302,6 +302,82 @@ exports.getAParkingLotDetails = async (req, res) => {
   }
 };
 
+exports.deactivateParkingLot = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Start a transaction
+    await pool.query('BEGIN');
+
+    // Update the parking lot's status column to 'Inactive'
+    const updateParkingLotQuery = `
+      UPDATE parking_lot
+      SET status = 'Inactive'
+      WHERE lot_id = $1
+      RETURNING *;
+    `;
+
+    const updateResult = await pool.query(updateParkingLotQuery, [id]);
+
+    if (updateResult.rows.length === 0) {
+      await pool.query('ROLLBACK');
+      return res.status(404).json({ message: 'Parking lot not found' });
+    }
+
+    // Commit the transaction
+    await pool.query('COMMIT');
+
+    res.status(200).json({
+      message: 'Parking lot status updated to Inactive successfully',
+      parkingLot: updateResult.rows[0]
+    });
+  } catch (error) {
+    // Rollback the transaction in case of error
+    await pool.query('ROLLBACK');
+    console.error('Error updating parking lot status:', error);
+    res.status(500).json({ message: 'Failed to update parking lot status' });
+  }
+};
+
+exports.activateParkingLot = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Start a transaction
+    await pool.query('BEGIN');
+
+    // Update the parking lot's status column to 'Active'
+    const updateParkingLotQuery = `
+      UPDATE parking_lot
+      SET status = 'active'
+      WHERE lot_id = $1
+      RETURNING *;
+    `;
+
+    const updateResult = await pool.query(updateParkingLotQuery, [id]);
+
+    if (updateResult.rows.length === 0) {
+      await pool.query('ROLLBACK');
+      return res.status(404).json({ message: 'Parking lot not found' });
+    }
+
+    // Commit the transaction
+    await pool.query('COMMIT');
+
+    res.status(200).json({
+      message: 'Parking lot status updated to Active successfully',
+      parkingLot: updateResult.rows[0]
+    });
+  } catch (error) {
+    // Rollback the transaction in case of error
+    await pool.query('ROLLBACK');
+    console.error('Error updating parking lot status:', error);
+    res.status(500).json({ message: 'Failed to update parking lot status' });
+  }
+};
+
+
+
 
 
 

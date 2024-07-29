@@ -78,16 +78,18 @@ const ParkingLot = () => {
         </div>
       </div>
       <div>
-        <Link href="/parkinglot-add">
-          <Button label="Add New Parking Lot" icon={faSquarePlus} />
-        </Link>
+        <Button
+          path="/parkinglot-add"
+          label="Add New Parking Lot"
+          icon={faSquarePlus}
+        />
       </div>
       <div className={styles.tablecontent}>
         <table className={styles.table}>
           <thead>
             <tr>
               <th className={styles.empidhead}>Name</th>
-              <th className={styles.empnamehead}>Wardens</th>
+              <th className={styles.empnamehead}>Assigned Wardens</th>
               <th className={styles.empgenderhead}>Number of Slots</th>
               <th className={styles.empagehead}>Status</th>
             </tr>
@@ -101,7 +103,13 @@ const ParkingLot = () => {
                       <div className={styles.link}>{lot.name}</div>
                     </Link>
                   </td>
-                  <td className={styles.empnamedata}>
+                  <td
+                    className={
+                      lot.wardens && lot.wardens.trim()
+                        ? styles.assigned
+                        : styles.notAssigned
+                    }
+                  >
                     {lot.wardens && lot.wardens.trim()
                       ? lot.wardens
                       : "Not yet assigned"}
