@@ -157,6 +157,15 @@ const ParkingSlotDetail = () => {
                           {slot.amount_per_slot}
                         </>
                       )}
+                      {slot.type === "tw" && (
+                        <div className="flex items-center">
+                          <img
+                            src="/images/tuk-tuk.png"
+                            className="w-6 h-5 mr-1 opacity-70"
+                          />
+                          {slot.amount_per_slot}
+                        </div>
+                      )}
                       {slot.type === "car" && (
                         <>
                           <FontAwesomeIcon icon={faCar} />{" "}
@@ -168,15 +177,6 @@ const ParkingSlotDetail = () => {
                           <FontAwesomeIcon icon={faTruck} />{" "}
                           {slot.amount_per_slot}
                         </>
-                      )}
-                      {slot.type === "tw" && (
-                        <div className="flex items-center">
-                          <img
-                            src="/images/tuk-tuk.png"
-                            className="w-6 h-5 mr-1 opacity-70"
-                          />
-                          {slot.amount_per_slot}
-                        </div>
                       )}
                     </p>
                   ))}

@@ -305,4 +305,11 @@ INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (2, 'Bike');
 INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (3, 'ThreeWheeler');
 INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (4, 'Large Vehicle');
 
+INSERT INTO slot_price (slot_id, type, amount_per_slot)
+VALUES
+  (1, 'bike', 30.00),
+  (2, 'tw', 50.00),
+  (3, 'car', 70.00),
+  (4, 'lorry', 100.00);
+
 
