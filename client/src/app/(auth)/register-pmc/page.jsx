@@ -67,28 +67,29 @@ const Register = () => {
               className={styles.image}
             />
           </div>
-          <div className="text-4xl text-white tracking-widest m-5">
-            Your Gateway to Hassle-free Parking
+          <div className="flex text-[20px] text-white tracking-widest m-5 font-bold text-center max-w-[600px]">
+            Optimized parking solutions to manage your business better
           </div>
           <div className="justify-self-center">
             <Image
-              src="/images/Parking-rafiki 1.png"
+              src="/images/extra.png"
               alt="Description of the image"
-              width={500}
-              height={500}
+              width={400}
+              height={400}
               className={styles.image}
             />
           </div>
         </div>
         <div className={styles.right}>
           <div className={styles.center}>
-            <div className="float-left pb-3">
+            <div className="pb-3">
               <h1 className="text-center text-3xl font-extrabold">
-                Registration
+                Signup
               </h1>
             </div>
 
             <div>
+            <h2 style={{ fontWeight: 'bold', color:'#ffb403' }}>General Information:</h2>
               <form type="submit" onSubmit={onSubmitForm}>
                   <input
                     type="email"
@@ -123,7 +124,7 @@ const Register = () => {
                     onChange={(e) => setRegNo(e.target.value)}
                   /><br/>
                 <div>
-                  <h2 className="text-bold">Address Details:</h2>
+                <h2 style={{ fontWeight: 'bold', color:'#ffb403' }}>Business Address Details:</h2>
                   <input
                     type="text"
                     placeholder="Address No"
