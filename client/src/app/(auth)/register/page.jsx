@@ -57,8 +57,8 @@ const Register = () => {
               className={styles.image}
             />
           </div>
-          <div className="text-4xl text-white tracking-widest m-5">
-            Your Gateway to Hassle-free Parking
+          <div className="text-[20px] text-white tracking-widest m-5 font-bold text-center max-w-[600px]">
+            Your gateway to hassle-free parking
           </div>
           <div className="justify-self-center">
             <Image
@@ -72,11 +72,12 @@ const Register = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.center}>
-            <div className="float-left pb-3">
-              <h1 className="text-center text-3xl font-extrabold">Registration</h1>
+            <div className="pb-3">
+              <h1 className="text-[20px] font-extrabold text-center">Signup</h1>
             </div>
 
             <div>
+            <h2 style={{ fontWeight: 'bold', color:'#ffb403' }}>General Information:</h2>
               <form type="submit" onSubmit={onSubmitForm}>
                 <input
                   type="email"
@@ -131,7 +132,7 @@ const Register = () => {
                 /><br/>
 
                 <div>
-                  <h2>Address Details:</h2>
+                <h2 style={{ fontWeight: 'bold', color:'#ffb403' }}>Address Details:</h2>
                   <input
                     type="text"
                     placeholder="Address No"

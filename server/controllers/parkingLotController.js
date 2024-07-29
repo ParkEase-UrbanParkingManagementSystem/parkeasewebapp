@@ -202,6 +202,7 @@ exports.getAParkingLotDetails = async (req, res) => {
   }
 
   try {
+    // Query to get parking lot details and related data
     const lotQuery = `
   SELECT 
     l.*, 
@@ -268,15 +269,6 @@ exports.getAParkingLotDetails = async (req, res) => {
         };
       }
 
-      // Add slot price details to the array
-      if (row.slot_id) {
-        parkingLotDetails.slotPrices.push({
-          slot_id: row.slot_id,
-          type: row.type,
-          amount_per_slot: row.amount_per_slot,
-        });
-      }
-
       // Add reviews to the array
       if (row.review_id) {
         parkingLotDetails.reviews.push({
@@ -291,13 +283,101 @@ exports.getAParkingLotDetails = async (req, res) => {
         });
       }
     });
-    // console.log(parkingLotDetails);
+
+    // Fetch slot prices
+    const slotPricesQuery = `SELECT * FROM slot_price;`; // Note: Adjusted query to fetch all slot prices
+    const slotPricesResult = await pool.query(slotPricesQuery);
+
+    parkingLotDetails.slotPrices = slotPricesResult.rows.map((row) => ({
+      slot_id: row.slot_id,
+      type: row.type,
+      amount_per_slot: row.amount_per_slot,
+    }));
+
+    console.log(parkingLotDetails);
     res.json({ data: parkingLotDetails });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server error" });
   }
 };
+
+exports.deactivateParkingLot = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Start a transaction
+    await pool.query('BEGIN');
+
+    // Update the parking lot's status column to 'Inactive'
+    const updateParkingLotQuery = `
+      UPDATE parking_lot
+      SET status = 'Inactive'
+      WHERE lot_id = $1
+      RETURNING *;
+    `;
+
+    const updateResult = await pool.query(updateParkingLotQuery, [id]);
+
+    if (updateResult.rows.length === 0) {
+      await pool.query('ROLLBACK');
+      return res.status(404).json({ message: 'Parking lot not found' });
+    }
+
+    // Commit the transaction
+    await pool.query('COMMIT');
+
+    res.status(200).json({
+      message: 'Parking lot status updated to Inactive successfully',
+      parkingLot: updateResult.rows[0]
+    });
+  } catch (error) {
+    // Rollback the transaction in case of error
+    await pool.query('ROLLBACK');
+    console.error('Error updating parking lot status:', error);
+    res.status(500).json({ message: 'Failed to update parking lot status' });
+  }
+};
+
+exports.activateParkingLot = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Start a transaction
+    await pool.query('BEGIN');
+
+    // Update the parking lot's status column to 'Active'
+    const updateParkingLotQuery = `
+      UPDATE parking_lot
+      SET status = 'active'
+      WHERE lot_id = $1
+      RETURNING *;
+    `;
+
+    const updateResult = await pool.query(updateParkingLotQuery, [id]);
+
+    if (updateResult.rows.length === 0) {
+      await pool.query('ROLLBACK');
+      return res.status(404).json({ message: 'Parking lot not found' });
+    }
+
+    // Commit the transaction
+    await pool.query('COMMIT');
+
+    res.status(200).json({
+      message: 'Parking lot status updated to Active successfully',
+      parkingLot: updateResult.rows[0]
+    });
+  } catch (error) {
+    // Rollback the transaction in case of error
+    await pool.query('ROLLBACK');
+    console.error('Error updating parking lot status:', error);
+    res.status(500).json({ message: 'Failed to update parking lot status' });
+  }
+};
+
+
+
 
 
 

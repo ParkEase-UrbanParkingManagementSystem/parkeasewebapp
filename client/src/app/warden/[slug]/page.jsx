@@ -64,10 +64,9 @@ const WardenDetailsPage = () => {
       const parkingLotNames = data.map((lot) => lot.name);
       setParkingLots(parkingLotNames);
       setSelectedParkingLot(parkingLotNames[0]);
-      
     } catch (error) {
       console.error("Error fetching parking lots:", error);
-      setError("Failed to load parking lots");
+      // setError("Failed to load parking lots");
     }
   };
 
@@ -78,7 +77,6 @@ const WardenDetailsPage = () => {
   }, [slug]);
 
   const handleAssign = async () => {
-   
     if (!selectedParkingLot) {
       setError("Please select a parking lot");
       return;
@@ -171,7 +169,7 @@ const WardenDetailsPage = () => {
             />
             <div className={styles.profileDetails}>
               <h2 className="font-semibold text-[36px]">{`${warden.fname} ${warden.lname}`}</h2>
-              <h3 className="mb-2">Warden ID - <span className="font-bold">{`${warden.warden_id.substring(0,4).toUpperCase()}`}</span> </h3>
+              <h3 className="mb-2">Warden ID - <span className="font-bold">W{`${warden.warden_id.substring(0,4).toUpperCase()}`}</span> </h3>
               <p>
                 <span>Status:</span>
                 <span
@@ -241,22 +239,34 @@ const WardenDetailsPage = () => {
             {warden.parking_lot_name === null ? (
               <div className={styles.assignoption}>
                 <p>Assign to a parking slot:</p>
-                <Dropdown
-                  options={parkingLots}
-                  selectedOption={selectedParkingLot}
-                  onChange={handleDropdownChange}
-                />
-                <ActionButton label="Assign" onClick={handleAssign} />
+                {parkingLots && parkingLots.length > 0 ? (
+                  <>
+                    <Dropdown
+                      options={parkingLots}
+                      selectedOption={selectedParkingLot}
+                      onChange={handleDropdownChange}
+                    />
+                    <ActionButton label="Assign" onClick={handleAssign} />
+                  </>
+                ) : (
+                  <p>No parking lots available to assign</p>
+                )}
               </div>
             ) : (
               <div className={styles.assignoption}>
                 <p>Change the current parking lot:</p>
-                <Dropdown
-                  options={parkingLots}
-                  selectedOption={selectedParkingLot}
-                  onChange={handleDropdownChange}
-                />
-                <ActionButton label="Change" onClick={handleAssign} />
+                {parkingLots && parkingLots.length > 0 ? (
+                  <>
+                    <Dropdown
+                      options={parkingLots}
+                      selectedOption={selectedParkingLot}
+                      onChange={handleDropdownChange}
+                    />
+                    <ActionButton label="Change" onClick={handleAssign} />
+                  </>
+                ) : (
+                  <div className="text-red">No Parking Lots available to assign</div>
+                )}
               </div>
             )}
           </div>

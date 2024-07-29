@@ -112,7 +112,7 @@ const DriverPage = () => {
                                     googleMapsApiKey={"AIzaSyAQzkKKubDkwzdBGhdUWrPoiQEuOzxpH4M"}>
                                     <div className='p-2 grid grid-cols-1 md:grid-cols-4 gap-2 '>
                                         <div className="col-span-1 p-2">
-                                            <div className="p-1 mb-3 text-2xl font-bold">
+                                            <div className="p-1 mt-2 mb-3 text-2xl font-bold" style={{ color: '#ffb403' }}> 
                                                 Hello {userDetails?.fname}!
                                             </div>
                                             <CategoryList setSelectedCategory={(category) =>

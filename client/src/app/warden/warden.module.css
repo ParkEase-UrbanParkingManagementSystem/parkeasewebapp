@@ -1,6 +1,6 @@
 .container {
   display: grid;
-  grid-template-rows: 5% 10% 5% 80% ;
+  grid-template-rows: 5% 10% 5% 80%;
   height: 100vh;
   padding: 20px;
   gap: 20px;
@@ -17,8 +17,10 @@
   border-radius: 8px;
   background: #fff;
   overflow: hidden;
-  padding: 10px;
-  /* max-height: 70vh; */
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+  margin-top: 10px;
   overflow-y: auto;
 }
 
@@ -28,8 +30,11 @@
 }
 
 .table thead {
+  position: sticky;
+  top: 0;
   background: #000000;
   color: white;
+  z-index: 1;
 }
 
 .table thead th {
@@ -81,7 +86,15 @@
   text-decoration: none;
   cursor: pointer;
   font-weight: 500;
+}
 
+.statusActive {
+  color: black !important;
+}
+
+.statusInactive {
+  color: rgb(236, 38, 38) !important;
+  font-weight: 500;
 }
 
 .noData {
@@ -89,7 +102,6 @@
   color: #999; /* Or any color you prefer for the no-data message */
   font-style: italic;
 }
-
 
 /* cards */
 
