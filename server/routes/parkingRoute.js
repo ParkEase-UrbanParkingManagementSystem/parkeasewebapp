@@ -5,6 +5,7 @@ const authorization = require("../middleware/authorization");
 
 
 router.get("/parking-details", authorization, parkingController.getParkingDetails);
+router.get("/parked-details", authorization, parkingController.getAfterParkingDetails);
 
 
 module.exports = router;

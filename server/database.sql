@@ -288,4 +288,8 @@ ALTER TABLE vehicle ADD COLUMN isdeleted BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE driver ADD COLUMN description TEXT;
 
+ALTER TABLE parking_instance
+ADD COLUMN iscompleted BOOLEAN;
+
+
 
