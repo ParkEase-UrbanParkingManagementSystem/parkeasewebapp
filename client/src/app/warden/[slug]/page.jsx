@@ -169,7 +169,7 @@ const WardenDetailsPage = () => {
             />
             <div className={styles.profileDetails}>
               <h2 className="font-semibold text-[36px]">{`${warden.fname} ${warden.lname}`}</h2>
-              <h3 className="mb-2">Warden ID - <span className="font-bold">{`${warden.warden_id.substring(0,4).toUpperCase()}`}</span> </h3>
+              <h3 className="mb-2">Warden ID - <span className="font-bold">W{`${warden.warden_id.substring(0,4).toUpperCase()}`}</span> </h3>
               <p>
                 <span>Status:</span>
                 <span

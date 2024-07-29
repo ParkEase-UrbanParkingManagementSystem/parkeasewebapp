@@ -281,6 +281,7 @@ ALTER TABLE vehicle ADD COLUMN isparked BOOLEAN DEFAULT FALSE;
 ALTER TABLE driver ADD COLUMN isparked BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE parking_lot ADD COLUMN status VARCHAR(50) DEFAULT 'active';
+--important inactive status is == "Inactive" not inactive
 
 ALTER TABLE parking_lot ADD COLUMN description VARCHAR(255);
 

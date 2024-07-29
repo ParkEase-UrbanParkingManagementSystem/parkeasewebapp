@@ -10,6 +10,8 @@ router.get(
     authorization,
     parkingLotController.getAParkingLotDetails
   );
+  router.post('/inactive/:id', authorization, parkingLotController.deactivateParkingLot);
+  router.post('/active/:id', authorization, parkingLotController.activateParkingLot);
 
 module.exports = router;
 

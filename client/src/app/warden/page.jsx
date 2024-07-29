@@ -53,9 +53,9 @@ const WardenPage = () => {
   }, []);
 
   // Render loading state or handle empty wardens array case
-  // if (wardens.length === 0) {
-  //   return <p>Loading...</p>; // or any other loading indicator
-  // }
+  if (wardens.length === 0) {
+    return <p>Loading...</p>; // or any other loading indicator
+  }
 
   const title = ["Assigned Wardens", "Not Assigned Wardens"];
   const amount = ["10%", "30%"];
@@ -66,10 +66,10 @@ const WardenPage = () => {
         <p>Registered Parking Warden List</p>
       </div>
       <div className={styles.cardcontainer}>
-        <div className="w-1/5">
+        <div className="w-1/4">
           <Card title={title[0]} amount={amount[0]} />
         </div>
-        <div className="w-1/5">
+        <div className="w-1/4">
           <Card title={title[1]} amount={amount[1]} />
         </div>
       </div>
