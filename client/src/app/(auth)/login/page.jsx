@@ -65,8 +65,8 @@ const Login = () => {
               className={styles.image}
             ></Image>
           </div>
-          <div className="text-4xl text-white tracking-widest m-5">
-            Your Gateway to Hassle-free parking
+          <div className="text-[20px] text-white tracking-widest m-5 font-bold text-center">
+            Where Finding Parking is a Breeze
           </div>
           <div className="justify-self-center">
             <Image
@@ -80,9 +80,9 @@ const Login = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.center}>
-            <div className="float-left py-7">
-              <h1 className="text-3xl font-extrabold mb-4">Welcome !</h1>
-              <h1 className="text-2xl font-extrabold">Log In</h1>
+            <div className="py-7">
+              <h1 className="text-[20px] mb-4 text-center" style={{ fontWeight: 'bold', color:'#ffb403' }}>Hello there!</h1> 
+              <h1 className="text-2xl font-extrabold text-center">Log In</h1>
             </div>
 
             <div>

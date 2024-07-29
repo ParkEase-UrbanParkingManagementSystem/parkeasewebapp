@@ -4,15 +4,19 @@ import Image from 'next/image'
 
 const ParkingItem = ({ parking }) => {
     const GOOGLE_API_KEY = 'AIzaSyAQzkKKubDkwzdBGhdUWrPoiQEuOzxpH4M';
-    const photo_ref = parking?.photos ? parking?.photos[0]?.photo_reference : ''
+    const photo_ref = parking?.photos ? parking?.photos[0]?.photo_reference : '';
+    const defaultImageUrl = '/images/default_parking_img.png';
 
+    const imageUrl = photo_ref 
+    ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo_ref}&key=${GOOGLE_API_KEY}`
+    : defaultImageUrl;
 
     return (
         <div className='flex gap-3 p-3 border-b-[1px] border-slate-400 mb-4 items-center'>
-            <Image src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo_ref}&key=${GOOGLE_API_KEY}`}
+            <Image src={imageUrl}
                 alt='parking-lot-image'
-                width={90}
-                height={90}
+                width={80}
+                height={80}
                 className='rounded-xl
             object-cover h-[100px] w-[100px]'
             />

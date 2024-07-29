@@ -28,12 +28,14 @@ exports.getDriverDetails = async (req, res) => {
             return res.status(404).json({ msg: "Driver details not found" });
         }
 
-        
+        console.log(combinedDetails.rows[0])
 
         res.status(200).json({
             message: "Success",
             data: combinedDetails.rows[0]
         });
+
+        
 
     } catch (error) {
         console.error(error.message);
