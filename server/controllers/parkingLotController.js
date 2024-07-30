@@ -193,7 +193,6 @@ exports.getParkingLot = async (req, res) => {
   }
 };
 
-
 exports.getAParkingLotDetails = async (req, res) => {
   const { id } = req.params;
 
