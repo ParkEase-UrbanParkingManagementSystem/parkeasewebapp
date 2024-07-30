@@ -52,13 +52,12 @@ const WardenPage = () => {
     fetchWardens();
   }, []);
 
-  // Render loading state or handle empty wardens array case
-  if (wardens.length === 0) {
-    return <p>Loading...</p>; // or any other loading indicator
-  }
+  
+  
 
   const title = ["Assigned Wardens", "Not Assigned Wardens"];
   const amount = ["10%", "30%"];
+
 
   return (
     <div className={styles.container}>
