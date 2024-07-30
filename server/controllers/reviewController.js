@@ -75,8 +75,40 @@ const postParkingReview = async (req, res) => {
     }
   };
 
+
+  // Get warden reviews
+const getWardenReviews = async (req, res) => {
+  const { warden_id } = req.params;
+
+  if (!warden_id) {
+    return res.status(400).json({ message: 'Missing warden_id parameter' });
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT wr.*, 
+              d.fname AS driver_fname, 
+              d.lname AS driver_lname, 
+              d.profile_pic 
+       FROM wardenreviews wr 
+       JOIN driver d ON wr.driver_id = d.driver_id
+       WHERE wr.warden_id = $1 
+       ORDER BY wr.created_at DESC`,
+      [warden_id]
+    );
+
+    return res.status(200).json({ reviews: result.rows });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
   module.exports = {
     postParkingReview,
     postWardenReview,
-    getParkingLotReviews
+    getParkingLotReviews,
+    getWardenReviews
   };

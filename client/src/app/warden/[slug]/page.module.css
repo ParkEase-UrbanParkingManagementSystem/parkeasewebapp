@@ -1,7 +1,6 @@
 .container {
   padding: 20px;
   display: grid;
-  grid-template-rows: 10% 90%;
   align-items: center;
 }
 
@@ -158,3 +157,63 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
 }
+
+/* YourStyles.module.css */
+.reviewsOuterCont {
+  padding: 20px;
+  
+}
+
+.reviewsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between cards */
+}
+
+.reviewCard {
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  flex: 1 1 calc(50% - 10px); /* Two cards per row with gap */
+  box-sizing: border-box;
+  max-width: 45%;
+}
+
+.reviewRating {
+  font-size: 16px;
+  color: #ffcc00;
+  margin-bottom: 5px;
+}
+
+.reviewText {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.reviewDate {
+  font-size: 12px;
+  color: #666;
+}
+
+.driverProfilePic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.driverName {
+  font-size: 12px;
+  color: #444;
+  display: flex;
+  align-items: center;
+}
+
+.reviewContainer h1 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
