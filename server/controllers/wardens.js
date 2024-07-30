@@ -56,7 +56,6 @@ exports.getWardens = async (req, res) => {
   }
 };
 
-
 exports.unassignParkingLot = async (req, res) => {
     const { id } = req.params;
   
@@ -102,10 +101,7 @@ exports.unassignParkingLot = async (req, res) => {
       console.error('Error unassigning parking lot:', error);
       res.status(500).json({ message: 'Failed to unassign parking lot' });
     }
-  };
-
-
-
+};
 
   exports.getWardenDetails = async (req, res) => {
     const { id } = req.params;
@@ -178,14 +174,8 @@ exports.unassignParkingLot = async (req, res) => {
       if (!res.headersSent) {
         res.status(500).json({ message: 'Internal Server Error' });
       }
-    }
-  };
-  
-
-
-
-
-  //register Warden
+  }
+};
 
 exports.registerWarden = async (req, res) => {
   const client = await pool.connect();

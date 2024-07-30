@@ -1,17 +1,25 @@
-/* Updated CSS for modern look */
-
 .container {
   display: grid;
-  grid-template-rows: 5% 12% 5% 78%;
+  grid-template-rows: 5% 5% 90%;
   height: 100vh;
   padding: 20px;
-  gap: 20px;
+  gap: 10px;
+}
+
+.heading {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.dropdown {
+  place-self: end;
 }
 
 .title {
   font-weight: bold;
   font-size: 1.5rem;
   color: #000000;
+  /* border: 2px solid black; */
 }
 
 .tablecontent {
@@ -22,8 +30,7 @@
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 20px;
-  margin-top: 10px;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 .table {
@@ -47,7 +54,6 @@
 
 .table tbody tr {
   border-bottom: 1px solid #ddd;
-  transition: background 0.3s;
 }
 
 .table tbody tr:nth-child(even) {
@@ -64,66 +70,29 @@
   color: #000000;
 }
 
-.empidhead,
 .empnamehead,
 .empgenderhead,
-.empagehead {
-  width: 25%;
+.empagehead,
+.empcontacthead,
+.empslothead {
+  width: 10%;
 }
 
-.empiddata,
 .empnamedata,
 .empgenderdata,
-.empagedata {
+.empagedata,
+.empcontactdata,
+.empslotdata {
   font-size: 1rem;
-}
-
-.iconContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.icon {
-  margin-right: 0.5rem; /* Adjust the spacing as needed */
-}
-
-.link {
-  text-decoration: none;
-  color: #333;
-}
-
-.link:hover {
-  text-decoration: none;
-  cursor: pointer;
-  font-weight: 500;
 }
 
 .statusActive {
   color: rgb(13, 194, 13) !important;
-  font-weight: 500;
 }
 
 .statusInactive {
   color: rgb(236, 38, 38) !important;
   font-weight: 500;
-}
-
-.notAssigned {
-  color: rgb(236, 38, 38) !important;
-  font-weight: 500;
-}
-
-.assigned {
-  color: #000000; 
-}
-
-/* Cards */
-
-.cardcontainer {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 5px;
 }
 
 .noData {
