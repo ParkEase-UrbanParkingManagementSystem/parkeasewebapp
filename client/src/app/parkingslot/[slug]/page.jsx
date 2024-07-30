@@ -135,7 +135,7 @@ const ParkingSlotDetail = () => {
         ...prevDetails,
         lot: {
           ...prevDetails.lot,
-          status: "Active",
+          status: "active",
         },
       }));
       alert("Parking lot status set to Active successfully");
