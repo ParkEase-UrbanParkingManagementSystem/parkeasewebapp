@@ -23,7 +23,9 @@ function Users() {
 
         <div className={styles.pmc}>
           <Link href="/register-pmc">
-            <img src="images/office-building.png" className={styles.userpic} />
+            <div className={styles.figure}>
+              <img src="images/office-building.png" className={styles.userpic} />
+            </div>
             <h1 className={styles.title}>Parking Management Company</h1>
           </Link>
         </div>
@@ -32,4 +34,4 @@ function Users() {
   );
 }
 
-export default Users
+export default Users;
