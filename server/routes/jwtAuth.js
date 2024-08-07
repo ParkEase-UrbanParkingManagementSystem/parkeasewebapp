@@ -97,7 +97,7 @@ router.post("/registerDriver", async (req, res) => {
             // Insert driver details into the driver table
             await pool.query(
                 "INSERT INTO driver (fname, lname, nic, age, gender, user_id) VALUES ($1, $2, $3, $4, $5, $6)",
-                [fname, lname, nic, age, gender, userId]
+                [fname, lname, nic, age, gender, userId] // Ensure userId is a valid UUID
             );
 
             // Commit the transaction

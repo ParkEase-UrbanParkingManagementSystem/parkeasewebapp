@@ -19,6 +19,11 @@ CREATE TABLE users(
     role_id INT
 );
 
+ALTER TABLE users ADD COLUMN contact VARCHAR(20) NOT NULL;
+
+ALTER TABLE users ALTER COLUMN role_id TYPE int USING role_id::integer;
+
+
 CREATE TABLE user_contactno (
     contactNo VARCHAR(20) NOT NULL,
     user_id uuid,
