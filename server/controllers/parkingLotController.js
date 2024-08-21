@@ -1,140 +1,93 @@
 const pool = require("../db"); // Adjust the path as needed
+const multer = require("multer");
 
-exports.parkingLotAdd = async (req, res) => {
-  const client = await pool.connect();
-  try {
-    const pmc_pmc_user_id = req.user;
+// Set storage engine for multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
 
-    if (!pmc_pmc_user_id) {
-      return res.status(400).json({ error: "User ID is missing from request" });
+const upload = multer({ storage: storage });
+
+exports.parkingLotAdd = [
+  upload.fields([{ name: 'sketch', maxCount: 1 }, { name: 'images', maxCount: 10 }]), // Up to 10 images
+  async (req, res) => {
+    const client = await pool.connect();
+    try {
+      const pmc_pmc_user_id = req.user;
+
+      if (!pmc_pmc_user_id) {
+        return res.status(400).json({ error: "User ID is missing from request" });
+      }
+
+      const pmcQuery = await pool.query(
+        "SELECT pmc_id FROM pmc WHERE user_id = $1",
+        [pmc_pmc_user_id]
+      );
+
+      if (pmcQuery.rows.length === 0) {
+        return res.status(404).json({ error: "PMC ID not found" });
+      }
+
+      const pmc_id = pmcQuery.rows[0].pmc_id;
+
+      const {
+        name,
+        bikeCapacity,
+        carCapacity,
+        addressNo,
+        street1,
+        street2,
+        city,
+        district,
+        description,
+      } = req.body;
+
+      // Calculate full_capacity
+      const fullCapacity = bikeCapacity + carCapacity;
+
+      // Get file paths
+      const sketchPath = req.files['sketch'] ? req.files['sketch'][0].path : null;
+      const imagePaths = req.files['images'] ? req.files['images'].map(file => file.path) : [];
+
+      const insertQuery = `
+        INSERT INTO parking_lot (pmc_id, name, bike_capacity, car_capacity, full_capacity, addressno, street1, street2, city, district, description, sketch, images)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        RETURNING *;
+      `;
+
+      const values = [
+        pmc_id,
+        name,
+        bikeCapacity,
+        carCapacity,
+        fullCapacity,
+        addressNo,
+        street1,
+        street2,
+        city,
+        district,
+        description,
+        sketchPath,
+        JSON.stringify(imagePaths), // Store images as a JSON array
+      ];
+
+      const result = await client.query(insertQuery, values);
+
+      res.status(201).json(result.rows[0]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    } finally {
+      client.release();
     }
-
-    const pmcQuery = await pool.query(
-      "SELECT pmc_id FROM pmc WHERE user_id = $1",
-      [pmc_pmc_user_id]
-    );
-
-    if (pmcQuery.rows.length === 0) {
-      return res.status(404).json({ error: "PMC ID not found" });
-    }
-
-    const pmc_id = pmcQuery.rows[0].pmc_id;
-
-    const {
-      name,
-      bikeCapacity,
-      twCapacity,
-      carCapacity,
-      xlVehicleCapacity,
-      addressNo,
-      street1,
-      street2,
-      city,
-      district,
-      description,
-    } = req.body;
-
-    exports.parkingLotAdd = async (req, res) => {
-  const client = await pool.connect();
-  try {
-    const pmc_pmc_user_id = req.user;
-
-    if (!pmc_pmc_user_id) {
-      return res.status(400).json({ error: "User ID is missing from request" });
-    }
-
-    const pmcQuery = await pool.query(
-      "SELECT pmc_id FROM pmc WHERE user_id = $1",
-      [pmc_pmc_user_id]
-    );
-
-    if (pmcQuery.rows.length === 0) {
-      return res.status(404).json({ error: "PMC ID not found" });
-    }
-
-    const pmc_id = pmcQuery.rows[0].pmc_id;
-
-    const {
-      name,
-      bikeCapacity,
-      twCapacity,
-      carCapacity,
-      xlVehicleCapacity,
-      addressNo,
-      street1,
-      street2,
-      city,
-      district,
-      description,
-    } = req.body;
-
-    // Calculate full_capacity
-    const fullCapacity  = bikeCapacity + twCapacity + carCapacity + xlVehicleCapacity;
-
-    const insertQuery = `
-      INSERT INTO parking_lot (pmc_id, name, bike_capacity, tw_capacity, car_capacity, xlvehicle_capacity, full_Capacity, addressno, street1, street2, city, district, description)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-      RETURNING *;
-    `;
-
-    const values = [
-      pmc_id,
-      name,
-      bikeCapacity,
-      twCapacity,
-      carCapacity,
-      xlVehicleCapacity,
-      fullCapacity,
-      addressNo,
-      street1,
-      street2,
-      city,
-      district,
-      description,
-    ];
-
-    const result = await client.query(insertQuery, values);
-
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  } finally {
-    client.release();
   }
-};
+];
 
-    const insertQuery = `
-      INSERT INTO parking_lot (pmc_id, name, bike_capacity, tw_capacity, car_capacity, xlvehicle_capacity, addressno, street1, street2, city, district, description)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-      RETURNING *;
-    `;
-
-    const values = [
-      pmc_id,
-      name,
-      bikeCapacity,
-      twCapacity,
-      carCapacity,
-      xlVehicleCapacity,
-      addressNo,
-      street1,
-      street2,
-      city,
-      district,
-      description,
-    ];
-
-    const result = await client.query(insertQuery, values);
-
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  } finally {
-    client.release();
-  }
-};
 
 exports.getParkingLot = async (req, res) => {
   const client = await pool.connect();
@@ -163,8 +116,6 @@ exports.getParkingLot = async (req, res) => {
           pl.name, 
           pl.bike_capacity, 
           pl.car_capacity, 
-          pl.xlvehicle_capacity,
-          pl.tw_capacity,
           pl.description,
           pl.status,
           STRING_AGG(CONCAT(w.fname, ' ', w.lname), ' , ') AS wardens
@@ -254,8 +205,6 @@ exports.getAParkingLotDetails = async (req, res) => {
           district: row.district,
           bike_capacity: row.bike_capacity,
           car_capacity: row.car_capacity,
-          tw_capacity: row.tw_capacity,
-          xlvehicle_capacity: row.xlvehicle_capacity,
           full_capacity: row.full_capacity,
           description: row.description,
           status: row.status,

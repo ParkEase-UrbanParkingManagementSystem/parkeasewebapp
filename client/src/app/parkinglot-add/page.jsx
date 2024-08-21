@@ -9,16 +9,16 @@ import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 const AddParkingLot = () => {
   const [formData, setFormData] = useState({
     name: "",
-    description:"",
+    description: "",
     bikeCapacity: "",
-    twCapacity: "",
     carCapacity: "",
-    xlVehicleCapacity: "",
     addressNo: "",
     street1: "",
     street2: "",
     city: "",
     district: "",
+    sketch: null,
+    images: [],
   });
 
   const router = useRouter();
@@ -26,6 +26,15 @@ const AddParkingLot = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    if (name === "sketch") {
+      setFormData({ ...formData, sketch: files[0] });
+    } else if (name === "images") {
+      setFormData({ ...formData, images: Array.from(files) });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -38,14 +47,25 @@ const AddParkingLot = () => {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token: token,
-        },
-        body: JSON.stringify(formData),
-      });
+      const data = new FormData();
+      for (let key in formData) {
+        if (key === "images") {
+          formData[key].forEach((file) => data.append(key, file));
+        } else {
+          data.append(key, formData[key]);
+        }
+      }
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/add`,
+        {
+          method: "POST",
+          headers: {
+            token: token,
+          },
+          body: data,
+        }
+      );
 
       const parseRes = await response.json();
 
@@ -96,25 +116,9 @@ const AddParkingLot = () => {
               />
               <input
                 type="number"
-                placeholder="Three-Wheeler Capacity"
-                name="twCapacity"
-                value={formData.twCapacity}
-                onChange={handleChange}
-                className={styles.input}
-              />
-              <input
-                type="number"
                 placeholder="Car Capacity"
                 name="carCapacity"
                 value={formData.carCapacity}
-                onChange={handleChange}
-                className={styles.input}
-              />
-              <input
-                type="number"
-                placeholder="XL Vehicle Capacity"
-                name="xlVehicleCapacity"
-                value={formData.xlVehicleCapacity}
                 onChange={handleChange}
                 className={styles.input}
               />
@@ -161,19 +165,29 @@ const AddParkingLot = () => {
                 className={styles.input}
               />
             </div>
-
             <div className={styles.formGroupii}>
-              {/* <div className={styles.formGrouppic}>
+              <div className={styles.formGrouppic}>
                 <span>Drawn parking lot sketch: </span>
-                <input type="file" accept="image/*" multiple name="skectch" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="sketch"
+                  onChange={handleFileChange}
+                />
                 <br />
                 <span>Add Pictures of the parking lot: </span>
-                <input type="file" accept="image/*" multiple name="images" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  name="images"
+                  onChange={handleFileChange}
+                />
                 <br />
 
-                <span>Mark location on the map: </span>
-                <img src="images/map.png"/>
-              </div> */}
+                {/* <span>Mark location on the map: </span>
+                <img src="images/map.png"/> */}
+              </div>
               <div>
                 <Button
                   label="Add Parking Lot"
