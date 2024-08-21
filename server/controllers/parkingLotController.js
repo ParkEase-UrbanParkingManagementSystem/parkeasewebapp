@@ -88,7 +88,6 @@ exports.parkingLotAdd = [
   }
 ];
 
-
 exports.getParkingLot = async (req, res) => {
   const client = await pool.connect();
 
@@ -166,6 +165,8 @@ exports.getAParkingLotDetails = async (req, res) => {
     d.fname AS driver_fname, 
     d.lname AS driver_lname,
     d.profile_pic AS driver_profile_pic,
+    l.sketch,  -- Include the sketch column
+    l.images,  -- Include the images column
     (SELECT COUNT(*) FROM parkinglotreviews WHERE lot_id = l.lot_id) AS review_count
   FROM parking_lot l
   LEFT JOIN warden_parking_lot wp ON l.lot_id = wp.lot_id
@@ -174,6 +175,7 @@ exports.getAParkingLotDetails = async (req, res) => {
   LEFT JOIN driver d ON r.driver_id = d.driver_id
   WHERE l.lot_id = $1;
 `;
+
 
 
     const lotResult = await pool.query(lotQuery, [id]);
@@ -194,7 +196,6 @@ exports.getAParkingLotDetails = async (req, res) => {
 
     lotResult.rows.forEach((row) => {
       if (!parkingLotDetails.lot) {
-        // Set the parking lot details (only once)
         parkingLotDetails.lot = {
           lot_id: row.lot_id,
           name: row.name,
@@ -208,15 +209,17 @@ exports.getAParkingLotDetails = async (req, res) => {
           full_capacity: row.full_capacity,
           description: row.description,
           status: row.status,
-          review_count: row.review_count
+          review_count: row.review_count,
+          sketch: row.sketch,
+          images: Array.isArray(row.images) ? row.images : (typeof row.images === 'string' ? row.images.split(',') : []), // Adjust based on data type
         };
-
+    
         parkingLotDetails.warden = {
           fname: row.warden_fname,
           lname: row.warden_lname,
         };
       }
-
+    
       // Add reviews to the array
       if (row.review_id) {
         parkingLotDetails.reviews.push({
