@@ -24,10 +24,10 @@ const getVehicles = async (req,res) => {
         );
 
         if(result.rows.length===0){
-            return res.status(404).json({message: "No vehicles found for this driver"})
+            return res.status(404).json({message: "No vehicles found for this driver"});
         }
 
-
+        
         return res.status(200).json({
             message:"Success",
             data: result.rows,
@@ -45,6 +45,8 @@ const addVehicle = async (req, res) => {
     try {
         const user_id = req.user; // Assuming req.user contains the user_id of the logged-in user
         const { vehicle_number, name, type_id } = req.body;
+
+        console.log("Req eka aawaaaaaaa")
 
         // Getting the driverID from the userID
         const driverDetails = await pool.query(

@@ -205,7 +205,12 @@ const ParkingSlotDetail = () => {
                 </div>
                 <div className={styles.detail}>
                   <label>Number of Slots</label>
-                  <p>Total : {parkingLotDetails.lot.full_capacity}</p>
+                  <p className="font-semibold">
+                  Total: {parkingLotDetails.lot.car_capacity +
+                          parkingLotDetails.lot.bike_capacity +
+                          parkingLotDetails.lot.tw_capacity +
+                          parkingLotDetails.lot.xlvehicle_capacity}
+                </p>
                   <p>
                     <FontAwesomeIcon icon={faCar} />{" "}
                     {parkingLotDetails.lot.car_capacity}
@@ -235,7 +240,7 @@ const ParkingSlotDetail = () => {
                 </div>
               </div>
               <div className={styles.detailColumn}>
-              <div className={styles.detail}>
+              {/* <div className={styles.detail}>
                   <label>Prices per Hour</label>
                   {parkingLotDetails.slotPrices.map((slot, i) => (
                     <p key={i}>
@@ -268,7 +273,7 @@ const ParkingSlotDetail = () => {
                       )}
                     </p>
                   ))}
-                </div>
+                </div> */}
                 
                 <div className={styles.detail}>
                   <label>Address</label>
