@@ -338,4 +338,7 @@ VALUES
   (3, 'car', 70.00),
   (4, 'lorry', 100.00);
 
+ALTER TABLE parking_lot
+ADD COLUMN sketch VARCHAR(255),
+ADD COLUMN images JSON;
 
