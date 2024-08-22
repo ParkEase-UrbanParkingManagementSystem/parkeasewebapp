@@ -20,6 +20,7 @@ app.use("/driver", require('./routes/driverRoutes'));
 app.use("/vehicle",require('./routes/vehicleRoutes'));
 app.use("/parking",require('./routes/parkingRoute'));
 app.use("/reviews", require('./routes/reviewRoutes'));
+app.use('/uploads', express.static('uploads'));
 
 // //Dashboard route
 

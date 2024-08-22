@@ -157,10 +157,14 @@ const ParkingSlotDetail = () => {
           <div className={styles.header}>
             <div className={styles.headerContent}>
               <img
-                src="/images/parking-lot.jpg"
-                alt="Parking Lot"
+                src={
+                  parkingLotDetails.lot.images.length > 0
+                    ? `/${parkingLotDetails.lot.images[0].replace(/\\/g, "/")}`
+                    : "/images/parking-lot.jpg" // Fallback image
+                }
                 className={styles.headerImage}
               />
+
               <div className={styles.headerText}>
                 <h2 className="font-semibold">{parkingLotDetails.lot.name}</h2>
                 <h3 className="mb-2">
@@ -214,11 +218,12 @@ const ParkingSlotDetail = () => {
                 <div className={styles.detail}>
                   <label>Number of Slots</label>
                   <p className="font-semibold">
-                  Total: {parkingLotDetails.lot.car_capacity +
-                          parkingLotDetails.lot.bike_capacity +
-                          parkingLotDetails.lot.tw_capacity +
-                          parkingLotDetails.lot.xlvehicle_capacity}
-                </p>
+                    Total:{" "}
+                    {parkingLotDetails.lot.car_capacity +
+                      parkingLotDetails.lot.bike_capacity +
+                      parkingLotDetails.lot.tw_capacity +
+                      parkingLotDetails.lot.xlvehicle_capacity}
+                  </p>
                   <p>
                     <FontAwesomeIcon icon={faCar} />{" "}
                     {parkingLotDetails.lot.car_capacity}
@@ -236,7 +241,7 @@ const ParkingSlotDetail = () => {
                 </div>
               </div>
               <div className={styles.detailColumn}>
-              <div className={styles.detail}>
+                <div className={styles.detail}>
                   <label>Prices per Hour</label>
                   {parkingLotDetails.slotPrices.map((slot, i) => (
                     <p key={i}>
@@ -270,7 +275,7 @@ const ParkingSlotDetail = () => {
                     </p>
                   ))}
                 </div>
-                
+
                 <div className={styles.detail}>
                   <label>Address</label>
                   <p>
@@ -308,21 +313,24 @@ const ParkingSlotDetail = () => {
               <div className={styles.gallery}>
                 {parkingLotDetails.lot.images.map((image, index) => (
                   <div key={index} className={styles.galleryItem}>
-                    <img src={image} alt={`Parking Lot Image ${index + 1}`} />
+                    <img
+                      src={`/${image.replace(/\\/g, "/")}`}
+                      alt={`Parking Lot Image ${index + 1}`}
+                    />
                   </div>
                 ))}
               </div>
-              <div className={styles.gallerysquare}>
+              {/* <div className={styles.gallerysquare}>
                 <FontAwesomeIcon
                   icon={faPlus}
                   className="w-16 h-16 opacity-10"
                 />
-              </div>
+              </div> */}
               <p>Parking Lot Location Sketch:</p>
               {parkingLotDetails.lot.sketch && (
                 <div className={styles.sketchContainer}>
                   <img
-                    src={parkingLotDetails.lot.sketch}
+                    src={`/${parkingLotDetails.lot.sketch.replace(/\\/g, "/")}`}
                     alt="Parking Lot Sketch"
                   />
                 </div>
