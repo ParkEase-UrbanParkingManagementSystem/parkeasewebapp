@@ -8,14 +8,13 @@ import {
   faSquarePlus,
   faCar,
   faMotorcycle,
-  faTruck,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import Link from "next/link";
 import Card from "../../ui/card/horizontalcard/card";
 import Router from "next/router"; // Import Router
 
-library.add(faSquarePlus, faCar, faMotorcycle, faTruck);
+library.add(faSquarePlus, faCar, faMotorcycle);
 
 const ParkingLot = () => {
   const [parkingLots, setParkingLots] = useState([]);
@@ -198,14 +197,7 @@ const ParkingLot = () => {
                         icon={faMotorcycle}
                         className={styles.icon}
                       />
-                      {lot.bike_capacity} &nbsp;&nbsp;
-                      <FontAwesomeIcon icon={faTruck} className={styles.icon} />
-                      {lot.xlvehicle_capacity} &nbsp;&nbsp;
-                      <img
-                        src="/images/tuk-tuk.png"
-                        className={`${styles.icon} w-6 h-5 mr-1`}
-                      />
-                      {lot.tw_capacity}
+                      {lot.bike_capacity}
                     </div>
                   </td>
                   <td
