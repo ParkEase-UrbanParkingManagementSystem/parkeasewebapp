@@ -235,31 +235,31 @@ const ParkingSlotDetail = () => {
                   <label>Prices per Hour</label>
                   {parkingLotDetails.slotPrices.map((slot, i) => (
                     <p key={i}>
-                      {slot.type === "bike" && (
+                      {slot.type_id === 1 && (
                         <>
                           <FontAwesomeIcon icon={faMotorcycle} />{" "}
-                          {slot.amount_per_slot}
+                          {slot.amount_per_vehicle}
                         </>
                       )}
-                      {slot.type === "tw" && (
+                      {slot.type_id === 2 && (
                         <div className="flex items-center">
                           <img
                             src="/images/tuk-tuk.png"
                             className="w-6 h-5 mr-1 opacity-70"
                           />
-                          {slot.amount_per_slot}
+                          {slot.amount_per_vehicle}
                         </div>
                       )}
-                      {slot.type === "car" && (
+                      {slot.type_id === 3 && (
                         <>
                           <FontAwesomeIcon icon={faCar} />{" "}
-                          {slot.amount_per_slot}
+                          {slot.amount_per_vehicle}
                         </>
                       )}
-                      {slot.type === "lorry" && (
+                      {slot.type_id === 4 && (
                         <>
                           <FontAwesomeIcon icon={faTruck} />{" "}
-                          {slot.amount_per_slot}
+                          {slot.amount_per_vehicle}
                         </>
                       )}
                     </p>
@@ -289,24 +289,10 @@ const ParkingSlotDetail = () => {
                 </span>
               </div>
               <div className={styles.card}>
-                <img src="/images/tuk-tuk.png" className={styles.icon} />
-                &nbsp; <strong>6</strong>:
-                <span className={styles.totalSlots}>
-                  {parkingLotDetails.lot.tw_capacity}
-                </span>
-              </div>
-              <div className={styles.card}>
                 <FontAwesomeIcon icon={faCar} className={styles.icon} />
                 &nbsp; <strong>5</strong>:
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.car_capacity}
-                </span>
-              </div>
-              <div className={styles.card}>
-                <FontAwesomeIcon icon={faTruck} className={styles.icon} />
-                &nbsp; <strong>1</strong>:
-                <span className={styles.totalSlots}>
-                  {parkingLotDetails.lot.xlvehicle_capacity}
                 </span>
               </div>
             </div>
