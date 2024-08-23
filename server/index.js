@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const path = require("path");
 
 
 
@@ -20,7 +21,10 @@ app.use("/driver", require('./routes/driverRoutes'));
 app.use("/vehicle",require('./routes/vehicleRoutes'));
 app.use("/parking",require('./routes/parkingRoute'));
 app.use("/reviews", require('./routes/reviewRoutes'));
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// app.get('/', (req, res) => {
+//     res.send('Static file server running');
+//   });
 // //Dashboard route
 
 // app.use("/dashboard", require("./routes/dashboard"))

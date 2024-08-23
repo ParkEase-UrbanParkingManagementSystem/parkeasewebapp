@@ -214,11 +214,12 @@ const ParkingSlotDetail = () => {
                 <div className={styles.detail}>
                   <label>Number of Slots</label>
                   <p className="font-semibold">
-                  Total: {parkingLotDetails.lot.car_capacity +
-                          parkingLotDetails.lot.bike_capacity +
-                          parkingLotDetails.lot.tw_capacity +
-                          parkingLotDetails.lot.xlvehicle_capacity}
-                </p>
+                    Total:{" "}
+                    {parkingLotDetails.lot.car_capacity +
+                      parkingLotDetails.lot.bike_capacity +
+                      parkingLotDetails.lot.tw_capacity +
+                      parkingLotDetails.lot.xlvehicle_capacity}
+                  </p>
                   <p>
                     <FontAwesomeIcon icon={faCar} />{" "}
                     {parkingLotDetails.lot.car_capacity}
@@ -236,7 +237,7 @@ const ParkingSlotDetail = () => {
                 </div>
               </div>
               <div className={styles.detailColumn}>
-              <div className={styles.detail}>
+                <div className={styles.detail}>
                   <label>Prices per Hour</label>
                   {parkingLotDetails.slotPrices.map((slot, i) => (
                     <p key={i}>
@@ -270,7 +271,7 @@ const ParkingSlotDetail = () => {
                     </p>
                   ))}
                 </div>
-                
+
                 <div className={styles.detail}>
                   <label>Address</label>
                   <p>
@@ -308,26 +309,29 @@ const ParkingSlotDetail = () => {
               <div className={styles.gallery}>
                 {parkingLotDetails.lot.images.map((image, index) => (
                   <div key={index} className={styles.galleryItem}>
-                    <img src={image} alt={`Parking Lot Image ${index + 1}`} />
+                    <img
+                      src={`/uploads/${image
+                        .replace(/\\/g, "/")
+                        .split("/")
+                        .pop()}`} // Corrected path
+                      alt={`Parking Lot Image ${index + 1}`}
+                    />
                   </div>
                 ))}
               </div>
-              <div className={styles.gallerysquare}>
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  className="w-16 h-16 opacity-10"
-                />
-              </div>
-              <p>Parking Lot Location Sketch:</p>
+
               {parkingLotDetails.lot.sketch && (
                 <div className={styles.sketchContainer}>
                   <img
-                    src={parkingLotDetails.lot.sketch}
+                    src={`/uploads/${parkingLotDetails.lot.sketch
+                      .replace(/\\/g, "/")
+                      .split("/")
+                      .pop()}`} // Corrected path
                     alt="Parking Lot Sketch"
                   />
                 </div>
               )}
-            </div>
+            </div>            
           </div>
         </div>
 
