@@ -14,14 +14,19 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 exports.parkingLotAdd = [
-  upload.fields([{ name: 'sketch', maxCount: 1 }, { name: 'images', maxCount: 10 }]), // Up to 10 images
+  upload.fields([
+    { name: "sketch", maxCount: 1 },
+    { name: "images", maxCount: 10 },
+  ]), // Up to 10 images
   async (req, res) => {
     const client = await pool.connect();
     try {
       const pmc_pmc_user_id = req.user;
 
       if (!pmc_pmc_user_id) {
-        return res.status(400).json({ error: "User ID is missing from request" });
+        return res
+          .status(400)
+          .json({ error: "User ID is missing from request" });
       }
 
       const pmcQuery = await pool.query(
@@ -45,22 +50,31 @@ exports.parkingLotAdd = [
         city,
         district,
         description,
+        bikePrice,
+        carPrice,
+        threeWheelerPrice,
+        lorryPrice,
       } = req.body;
 
       // Calculate full_capacity
       const fullCapacity = bikeCapacity + carCapacity;
 
       // Get file paths
-      const sketchPath = req.files['sketch'] ? req.files['sketch'][0].path : null;
-      const imagePaths = req.files['images'] ? req.files['images'].map(file => file.path) : [];
+      const sketchPath = req.files["sketch"]
+        ? req.files["sketch"][0].path
+        : null;
+      const imagePaths = req.files["images"]
+        ? req.files["images"].map((file) => file.path)
+        : [];
 
-      const insertQuery = `
+      // Insert the parking lot
+      const insertParkingLotQuery = `
         INSERT INTO parking_lot (pmc_id, name, bike_capacity, car_capacity, full_capacity, addressno, street1, street2, city, district, description, sketch, images)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-        RETURNING *;
+        RETURNING lot_id;
       `;
 
-      const values = [
+      const parkingLotValues = [
         pmc_id,
         name,
         bikeCapacity,
@@ -76,16 +90,43 @@ exports.parkingLotAdd = [
         JSON.stringify(imagePaths), // Store images as a JSON array
       ];
 
-      const result = await client.query(insertQuery, values);
+      const parkingLotResult = await client.query(
+        insertParkingLotQuery,
+        parkingLotValues
+      );
+      const lot_id = parkingLotResult.rows[0].lot_id;
 
-      res.status(201).json(result.rows[0]);
+      // Insert prices into the toll_amount table
+      const insertTollAmountQuery = `
+        INSERT INTO toll_amount (lot_id, type_id, amount_per_vehicle)
+        VALUES 
+          ($1, 1, $2),
+          ($1, 2, $3),
+          ($1, 3, $4),
+          ($1, 4, $5)
+        RETURNING *;
+      `;
+
+      const tollAmountValues = [
+        lot_id,
+        bikePrice,
+        carPrice,
+        threeWheelerPrice,
+        lorryPrice,
+      ];
+
+      await client.query(insertTollAmountQuery, tollAmountValues);
+
+      res
+        .status(201)
+        .json({ message: "Parking lot and prices added successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });
     } finally {
       client.release();
     }
-  }
+  },
 ];
 
 exports.getParkingLot = async (req, res) => {
@@ -133,7 +174,6 @@ exports.getParkingLot = async (req, res) => {
         .json({ error: "No parking lots found for this PMC" });
     }
 
-    
     res.status(200).json(result.rows);
   } catch (error) {
     console.error(error);
@@ -147,7 +187,7 @@ exports.getAParkingLotDetails = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.status(400).json({ message: 'Lot ID is required or Invalid' });
+    return res.status(400).json({ message: "Lot ID is required or Invalid" });
   }
 
   try {
@@ -175,8 +215,6 @@ exports.getAParkingLotDetails = async (req, res) => {
   LEFT JOIN driver d ON r.driver_id = d.driver_id
   WHERE l.lot_id = $1;
 `;
-
-
 
     const lotResult = await pool.query(lotQuery, [id]);
 
@@ -211,15 +249,19 @@ exports.getAParkingLotDetails = async (req, res) => {
           status: row.status,
           review_count: row.review_count,
           sketch: row.sketch,
-          images: Array.isArray(row.images) ? row.images : (typeof row.images === 'string' ? row.images.split(',') : []), // Adjust based on data type
+          images: Array.isArray(row.images)
+            ? row.images
+            : typeof row.images === "string"
+            ? row.images.split(",")
+            : [], // Adjust based on data type
         };
-    
+
         parkingLotDetails.warden = {
           fname: row.warden_fname,
           lname: row.warden_lname,
         };
       }
-    
+
       // Add reviews to the array
       if (row.review_id) {
         parkingLotDetails.reviews.push({
@@ -230,16 +272,17 @@ exports.getAParkingLotDetails = async (req, res) => {
           created_at: row.review_created_at,
           driver_fname: row.driver_fname,
           driver_lname: row.driver_lname,
-          profile_pic: row.driver_profile_pic
+          profile_pic: row.driver_profile_pic,
         });
       }
     });
 
-    // Fetch slot prices
-    const slotPricesQuery = `SELECT * FROM slot_price;`; // Note: Adjusted query to fetch all slot prices
-    const slotPricesResult = await pool.query(slotPricesQuery);
+    const slotPricesQuery = `SELECT type_id, amount_per_vehicle FROM toll_amount WHERE lot_id = $1;`;
+    const slotPricesResult = await pool.query(slotPricesQuery, [id]);
+
 
     
+
 
     console.log(parkingLotDetails);
     res.json({ data: parkingLotDetails });
@@ -254,7 +297,7 @@ exports.deactivateParkingLot = async (req, res) => {
 
   try {
     // Start a transaction
-    await pool.query('BEGIN');
+    await pool.query("BEGIN");
 
     // Update the parking lot's status column to 'Inactive'
     const updateParkingLotQuery = `
@@ -267,22 +310,22 @@ exports.deactivateParkingLot = async (req, res) => {
     const updateResult = await pool.query(updateParkingLotQuery, [id]);
 
     if (updateResult.rows.length === 0) {
-      await pool.query('ROLLBACK');
-      return res.status(404).json({ message: 'Parking lot not found' });
+      await pool.query("ROLLBACK");
+      return res.status(404).json({ message: "Parking lot not found" });
     }
 
     // Commit the transaction
-    await pool.query('COMMIT');
+    await pool.query("COMMIT");
 
     res.status(200).json({
-      message: 'Parking lot status updated to Inactive successfully',
-      parkingLot: updateResult.rows[0]
+      message: "Parking lot status updated to Inactive successfully",
+      parkingLot: updateResult.rows[0],
     });
   } catch (error) {
     // Rollback the transaction in case of error
-    await pool.query('ROLLBACK');
-    console.error('Error updating parking lot status:', error);
-    res.status(500).json({ message: 'Failed to update parking lot status' });
+    await pool.query("ROLLBACK");
+    console.error("Error updating parking lot status:", error);
+    res.status(500).json({ message: "Failed to update parking lot status" });
   }
 };
 
@@ -291,7 +334,7 @@ exports.activateParkingLot = async (req, res) => {
 
   try {
     // Start a transaction
-    await pool.query('BEGIN');
+    await pool.query("BEGIN");
 
     // Update the parking lot's status column to 'Active'
     const updateParkingLotQuery = `
@@ -304,27 +347,21 @@ exports.activateParkingLot = async (req, res) => {
     const updateResult = await pool.query(updateParkingLotQuery, [id]);
 
     if (updateResult.rows.length === 0) {
-      await pool.query('ROLLBACK');
-      return res.status(404).json({ message: 'Parking lot not found' });
+      await pool.query("ROLLBACK");
+      return res.status(404).json({ message: "Parking lot not found" });
     }
 
     // Commit the transaction
-    await pool.query('COMMIT');
+    await pool.query("COMMIT");
 
     res.status(200).json({
-      message: 'Parking lot status updated to Active successfully',
-      parkingLot: updateResult.rows[0]
+      message: "Parking lot status updated to Active successfully",
+      parkingLot: updateResult.rows[0],
     });
   } catch (error) {
     // Rollback the transaction in case of error
-    await pool.query('ROLLBACK');
-    console.error('Error updating parking lot status:', error);
-    res.status(500).json({ message: 'Failed to update parking lot status' });
+    await pool.query("ROLLBACK");
+    console.error("Error updating parking lot status:", error);
+    res.status(500).json({ message: "Failed to update parking lot status" });
   }
 };
-
-
-
-
-
-

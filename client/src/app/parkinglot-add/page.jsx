@@ -19,6 +19,10 @@ const AddParkingLot = () => {
     district: "",
     sketch: null,
     images: [],
+    bikePrice: "",
+    carPrice: "",
+    threeWheelerPrice: "",
+    lorryPrice: "",
   });
 
   const router = useRouter();
@@ -105,7 +109,7 @@ const AddParkingLot = () => {
                 className={styles.input}
               />
               <br />
-              <span>Parking capacity Details: </span>
+              <span>Parking Capacity Details: </span>
               <input
                 type="number"
                 placeholder="Bike Capacity"
@@ -164,9 +168,44 @@ const AddParkingLot = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              <br />
             </div>
             <div className={styles.formGroupii}>
               <div className={styles.formGrouppic}>
+                <span>Parking Prices (per vehicle): </span>
+                <input
+                  type="number"
+                  placeholder="Bike Price"
+                  name="bikePrice"
+                  value={formData.bikePrice}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
+                <input
+                  type="number"
+                  placeholder="Car Price"
+                  name="carPrice"
+                  value={formData.carPrice}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
+                <input
+                  type="number"
+                  placeholder="Three-Wheeler Price"
+                  name="threeWheelerPrice"
+                  value={formData.threeWheelerPrice}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
+                <input
+                  type="number"
+                  placeholder="Lorry Price"
+                  name="lorryPrice"
+                  value={formData.lorryPrice}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
+                <br />
                 <span>Drawn parking lot sketch: </span>
                 <input
                   type="file"
@@ -184,9 +223,6 @@ const AddParkingLot = () => {
                   onChange={handleFileChange}
                 />
                 <br />
-
-                {/* <span>Mark location on the map: </span>
-                <img src="images/map.png"/> */}
               </div>
               <div>
                 <Button
