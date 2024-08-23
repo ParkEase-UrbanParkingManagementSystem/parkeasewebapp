@@ -157,14 +157,10 @@ const ParkingSlotDetail = () => {
           <div className={styles.header}>
             <div className={styles.headerContent}>
               <img
-                src={
-                  parkingLotDetails.lot.images.length > 0
-                    ? `/${parkingLotDetails.lot.images[0].replace(/\\/g, "/")}`
-                    : "/images/parking-lot.jpg" // Fallback image
-                }
+                src="/images/parking-lot.jpg"
+                alt="Parking Lot"
                 className={styles.headerImage}
               />
-
               <div className={styles.headerText}>
                 <h2 className="font-semibold">{parkingLotDetails.lot.name}</h2>
                 <h3 className="mb-2">
@@ -314,28 +310,28 @@ const ParkingSlotDetail = () => {
                 {parkingLotDetails.lot.images.map((image, index) => (
                   <div key={index} className={styles.galleryItem}>
                     <img
-                      src={`/${image.replace(/\\/g, "/")}`}
+                      src={`/uploads/${image
+                        .replace(/\\/g, "/")
+                        .split("/")
+                        .pop()}`} // Corrected path
                       alt={`Parking Lot Image ${index + 1}`}
                     />
                   </div>
                 ))}
               </div>
-              {/* <div className={styles.gallerysquare}>
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  className="w-16 h-16 opacity-10"
-                />
-              </div> */}
-              <p>Parking Lot Location Sketch:</p>
+
               {parkingLotDetails.lot.sketch && (
                 <div className={styles.sketchContainer}>
                   <img
-                    src={`/${parkingLotDetails.lot.sketch.replace(/\\/g, "/")}`}
+                    src={`/uploads/${parkingLotDetails.lot.sketch
+                      .replace(/\\/g, "/")
+                      .split("/")
+                      .pop()}`} // Corrected path
                     alt="Parking Lot Sketch"
                   />
                 </div>
               )}
-            </div>
+            </div>            
           </div>
         </div>
 

@@ -1,10 +1,9 @@
 const pool = require("../db"); // Adjust the path as needed
 const multer = require("multer");
 
-// Set storage engine for multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -15,8 +14,8 @@ const upload = multer({ storage: storage });
 
 exports.parkingLotAdd = [
   upload.fields([
-    { name: "sketch", maxCount: 1 },
-    { name: "images", maxCount: 10 },
+    { name: 'sketch', maxCount: 1 },
+    { name: 'images', maxCount: 10 },
   ]), // Up to 10 images
   async (req, res) => {
     const client = await pool.connect();
@@ -24,18 +23,16 @@ exports.parkingLotAdd = [
       const pmc_pmc_user_id = req.user;
 
       if (!pmc_pmc_user_id) {
-        return res
-          .status(400)
-          .json({ error: "User ID is missing from request" });
+        return res.status(400).json({ error: 'User ID is missing from request' });
       }
 
-      const pmcQuery = await pool.query(
-        "SELECT pmc_id FROM pmc WHERE user_id = $1",
+      const pmcQuery = await client.query(
+        'SELECT pmc_id FROM pmc WHERE user_id = $1',
         [pmc_pmc_user_id]
       );
 
       if (pmcQuery.rows.length === 0) {
-        return res.status(404).json({ error: "PMC ID not found" });
+        return res.status(404).json({ error: 'PMC ID not found' });
       }
 
       const pmc_id = pmcQuery.rows[0].pmc_id;
@@ -56,20 +53,20 @@ exports.parkingLotAdd = [
         lorryPrice,
       } = req.body;
 
-      // Calculate full_capacity
-      const fullCapacity = bikeCapacity + carCapacity;
+      const fullCapacity = Number(bikeCapacity) + Number(carCapacity);
 
-      // Get file paths
-      const sketchPath = req.files["sketch"]
-        ? req.files["sketch"][0].path
-        : null;
-      const imagePaths = req.files["images"]
-        ? req.files["images"].map((file) => file.path)
-        : [];
+      const formatImagePaths = (paths) => paths.map((path) => path.replace(/\\/g, '/'));
+      const imagePaths = formatImagePaths(req.files['images'] ? req.files['images'].map((file) => file.path) : []);
+      const sketchPath = req.files['sketch'] ? req.files['sketch'][0].path.replace(/\\/g, '/') : null;
 
-      // Insert the parking lot
+      console.log(imagePaths);
+      console.log(sketchPath);
+
       const insertParkingLotQuery = `
-        INSERT INTO parking_lot (pmc_id, name, bike_capacity, car_capacity, full_capacity, addressno, street1, street2, city, district, description, sketch, images)
+        INSERT INTO parking_lot (
+          pmc_id, name, bike_capacity, car_capacity, full_capacity,
+          addressno, street1, street2, city, district, description, sketch, images
+        )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
         RETURNING lot_id;
       `;
@@ -87,16 +84,12 @@ exports.parkingLotAdd = [
         district,
         description,
         sketchPath,
-        JSON.stringify(imagePaths), // Store images as a JSON array
+        JSON.stringify(imagePaths),
       ];
 
-      const parkingLotResult = await client.query(
-        insertParkingLotQuery,
-        parkingLotValues
-      );
+      const parkingLotResult = await client.query(insertParkingLotQuery, parkingLotValues);
       const lot_id = parkingLotResult.rows[0].lot_id;
 
-      // Insert prices into the toll_amount table
       const insertTollAmountQuery = `
         INSERT INTO toll_amount (lot_id, type_id, amount_per_vehicle)
         VALUES 
@@ -107,27 +100,20 @@ exports.parkingLotAdd = [
         RETURNING *;
       `;
 
-      const tollAmountValues = [
-        lot_id,
-        bikePrice,
-        carPrice,
-        threeWheelerPrice,
-        lorryPrice,
-      ];
+      const tollAmountValues = [lot_id, bikePrice, carPrice, threeWheelerPrice, lorryPrice];
 
       await client.query(insertTollAmountQuery, tollAmountValues);
 
-      res
-        .status(201)
-        .json({ message: "Parking lot and prices added successfully" });
+      res.status(201).json({ message: 'Parking lot and prices added successfully' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: 'Internal Server Error' });
     } finally {
       client.release();
     }
   },
 ];
+
 
 exports.getParkingLot = async (req, res) => {
   const client = await pool.connect();
