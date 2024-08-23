@@ -109,8 +109,8 @@ exports.parkingLotAdd = [
 
       const tollAmountValues = [
         lot_id,
-        bikePrice,
         carPrice,
+        bikePrice,
         threeWheelerPrice,
         lorryPrice,
       ];
