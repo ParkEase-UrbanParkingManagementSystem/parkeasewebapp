@@ -117,9 +117,7 @@ const ParkingLot = () => {
   }, []);
 
   // Render loading state or handle empty parking lots array case
-  if (parkingLots.length === 0) {
-    return <p>Loading...</p>; // or any other loading indicator
-  }
+  
 
   return (
     <div className={styles.container}>
