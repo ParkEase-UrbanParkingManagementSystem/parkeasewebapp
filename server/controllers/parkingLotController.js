@@ -266,10 +266,9 @@ exports.getAParkingLotDetails = async (req, res) => {
     const slotPricesQuery = `SELECT type_id, amount_per_vehicle FROM toll_amount WHERE lot_id = $1;`;
     const slotPricesResult = await pool.query(slotPricesQuery, [id]);
 
-    parkingLotDetails.slotPrices = slotPricesResult.rows.map((row) => ({
-      type_id: row.type_id,
-      amount_per_vehicle: row.amount_per_vehicle,
-    }));
+
+    
+
 
     console.log(parkingLotDetails);
     res.json({ data: parkingLotDetails });
