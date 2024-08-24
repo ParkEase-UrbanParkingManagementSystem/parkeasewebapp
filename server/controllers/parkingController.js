@@ -440,3 +440,77 @@ exports.getRecentParkingLotsHome = async (req, res) => {
         client.release();
     }
 }
+
+exports.getRecentParkingInstances = async (req, res) => {
+    const client = await pool.connect();
+
+    try {
+        const user_id = req.user;
+
+        // Get the driver_id based on the user_id
+        const driverIdQuery = await client.query(`
+            SELECT driver_id FROM driver WHERE user_id = $1`, [user_id]);
+
+        if (driverIdQuery.rows.length === 0) {
+            return res.status(404).json({ message: "No driver found for this user" });
+        }
+
+        const driver_id = driverIdQuery.rows[0].driver_id;
+
+        // Get the recent parking lots
+        const recentParkingQuery = await client.query(`
+            SELECT
+                p.out_time,
+                p.in_time,
+                p.toll_amount AS cost,
+                pl.lot_id,
+                pl.name AS lot_name,
+                pl.bike_capacity,
+                pl.car_capacity,
+                pl.addressNO,
+                pl.street1,
+                pl.street2,
+                pl.city,
+                pl.district,
+                pl.description,
+                pl.status,
+                pl.sketch,
+                pl.images,
+                v.name AS vehicle_name
+            FROM
+                driver_vehicle dv
+            JOIN
+                parking_instance p ON dv.driver_vehicle_id = p.driver_vehicle_id
+            JOIN
+                parking_lot pl ON p.lot_id = pl.lot_id
+            JOIN
+                vehicle v ON dv.vehicle_id = v.vehicle_id    
+            WHERE
+                dv.driver_id = $1
+                AND p.out_time IS NOT NULL
+                AND p.iscompleted = true
+            ORDER BY
+                p.out_time DESC
+        `, [driver_id]);
+        
+        
+        
+
+        if (recentParkingQuery.rows.length === 0) {
+            return res.status(200).json({ message: "No recent parking lots found", data: [] });
+        }
+
+        console.log(recentParkingQuery.rows);
+
+        return res.status(200).json({
+            message: "Success",
+            data: recentParkingQuery.rows
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    } finally {
+        client.release();
+    }
+}
