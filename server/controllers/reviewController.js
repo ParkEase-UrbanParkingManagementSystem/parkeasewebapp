@@ -3,6 +3,8 @@ const pool = require('../db');
 const postParkingReview = async (req, res) => {
     const { driver_id, lot_id, rating, review } = req.body;
     const { user_id } = req.user; // Assuming authorization middleware attaches user info to req.user
+
+    console.log(req.body);
   
     if (!lot_id || !rating || !review) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -26,6 +28,8 @@ const postParkingReview = async (req, res) => {
 
   const postWardenReview = async (req, res) => {
     const { driver_id, warden_id, rating, review } = req.body;
+
+    console.log(req.body);
   
     if (!warden_id || !rating || !review) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -49,6 +53,8 @@ const postParkingReview = async (req, res) => {
   
   const getParkingLotReviews = async (req, res) => {
     const { lot_id } = req.params;
+
+    
   
     if (!lot_id) {
       return res.status(400).json({ message: 'Missing lot_id parameter' });

@@ -9,6 +9,7 @@ router.get("/parked-details", authorization, parkingController.getAfterParkingDe
 router.get("/parked-detailsMob", authorization, parkingController.getAfterParkingDetailsMobile);
 router.get("/get-recent-parking-instances", authorization, parkingController.getRecentParkingInstances);
 router.get("/get-recent-parking-lots-home", authorization, parkingController.getRecentParkingLotsHome);
+router.get("/get-instance-details/:id", authorization, parkingController.getParkingInstanceDetails);
 router.post("/pay-wallet", authorization, parkingController.payByWallet);
 router.post("/pay-pp", authorization, parkingController.payByParkPoints);
 
