@@ -172,12 +172,14 @@ exports.getParkingLot = async (req, res) => {
 exports.getAParkingLotDetails = async (req, res) => {
   const { id } = req.params;
 
+  console.log("ID", id);
+
   if (!id) {
     return res.status(400).json({ message: "Lot ID is required or Invalid" });
   }
 
   try {
-    // Query to get parking lot details and related data
+    // Query to get parking lot details, reviews, and vehicle type prices
     const lotQuery = `
       SELECT 
         l.*, 
@@ -193,12 +195,16 @@ exports.getAParkingLotDetails = async (req, res) => {
         d.profile_pic AS driver_profile_pic,
         l.sketch,
         l.images,
-        (SELECT COUNT(*) FROM parkinglotreviews WHERE lot_id = l.lot_id) AS review_count
+        (SELECT COUNT(*) FROM parkinglotreviews WHERE lot_id = l.lot_id) AS review_count,
+        t.type_name AS vehicle_type_name,
+        ta.amount_per_vehicle
       FROM parking_lot l
       LEFT JOIN warden_parking_lot wp ON l.lot_id = wp.lot_id
       LEFT JOIN warden w ON wp.warden_id = w.warden_id
       LEFT JOIN parkinglotreviews r ON l.lot_id = r.lot_id
       LEFT JOIN driver d ON r.driver_id = d.driver_id
+      LEFT JOIN toll_amount ta ON l.lot_id = ta.lot_id
+      LEFT JOIN vehicle_type t ON ta.type_id = t.vehicle_type_id
       WHERE l.lot_id = $1;
     `;
 
@@ -215,6 +221,9 @@ exports.getAParkingLotDetails = async (req, res) => {
       slotPrices: [],
       reviews: [],
     };
+
+    const slotPricesMap = new Map();
+    const reviewsSet = new Map(); // To track unique reviews
 
     lotResult.rows.forEach((row) => {
       if (!parkingLotDetails.lot) {
@@ -246,8 +255,9 @@ exports.getAParkingLotDetails = async (req, res) => {
         };
       }
 
-      if (row.review_id) {
-        parkingLotDetails.reviews.push({
+      // Add reviews to the set
+      if (row.review_id && !reviewsSet.has(row.review_id)) {
+        reviewsSet.set(row.review_id, {
           id: row.review_id,
           driver_id: row.driver_id,
           rating: row.review_rating,
@@ -258,17 +268,20 @@ exports.getAParkingLotDetails = async (req, res) => {
           profile_pic: row.driver_profile_pic,
         });
       }
+      // Add slot prices to the map
+      if (row.vehicle_type_name && row.amount_per_vehicle) {
+        slotPricesMap.set(row.vehicle_type_name, row.amount_per_vehicle);
+      }
     });
 
-    // Query to get slot prices
-    const slotPricesQuery = `SELECT type_id, amount_per_vehicle FROM toll_amount WHERE lot_id = $1;`;
-    const slotPricesResult = await pool.query(slotPricesQuery, [id]);
-
-    // Process slot prices result and add to parkingLotDetails
-    parkingLotDetails.slotPrices = slotPricesResult.rows.map(row => ({
-      type_id: row.type_id,
-      amount_per_vehicle: row.amount_per_vehicle,
+    // Convert map to array for slotPrices
+    parkingLotDetails.slotPrices = Array.from(slotPricesMap.entries()).map(([type_name, amount_per_vehicle]) => ({
+      type_name,
+      amount_per_vehicle,
     }));
+
+    // Convert reviews set to array
+    parkingLotDetails.reviews = Array.from(reviewsSet.values());
 
     console.log(parkingLotDetails);
     res.json({ data: parkingLotDetails });
@@ -277,7 +290,6 @@ exports.getAParkingLotDetails = async (req, res) => {
     res.status(500).json({ message: "Internal Server error" });
   }
 };
-
 
 exports.deactivateParkingLot = async (req, res) => {
   const { id } = req.params;
