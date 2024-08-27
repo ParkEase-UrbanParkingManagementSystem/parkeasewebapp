@@ -179,32 +179,30 @@ exports.getAParkingLotDetails = async (req, res) => {
   try {
     // Query to get parking lot details and related data
     const lotQuery = `
-  SELECT 
-    l.*, 
-    w.fname AS warden_fname, 
-    w.lname AS warden_lname,
-    r.id AS review_id,
-    r.driver_id, 
-    r.rating AS review_rating, 
-    r.review AS review_text, 
-    r.created_at AS review_created_at,
-    d.fname AS driver_fname, 
-    d.lname AS driver_lname,
-    d.profile_pic AS driver_profile_pic,
-    l.sketch,  -- Include the sketch column
-    l.images,  -- Include the images column
-    (SELECT COUNT(*) FROM parkinglotreviews WHERE lot_id = l.lot_id) AS review_count
-  FROM parking_lot l
-  LEFT JOIN warden_parking_lot wp ON l.lot_id = wp.lot_id
-  LEFT JOIN warden w ON wp.warden_id = w.warden_id
-  LEFT JOIN parkinglotreviews r ON l.lot_id = r.lot_id
-  LEFT JOIN driver d ON r.driver_id = d.driver_id
-  WHERE l.lot_id = $1;
-`;
+      SELECT 
+        l.*, 
+        w.fname AS warden_fname, 
+        w.lname AS warden_lname,
+        r.id AS review_id,
+        r.driver_id, 
+        r.rating AS review_rating, 
+        r.review AS review_text, 
+        r.created_at AS review_created_at,
+        d.fname AS driver_fname, 
+        d.lname AS driver_lname,
+        d.profile_pic AS driver_profile_pic,
+        l.sketch,
+        l.images,
+        (SELECT COUNT(*) FROM parkinglotreviews WHERE lot_id = l.lot_id) AS review_count
+      FROM parking_lot l
+      LEFT JOIN warden_parking_lot wp ON l.lot_id = wp.lot_id
+      LEFT JOIN warden w ON wp.warden_id = w.warden_id
+      LEFT JOIN parkinglotreviews r ON l.lot_id = r.lot_id
+      LEFT JOIN driver d ON r.driver_id = d.driver_id
+      WHERE l.lot_id = $1;
+    `;
 
     const lotResult = await pool.query(lotQuery, [id]);
-
-    console.log(lotResult.rows);
 
     if (lotResult.rows.length === 0) {
       return res.status(404).json({ message: "Parking lot not found" });
@@ -239,7 +237,7 @@ exports.getAParkingLotDetails = async (req, res) => {
             ? row.images
             : typeof row.images === "string"
             ? row.images.split(",")
-            : [], // Adjust based on data type
+            : [],
         };
 
         parkingLotDetails.warden = {
@@ -248,7 +246,6 @@ exports.getAParkingLotDetails = async (req, res) => {
         };
       }
 
-      // Add reviews to the array
       if (row.review_id) {
         parkingLotDetails.reviews.push({
           id: row.review_id,
@@ -263,12 +260,15 @@ exports.getAParkingLotDetails = async (req, res) => {
       }
     });
 
+    // Query to get slot prices
     const slotPricesQuery = `SELECT type_id, amount_per_vehicle FROM toll_amount WHERE lot_id = $1;`;
     const slotPricesResult = await pool.query(slotPricesQuery, [id]);
 
-
-    
-
+    // Process slot prices result and add to parkingLotDetails
+    parkingLotDetails.slotPrices = slotPricesResult.rows.map(row => ({
+      type_id: row.type_id,
+      amount_per_vehicle: row.amount_per_vehicle,
+    }));
 
     console.log(parkingLotDetails);
     res.json({ data: parkingLotDetails });
@@ -277,6 +277,7 @@ exports.getAParkingLotDetails = async (req, res) => {
     res.status(500).json({ message: "Internal Server error" });
   }
 };
+
 
 exports.deactivateParkingLot = async (req, res) => {
   const { id } = req.params;
