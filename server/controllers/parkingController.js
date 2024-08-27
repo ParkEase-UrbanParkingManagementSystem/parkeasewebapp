@@ -440,3 +440,199 @@ exports.getRecentParkingLotsHome = async (req, res) => {
         client.release();
     }
 }
+
+exports.getRecentParkingInstances = async (req, res) => {
+    const client = await pool.connect();
+
+    try {
+        const user_id = req.user;
+
+        // Get the driver_id based on the user_id
+        const driverIdQuery = await client.query(`
+            SELECT driver_id FROM driver WHERE user_id = $1`, [user_id]);
+
+        if (driverIdQuery.rows.length === 0) {
+            return res.status(404).json({ message: "No driver found for this user" });
+        }
+
+        const driver_id = driverIdQuery.rows[0].driver_id;
+
+        // Get the recent parking lots
+        const recentParkingQuery = await client.query(`
+            SELECT
+                p.out_time,
+                p.in_time,
+                p.instance_id,
+                p.toll_amount AS cost,
+                pl.lot_id,
+                pl.name AS lot_name,
+                pl.bike_capacity,
+                pl.car_capacity,
+                pl.addressNO,
+                pl.street1,
+                pl.street2,
+                pl.city,
+                pl.district,
+                pl.description,
+                pl.status,
+                pl.sketch,
+                pl.images,
+                v.name AS vehicle_name
+            FROM
+                driver_vehicle dv
+            JOIN
+                parking_instance p ON dv.driver_vehicle_id = p.driver_vehicle_id
+            JOIN
+                parking_lot pl ON p.lot_id = pl.lot_id
+            JOIN
+                vehicle v ON dv.vehicle_id = v.vehicle_id    
+            WHERE
+                dv.driver_id = $1
+                AND p.out_time IS NOT NULL
+                AND p.iscompleted = true
+            ORDER BY
+                p.out_time DESC
+        `, [driver_id]);
+        
+        
+        
+
+        if (recentParkingQuery.rows.length === 0) {
+            return res.status(200).json({ message: "No recent parking lots found", data: [] });
+        }
+
+        console.log(recentParkingQuery.rows);
+
+        return res.status(200).json({
+            message: "Success",
+            data: recentParkingQuery.rows
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    } finally {
+        client.release();
+    }
+}
+
+exports.getParkingInstanceDetails = async (req, res) => {
+    const client = await pool.connect();
+
+    try {
+        const user_id = req.user;
+        const { id } = req.params;
+        console.log(id);
+
+        // Get the driver_id based on the user_id
+        const driverIdQuery = await client.query(`
+            SELECT driver_id FROM driver WHERE user_id = $1`, [user_id]);
+
+        console.log(driverIdQuery.rows);
+
+        if (driverIdQuery.rows.length === 0) {
+            return res.status(404).json({ message: "No driver found for this user" });
+        }
+
+        const driver_id = driverIdQuery.rows[0].driver_id;
+
+        // Get the parking instance details
+        const instanceQuery = await client.query(`
+            SELECT
+            dv.driver_id,
+                p.out_time,
+                p.in_time,
+                p.toll_amount AS cost,
+                pl.lot_id,
+                pl.name AS lot_name,
+                pl.bike_capacity,
+                pl.car_capacity,
+                pl.addressNO,
+                pl.street1,
+                pl.street2,
+                pl.city,
+                pl.district,
+                pl.description,
+                pl.status,
+                pl.sketch,
+                pl.images,
+                v.name AS vehicle_name,
+                w.warden_id,
+                w.fname AS warden_fname,
+                w.lname AS warden_lname,
+                w.profile_pic AS warden_profile_pic,
+                u.contact AS warden_contact,
+                u.city AS warden_city,
+                pm.name AS payment_method
+            FROM
+                driver_vehicle dv
+            JOIN
+                parking_instance p ON dv.driver_vehicle_id = p.driver_vehicle_id
+            JOIN
+                parking_lot pl ON p.lot_id = pl.lot_id
+            JOIN
+                vehicle v ON dv.vehicle_id = v.vehicle_id    
+            JOIN
+                warden w ON p.warden_id = w.warden_id
+            JOIN
+                payment_method pm ON p.method_id = pm.method_id    
+            JOIN
+                users u ON w.user_id = u.user_id
+            WHERE
+                dv.driver_id = $1
+                AND p.instance_id = $2
+        `, [driver_id, id]);
+
+        if (instanceQuery.rows.length === 0) {
+            // console.log(instanceQuery.rows);
+            return res.status(404).json({ message: "No parking instance found" });
+        }
+
+        const parkingLotId = instanceQuery.rows[0].lot_id;
+        const wardenId = instanceQuery.rows[0].warden_id;
+
+        // Get the average rating for the parking lot
+        const lotRatingQuery = await client.query(`
+            SELECT
+                COALESCE(AVG(rating), 0) AS average_lot_rating
+            FROM
+                parkinglotreviews
+            WHERE
+                lot_id = $1
+        `, [parkingLotId]);
+
+        // Get the average rating for the warden
+        const wardenRatingQuery = await client.query(`
+            SELECT
+                COALESCE(AVG(rating), 0) AS average_warden_rating
+            FROM
+                wardenreviews
+            WHERE
+                warden_id = $1
+        `, [wardenId]);
+
+        console.log(instanceQuery.rows[0]);
+
+        console.log(instanceQuery.rows[0],
+            lotRatingQuery.rows[0].average_lot_rating,
+            wardenRatingQuery.rows[0].average_warden_rating)
+
+        return res.status(200).json({
+            message: "Success",
+            data: {
+                instanceDetails: instanceQuery.rows[0],
+                averageLotRating: lotRatingQuery.rows[0].average_lot_rating,
+                averageWardenRating: wardenRatingQuery.rows[0].average_warden_rating
+            }
+            
+        });
+        
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    } finally {
+        client.release();
+    }
+}
+
