@@ -238,13 +238,13 @@ const ParkingSlotDetail = () => {
                   <label>Prices per Hour</label>
                   {parkingLotDetails.slotPrices.map((slot, i) => (
                     <p key={i}>
-                      {slot.type_id === 1 && (
+                      {slot.type_name === "Bike" && (
                         <>
                           <FontAwesomeIcon icon={faMotorcycle} />{" "}
                           {slot.amount_per_vehicle}
                         </>
                       )}
-                      {slot.type_id === 2 && (
+                      {slot.type_name === "ThreeWheeler" && (
                         <div className="flex items-center">
                           <img
                             src="/images/tuk-tuk.png"
@@ -253,13 +253,13 @@ const ParkingSlotDetail = () => {
                           {slot.amount_per_vehicle}
                         </div>
                       )}
-                      {slot.type_id === 3 && (
+                      {slot.type_name === "Car" && (
                         <>
                           <FontAwesomeIcon icon={faCar} />{" "}
                           {slot.amount_per_vehicle}
                         </>
                       )}
-                      {slot.type_id === 4 && (
+                      {slot.type_name === "Large Vehicle" && (
                         <>
                           <FontAwesomeIcon icon={faTruck} />{" "}
                           {slot.amount_per_vehicle}
