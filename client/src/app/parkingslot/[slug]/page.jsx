@@ -215,10 +215,7 @@ const ParkingSlotDetail = () => {
                   <label>Number of Slots</label>
                   <p className="font-semibold">
                     Total:{" "}
-                    {parkingLotDetails.lot.car_capacity +
-                      parkingLotDetails.lot.bike_capacity +
-                      parkingLotDetails.lot.tw_capacity +
-                      parkingLotDetails.lot.xlvehicle_capacity}
+                    {parkingLotDetails.lot.full_capacity}
                   </p>
                   <p>
                     <FontAwesomeIcon icon={faCar} />{" "}
@@ -310,7 +307,7 @@ const ParkingSlotDetail = () => {
                 {parkingLotDetails.lot.images.map((image, index) => (
                   <div key={index} className={styles.galleryItem}>
                     <img
-                      src={`/uploads/${image
+                      src={`${process.env.NEXT_PUBLIC_API_KEY}/uploads/${image
                         .replace(/\\/g, "/")
                         .split("/")
                         .pop()}`} // Corrected path
@@ -319,11 +316,14 @@ const ParkingSlotDetail = () => {
                   </div>
                 ))}
               </div>
-
+              </div>
+              <div className={styles.galleryContainer}>
+                <div className={styles.gallery}>
+              <p>Parking Lot Sketch:</p>
               {parkingLotDetails.lot.sketch && (
-                <div className={styles.sketchContainer}>
+                <div className={styles.galleryItem}>
                   <img
-                    src={`/uploads/${parkingLotDetails.lot.sketch
+                    src={`${process.env.NEXT_PUBLIC_API_KEY}/uploads/${parkingLotDetails.lot.sketch
                       .replace(/\\/g, "/")
                       .split("/")
                       .pop()}`} // Corrected path
@@ -331,6 +331,7 @@ const ParkingSlotDetail = () => {
                   />
                 </div>
               )}
+              </div>
             </div>            
           </div>
         </div>

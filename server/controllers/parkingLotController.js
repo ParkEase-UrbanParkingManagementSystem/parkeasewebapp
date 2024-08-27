@@ -210,8 +210,6 @@ exports.getAParkingLotDetails = async (req, res) => {
 
     const lotResult = await pool.query(lotQuery, [id]);
 
-    console.log(lotResult.rows);
-
     if (lotResult.rows.length === 0) {
       return res.status(404).json({ message: "Parking lot not found" });
     }
@@ -248,7 +246,7 @@ exports.getAParkingLotDetails = async (req, res) => {
             ? row.images
             : typeof row.images === "string"
             ? row.images.split(",")
-            : [], // Adjust based on data type
+            : [],
         };
 
         parkingLotDetails.warden = {
@@ -270,7 +268,6 @@ exports.getAParkingLotDetails = async (req, res) => {
           profile_pic: row.driver_profile_pic,
         });
       }
-
       // Add slot prices to the map
       if (row.vehicle_type_name && row.amount_per_vehicle) {
         slotPricesMap.set(row.vehicle_type_name, row.amount_per_vehicle);
@@ -293,8 +290,6 @@ exports.getAParkingLotDetails = async (req, res) => {
     res.status(500).json({ message: "Internal Server error" });
   }
 };
-
-
 
 exports.deactivateParkingLot = async (req, res) => {
   const { id } = req.params;
