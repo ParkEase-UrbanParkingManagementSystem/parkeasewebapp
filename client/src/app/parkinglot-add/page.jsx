@@ -1,10 +1,17 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./parkinglot-add.module.css";
 import Button from "../../ui/button/button";
 import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
+
+const defaultPrices = {
+  bikePrice: 30,  // Default prices for public PMC
+  carPrice: 70,
+  threeWheelerPrice: 50,
+  lorryPrice: 100
+};
 
 const AddParkingLot = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +32,46 @@ const AddParkingLot = () => {
     lorryPrice: "",
   });
 
+  const [isPublicPMC, setIsPublicPMC] = useState(null); // null to determine if PMC type is loaded
+
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchPMCType = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/pmc/pmctype`, {
+          method: "GET",
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          // Set isPublicPMC based on the sector
+          const publicPMC = data.sector === 'public';
+          setIsPublicPMC(publicPMC);
+
+          // Set default prices if PMC is public
+          if (publicPMC) {
+            setFormData(prevData => ({
+              ...prevData,
+              bikePrice: defaultPrices.bikePrice,
+              carPrice: defaultPrices.carPrice,
+              threeWheelerPrice: defaultPrices.threeWheelerPrice,
+              lorryPrice: defaultPrices.lorryPrice,
+            }));
+          }
+        } else {
+          console.error("Failed to fetch PMC type", data.message);
+        }
+      } catch (err) {
+        console.error("Failed to fetch PMC type", err);
+      }
+    };
+
+    fetchPMCType();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -177,33 +223,37 @@ const AddParkingLot = () => {
                   type="number"
                   placeholder="Bike Price"
                   name="bikePrice"
-                  value={formData.bikePrice}
+                  value={isPublicPMC ? defaultPrices.bikePrice : formData.bikePrice}
                   onChange={handleChange}
                   className={styles.input}
+                  disabled={isPublicPMC === true}  // Disable input if PMC is public
                 />
                 <input
                   type="number"
                   placeholder="Car Price"
                   name="carPrice"
-                  value={formData.carPrice}
+                  value={isPublicPMC ? defaultPrices.carPrice : formData.carPrice}
                   onChange={handleChange}
                   className={styles.input}
+                  disabled={isPublicPMC === true}  // Disable input if PMC is public
                 />
                 <input
                   type="number"
                   placeholder="Three-Wheeler Price"
                   name="threeWheelerPrice"
-                  value={formData.threeWheelerPrice}
+                  value={isPublicPMC ? defaultPrices.threeWheelerPrice : formData.threeWheelerPrice}
                   onChange={handleChange}
                   className={styles.input}
+                  disabled={isPublicPMC === true}  // Disable input if PMC is public
                 />
                 <input
                   type="number"
                   placeholder="Lorry Price"
                   name="lorryPrice"
-                  value={formData.lorryPrice}
+                  value={isPublicPMC ? defaultPrices.lorryPrice : formData.lorryPrice}
                   onChange={handleChange}
                   className={styles.input}
+                  disabled={isPublicPMC === true}  // Disable input if PMC is public
                 />
                 <br />
                 <span>Drawn parking lot sketch: </span>

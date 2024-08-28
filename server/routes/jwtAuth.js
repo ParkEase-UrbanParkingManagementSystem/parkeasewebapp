@@ -12,7 +12,7 @@ const extractAgeAndGenderFromNIC = require("../utils/extractFromNic")
 router.post("/registerPMC", validInfo, async (req, res) => {
     try {
         // Destructure the req.body
-        const { name, email, password, regNo, addressNo, street1, street2, city, district, sector, cmc } = req.body;
+        const { name, email, password, regNo, addressNo, street1, street2, city, district, sector, cmc, contact } = req.body;
 
         // Check if the user email already exists
         const existingUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
@@ -32,8 +32,8 @@ router.post("/registerPMC", validInfo, async (req, res) => {
 
             // Insert new user into the users table
             const newUser = await pool.query(
-                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province, role_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING user_id",
-                [email, bcryptPassword, addressNo, street1, street2, city, district, role_id]
+                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province, role_id, contact) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING user_id",
+                [email, bcryptPassword, addressNo, street1, street2, city, district, role_id, contact]
             );
 
             const userId = newUser.rows[0].user_id;
