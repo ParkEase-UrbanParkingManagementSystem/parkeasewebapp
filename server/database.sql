@@ -346,3 +346,8 @@ CREATE TABLE toll_amount (
 );
 
 
+ALTER TABLE pmc
+ADD COLUMN sector VARCHAR(50),
+ADD COLUMN cmc VARCHAR(100);
+
+
