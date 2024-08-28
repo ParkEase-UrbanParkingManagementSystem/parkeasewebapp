@@ -11,6 +11,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [contact, setContact] = useState("");
   const [regNo, setRegNo] = useState("");
   const [addressNo, setAddressNo] = useState("");
   const [street1, setStreet1] = useState("");
@@ -34,6 +35,7 @@ const Register = () => {
     newErrors.email = validateField(email, "Email");
     newErrors.password = validateField(password, "Password");
     newErrors.name = validateField(name, "Name");
+    newErrors.contact = validateField(contact, "Contact Number");
     newErrors.regNo = validateField(regNo, "Business Registration Number");
 
     if (Object.values(newErrors).some((error) => error !== "")) {
@@ -96,6 +98,7 @@ const Register = () => {
         email,
         password,
         name,
+        contact,
         regNo,
         sector,
         cmc,
@@ -200,6 +203,19 @@ const Register = () => {
                     />
                     {errors.name && (
                     <div className="text-red-500 text-xs">{errors.name}</div>
+                  )}
+                  </div>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Contact Number"
+                      name="contact"
+                      className="form-control my-2 w-96"
+                      value={contact}
+                      onChange={(e) => setContact(e.target.value)}
+                    />
+                    {errors.contact && (
+                    <div className="text-red-500 text-xs">{errors.contact}</div>
                   )}
                   </div>
                   <div className="relative">
