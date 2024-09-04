@@ -405,6 +405,79 @@ exports.payByCash = async(req,res) => {
     }
 }
 
+//Checking Driver status
+
+exports.checkDriverStatus = async (req, res) => {
+    const client = await pool.connect();
+
+    console.log("Checking driver status");
+
+    try {
+        const user_id = req.user;
+
+        // Get the driver_id based on the user_id
+        const driverIdQuery = await client.query(`
+            SELECT driver_id FROM driver WHERE user_id = $1`, [user_id]);
+
+        if (driverIdQuery.rows.length === 0) {
+            return res.status(404).json({ message: "No driver found for this user" });
+        }
+
+        const driver_id = driverIdQuery.rows[0].driver_id;
+
+        // Get the parking details
+        const detailsQuery = await client.query(`
+            SELECT
+                p.iscompleted,
+                p.out_time
+            FROM
+                driver_vehicle dv
+            JOIN
+                vehicle v ON dv.vehicle_id = v.vehicle_id
+            JOIN
+                driver d ON dv.driver_id = d.driver_id
+            JOIN
+                parking_instance p ON dv.driver_vehicle_id = p.driver_vehicle_id
+            WHERE
+                d.driver_id = $1
+        `, [driver_id]);
+
+        if (detailsQuery.rows.length === 0) {
+            return res.status(200).json({ message: "No parking details found", data: "available" });
+        }
+
+        let isParked = false;
+        let isPayment = false;
+
+        for (let record of detailsQuery.rows) {
+            if (!record.iscompleted && record.out_time === null) {
+                isParked = true;
+                break; // If parked, no need to check further
+            }
+            if (!record.iscompleted && record.out_time !== null) {
+                isPayment = true;
+                break; // If in payment, no need to check further
+            }
+        }
+
+        if (isParked) {
+            return res.status(200).json({ message: "Driver is in parking lot", data: "parked" });
+        } else if (isPayment) {
+            return res.status(200).json({ message: "Driver is in payment state", data: "payment" });
+        } else {
+            return res.status(200).json({ message: "Driver is available", data: "available" });
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    } finally {
+        client.release();
+    }
+}
+
+
+
 
 
 
