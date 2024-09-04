@@ -369,6 +369,47 @@ exports.payByWallet = async (req, res) => {
     }
 }
 
+//Pay by Cash
+
+exports.payByCash = async(req,res) => {
+    const client = await pool.connect();
+
+    try {
+        const user_id = req.user;
+        const {method, instance_id } = req.body; // Ensure instance_id is included in the request body
+
+        if (!instance_id) {
+            return res.status(400).json({ message: "Instance ID is required" });
+        }
+
+        // Update parking_instance table
+        const updateQuery = await client.query(`
+            UPDATE parking_instance
+            SET iscompleted = true,
+                method_id = $1
+            WHERE instance_id = $2
+        `, [method, instance_id]);
+        
+
+        if (updateQuery.rowCount === 0) {
+            return res.status(404).json({ message: "Parking instance not found or already updated" });
+        }
+
+        return res.status(200).json({ message: "Payment successful" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    } finally {
+        client.release();
+    }
+}
+
+
+
+
+//-----------
+
 exports.getRecentParkingLotsHome = async (req, res) => {
     const client = await pool.connect();
 
