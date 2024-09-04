@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const path = require("path");
+const wardenAppController = require("./controllers/wardenAppController");
 
 
 
@@ -22,6 +23,7 @@ app.use("/vehicle",require('./routes/vehicleRoutes'));
 app.use("/parking",require('./routes/parkingRoute'));
 app.use("/reviews", require('./routes/reviewRoutes'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/wardenApp", wardenAppController);
 // app.get('/', (req, res) => {
 //     res.send('Static file server running');
 //   });
