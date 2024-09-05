@@ -163,6 +163,12 @@ const Profile = () => {
                     </div>
                   </div>
                   <div className="grid grid-cols-2">
+                    <div className="px-4 py-2 ">Company Sector</div>
+                    <div className="px-4 py-2 font-bold">
+                      {pmcDetails.pmc.sector}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2">
                     <div className="px-4 py-2 ">Email</div>
                     <div className="px-4 py-2 font-bold">
                       {pmcDetails.user.email}
@@ -171,7 +177,7 @@ const Profile = () => {
                   <div className="grid grid-cols-2">
                     <div className="px-4 py-2 ">Contact No.</div>
                     <div className="px-4 py-2 font-bold">
-                      0115 234 987
+                    {pmcDetails.user.contact}
                     </div>
                   </div>
                   <div className="grid grid-cols-2">
