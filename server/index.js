@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
+const wardenAppController = require("./controllers/wardenAppController");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -27,6 +28,7 @@ app.use("/vehicle",require('./routes/vehicleRoutes'));
 app.use("/parking",require('./routes/parkingRoute'));
 app.use("/reviews", require('./routes/reviewRoutes'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/wardenApp", wardenAppController);
 // app.get('/', (req, res) => {
 //     res.send('Static file server running');
 //   });
