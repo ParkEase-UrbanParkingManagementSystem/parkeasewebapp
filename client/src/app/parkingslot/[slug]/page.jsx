@@ -75,6 +75,29 @@ const ParkingSlotDetail = () => {
 
   const handleStatus = async () => {
     const token = localStorage.getItem("token");
+
+    // Check if the parking lot has assigned wardens
+    const hasAssignedWardens =
+      parkingLotDetails.warden &&
+      parkingLotDetails.warden.fname &&
+      parkingLotDetails.warden.lname;
+
+    if (hasAssignedWardens) {
+      // Show an error message and abort the function
+      alert(
+        "You cannot set this parking lot status to Inactive because there are assigned wardens."
+      );
+      return;
+    }
+
+    // Ask for confirmation before proceeding
+    const confirmed = window.confirm(
+      "Are you sure you want to set this parking lot status to Inactive? Click OK to proceed or Cancel to abort."
+    );
+
+    if (!confirmed) {
+      return; // Abort the function if the user clicks Cancel
+    }
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/inactive/${slug}`,
@@ -91,18 +114,22 @@ const ParkingSlotDetail = () => {
         throw new Error("Failed to set parking lot status to inactive");
       }
 
-      // Fetch the updated parking lot details
-      await fetchParkingLotDetails();
+      // // Fetch the updated parking lot details
+      // await fetchParkingLotDetails();
 
-      // Update the state to reflect the new status
-      setParkingLotDetails((prevDetails) => ({
-        ...prevDetails,
-        lot: {
-          ...prevDetails.lot,
-          status: "Inactive",
-        },
-      }));
-      alert("Parking lot status set to Inactive successfully");
+      // // Update the state to reflect the new status
+      // setParkingLotDetails((prevDetails) => ({
+      //   ...prevDetails,
+      //   lot: {
+      //     ...prevDetails.lot,
+      //     status: "Inactive",
+      //   },
+      // }));
+      // Notify the user and reload the page
+      alert(
+        "Parking lot status set to Inactive successfully. Click OK to refresh the page."
+      );
+      window.location.reload();
     } catch (error) {
       console.error("Error setting parking lot status to inactive:", error);
       // setError("Failed to set parking lot status to inactive");
@@ -111,6 +138,14 @@ const ParkingSlotDetail = () => {
 
   const handleActivate = async () => {
     const token = localStorage.getItem("token");
+    // Ask for confirmation before proceeding
+    const confirmed = window.confirm(
+      "Are you sure you want to set this parking lot status to Active? Click OK to proceed or Cancel to abort."
+    );
+
+    if (!confirmed) {
+      return; // Abort the function if the user clicks Cancel
+    }
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/active/${slug}`,
@@ -127,23 +162,39 @@ const ParkingSlotDetail = () => {
         throw new Error("Failed to set parking lot status to active");
       }
 
-      // Fetch the updated parking lot details
-      await fetchParkingLotDetails();
+      // // Fetch the updated parking lot details
+      // await fetchParkingLotDetails();
 
-      // Update the state to reflect the new status
-      setParkingLotDetails((prevDetails) => ({
-        ...prevDetails,
-        lot: {
-          ...prevDetails.lot,
-          status: "active",
-        },
-      }));
-      alert("Parking lot status set to Active successfully");
+      // // Update the state to reflect the new status
+      // setParkingLotDetails((prevDetails) => ({
+      //   ...prevDetails,
+      //   lot: {
+      //     ...prevDetails.lot,
+      //     status: "active",
+      //   },
+      // }));
+      // Notify the user and reload the page
+      alert(
+        "Parking lot status set to Active successfully. Click OK to refresh the page."
+      );
+      window.location.reload();
     } catch (error) {
       console.error("Error setting parking lot status to active:", error);
       // setError("Failed to set parking lot status to active");
     }
   };
+
+  const defaultImage = "/images/parking-lot.jpg";
+
+  const headerImageSrc =
+    parkingLotDetails && parkingLotDetails.lot.images.length > 0
+      ? `${
+          process.env.NEXT_PUBLIC_API_KEY
+        }/uploads/${parkingLotDetails.lot.images[0]
+          .replace(/\\/g, "/")
+          .split("/")
+          .pop()}`
+      : defaultImage;
 
   if (!parkingLotDetails) {
     return <div>Loading...</div>;
@@ -157,7 +208,7 @@ const ParkingSlotDetail = () => {
           <div className={styles.header}>
             <div className={styles.headerContent}>
               <img
-                src="/images/parking-lot.jpg"
+                src={headerImageSrc} // Use the image URL from the array or default
                 alt="Parking Lot"
                 className={styles.headerImage}
               />
@@ -214,8 +265,7 @@ const ParkingSlotDetail = () => {
                 <div className={styles.detail}>
                   <label>Number of Slots</label>
                   <p className="font-semibold">
-                    Total:{" "}
-                    {parkingLotDetails.lot.full_capacity}
+                    Total: {parkingLotDetails.lot.full_capacity}
                   </p>
                   <p>
                     <FontAwesomeIcon icon={faCar} />{" "}
@@ -286,6 +336,7 @@ const ParkingSlotDetail = () => {
             <div className={styles.slotcard}>
               <div className={styles.card}>
                 <FontAwesomeIcon icon={faMotorcycle} className={styles.icon} />
+                {/* change the slot availablity */}
                 &nbsp; <strong>6</strong>:
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.bike_capacity}
@@ -293,6 +344,7 @@ const ParkingSlotDetail = () => {
               </div>
               <div className={styles.card}>
                 <FontAwesomeIcon icon={faCar} className={styles.icon} />
+                {/* change the slot availablity */}
                 &nbsp; <strong>5</strong>:
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.car_capacity}
@@ -301,7 +353,11 @@ const ParkingSlotDetail = () => {
             </div>
           </div>
           <div className={styles.picscard}>
-            <p>Add More Location Pictures:</p>
+            <p>
+              {parkingLotDetails.lot.images.length >= 10
+                ? "Parking Lot Location Images:"
+                : "Add More Location Pictures:"}
+            </p>
             <div className={styles.galleryContainer}>
               <div className={styles.gallery}>
                 {parkingLotDetails.lot.images.map((image, index) => (
@@ -316,14 +372,17 @@ const ParkingSlotDetail = () => {
                   </div>
                 ))}
               </div>
-              </div>
-              <div className={styles.galleryContainer}>
-                <div className={styles.gallery}>
+            </div>
+
+            <div className={styles.galleryContainer}>
+              {/* <div className={styles.gallery}> */}
               <p>Parking Lot Sketch:</p>
               {parkingLotDetails.lot.sketch && (
                 <div className={styles.galleryItem}>
                   <img
-                    src={`${process.env.NEXT_PUBLIC_API_KEY}/uploads/${parkingLotDetails.lot.sketch
+                    src={`${
+                      process.env.NEXT_PUBLIC_API_KEY
+                    }/uploads/${parkingLotDetails.lot.sketch
                       .replace(/\\/g, "/")
                       .split("/")
                       .pop()}`} // Corrected path
@@ -331,8 +390,8 @@ const ParkingSlotDetail = () => {
                   />
                 </div>
               )}
-              </div>
-            </div>            
+              {/* </div> */}
+            </div>
           </div>
         </div>
 

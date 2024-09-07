@@ -353,3 +353,13 @@ ADD COLUMN cmc VARCHAR(100);
 ALTER TABLE pmc
 ADD COLUMN registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
+CREATE TABLE wardenreviews (
+    id SERIAL PRIMARY KEY,
+    driver_id UUID NOT NULL,
+    warden_id UUID NOT NULL,
+    rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+    review TEXT,
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (driver_id) REFERENCES driver(driver_id),
+    FOREIGN KEY (warden_id) REFERENCES warden(warden_id)
+);

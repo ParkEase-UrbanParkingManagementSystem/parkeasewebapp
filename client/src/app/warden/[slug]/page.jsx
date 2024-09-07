@@ -131,6 +131,14 @@ const WardenDetailsPage = () => {
 
   const handleUnassign = async () => {
     const token = localStorage.getItem("token");
+    // Show confirmation dialog
+  const confirmed = window.confirm(
+    "Are you sure you want to unassign from this parking lot? Click OK to proceed or Cancel to abort."
+  );
+
+  if (!confirmed) {
+    return; // Abort the function if the user clicks Cancel
+  }
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_KEY}/wardens/unassign/${slug}`,
@@ -317,8 +325,9 @@ const WardenDetailsPage = () => {
 
 
       </div>
+      <div className={styles.reviewcard}>
       <h1 className="text-[20px] font-semibold mt-4">
-            Reviews and Ratings for Warden {warden.fname} {warden.lname}
+            Reviews and Ratings for Warden - {warden.fname} {warden.lname}
           </h1>
 
       <div className={styles.reviewsOuterCont}>
@@ -351,6 +360,7 @@ const WardenDetailsPage = () => {
       ) : (
         <p>No reviews available for this warden.</p>
       )}
+      </div>
     </div>
 
 
