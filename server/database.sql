@@ -353,7 +353,6 @@ ADD COLUMN cmc VARCHAR(100);
 ALTER TABLE pmc
 ADD COLUMN registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
-
 CREATE TABLE wardenreviews (
     id SERIAL PRIMARY KEY,
     driver_id UUID NOT NULL,
@@ -364,16 +363,3 @@ CREATE TABLE wardenreviews (
     FOREIGN KEY (driver_id) REFERENCES driver(driver_id),
     FOREIGN KEY (warden_id) REFERENCES warden(warden_id)
 );
-
-
-CREATE TABLE notifications (
-    id serial PRIMARY KEY,
-    sender_id uuid REFERENCES users(user_id) ON DELETE CASCADE,
-    receiver_id uuid REFERENCES users(user_id) ON DELETE CASCADE,
-    type varchar(50),
-    message text,
-    is_read boolean DEFAULT false,
-    created_at timestamp DEFAULT CURRENT_TIMESTAMP
-);
-
-
