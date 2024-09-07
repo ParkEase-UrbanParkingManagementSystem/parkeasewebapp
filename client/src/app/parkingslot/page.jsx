@@ -8,13 +8,14 @@ import {
   faSquarePlus,
   faCar,
   faMotorcycle,
+  faTruck,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import Link from "next/link";
 import Card from "../../ui/card/horizontalcard/card";
 import Router from "next/router"; // Import Router
 
-library.add(faSquarePlus, faCar, faMotorcycle);
+library.add(faSquarePlus, faCar, faMotorcycle, faTruck);
 
 const ParkingLot = () => {
   const [parkingLots, setParkingLots] = useState([]);
@@ -117,7 +118,9 @@ const ParkingLot = () => {
   }, []);
 
   // Render loading state or handle empty parking lots array case
-  
+  if (parkingLots.length === 0) {
+    return <p>Loading...</p>; // or any other loading indicator
+  }
 
   return (
     <div className={styles.container}>
@@ -195,7 +198,14 @@ const ParkingLot = () => {
                         icon={faMotorcycle}
                         className={styles.icon}
                       />
-                      {lot.bike_capacity}
+                      {lot.bike_capacity} &nbsp;&nbsp;
+                      <FontAwesomeIcon icon={faTruck} className={styles.icon} />
+                      {lot.xlvehicle_capacity} &nbsp;&nbsp;
+                      <img
+                        src="/images/tuk-tuk.png"
+                        className={`${styles.icon} w-6 h-5 mr-1`}
+                      />
+                      {lot.tw_capacity}
                     </div>
                   </td>
                   <td
