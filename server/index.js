@@ -1,8 +1,15 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const dotenv = require("dotenv");
+const path = require("path");
+const wardenAppController = require("./controllers/wardenAppController");
 
+// Load environment variables from .env file
+dotenv.config();
 
+// Use the PORT variable from the .env file or default to 3000
+const port = process.env.PORT || 3000;
 
 //middleware
 app.use(express.json()) //req.body
@@ -21,11 +28,15 @@ app.use("/vehicle",require('./routes/vehicleRoutes'));
 app.use("/parking",require('./routes/parkingRoute'));
 app.use("/reviews", require('./routes/reviewRoutes'));
 app.use("/card", require('./routes/cardRoutes'));
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/wardenApp", wardenAppController);
+// app.get('/', (req, res) => {
+//     res.send('Static file server running');
+//   });
 // //Dashboard route
 
 // app.use("/dashboard", require("./routes/dashboard"))
 
-app.listen(5000,()=>{
-    console.log("The server is running on port 5000");
-})
+app.listen(port, () => {
+    console.log(`The server is running on port ${port}`);
+});
