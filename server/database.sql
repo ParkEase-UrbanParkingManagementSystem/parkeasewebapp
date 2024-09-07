@@ -79,9 +79,9 @@ CREATE TABLE parking_lot(
     name VARCHAR(255) NOT NULL,
     location VARCHAR(255) NOT NULL,
     bike_capacity INT,
-    tw_capacity INT,
+    -- tw_capacity INT,
     car_capacity INT,
-    XLvehicle_capacity INT,
+    -- XLvehicle_capacity INT,
     full_capacity INT,
     PMC_id uuid, -- Change INT to UUID
     addressNo VARCHAR(50),
@@ -196,11 +196,11 @@ CREATE TABLE parking_instance (
         REFERENCES warden(warden_id)
 );
 
-CREATE TABLE slot_price (
-    slot_id INT PRIMARY KEY,
-    type VARCHAR(50) NOT NULL,
-    amount_per_slot DECIMAL(10, 2) NOT NULL
-);
+-- CREATE TABLE slot_price (
+--     slot_id INT PRIMARY KEY,
+--     type VARCHAR(50) NOT NULL,
+--     amount_per_slot DECIMAL(10, 2) NOT NULL
+-- );
 
 CREATE TABLE parkpoints (
     parkpoint_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -289,11 +289,8 @@ ALTER TABLE vehicle ADD COLUMN isdeleted BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE driver ADD COLUMN description TEXT;
 
-
 ALTER TABLE parking_instance
 ADD COLUMN iscompleted BOOLEAN;
-
-
 
 ALTER TABLE users ADD COLUMN contact VARCHAR(10);
 
@@ -318,9 +315,7 @@ CREATE OR REPLACE FUNCTION calculate_full_capacity()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.full_capacity := COALESCE(NEW.bike_capacity, 0) + 
-                         COALESCE(NEW.tw_capacity, 0) + 
-                         COALESCE(NEW.car_capacity, 0) + 
-                         COALESCE(NEW.xlvehicle_capacity, 0);
+                         COALESCE(NEW.car_capacity, 0); 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -331,11 +326,30 @@ BEFORE INSERT OR UPDATE ON parking_lot
 FOR EACH ROW
 EXECUTE FUNCTION calculate_full_capacity();
 
-INSERT INTO slot_price (slot_id, type, amount_per_slot)
-VALUES
-  (1, 'bike', 30.00),
-  (2, 'tw', 50.00),
-  (3, 'car', 70.00),
-  (4, 'lorry', 100.00);
+-- INSERT INTO slot_price (slot_id, type, amount_per_slot)
+-- VALUES
+--   (1, 'bike', 30.00),
+--   (2, 'tw', 50.00),
+--   (3, 'car', 70.00),
+--   (4, 'lorry', 100.00);
 
+ALTER TABLE parking_lot
+ADD COLUMN sketch VARCHAR(255),
+ADD COLUMN images JSON;
+
+CREATE TABLE toll_amount (
+    lot_id UUID,
+    type_id INT,
+    amount_per_vehicle DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (lot_id, type_id),
+    FOREIGN KEY (lot_id) REFERENCES parking_lot(lot_id)
+);
+
+
+ALTER TABLE pmc
+ADD COLUMN sector VARCHAR(50),
+ADD COLUMN cmc VARCHAR(100);
+
+ALTER TABLE pmc
+ADD COLUMN registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 

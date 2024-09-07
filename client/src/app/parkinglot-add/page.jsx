@@ -1,31 +1,89 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./parkinglot-add.module.css";
 import Button from "../../ui/button/button";
 import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 
+const defaultPrices = {
+  bikePrice: 30,  // Default prices for public PMC
+  carPrice: 70,
+  threeWheelerPrice: 50,
+  lorryPrice: 100
+};
+
 const AddParkingLot = () => {
   const [formData, setFormData] = useState({
     name: "",
-    description:"",
+    description: "",
     bikeCapacity: "",
-    twCapacity: "",
     carCapacity: "",
-    xlVehicleCapacity: "",
     addressNo: "",
     street1: "",
     street2: "",
     city: "",
     district: "",
+    sketch: null,
+    images: [],
+    bikePrice: "",
+    carPrice: "",
+    threeWheelerPrice: "",
+    lorryPrice: "",
   });
 
+  const [isPublicPMC, setIsPublicPMC] = useState(null); // null to determine if PMC type is loaded
+
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchPMCType = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/pmc/pmctype`, {
+          method: "GET",
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          const publicPMC = data.sector === 'Public';
+          setIsPublicPMC(publicPMC);
+
+          // Set default prices if PMC is public
+          if (publicPMC) {
+            setFormData(prevData => ({
+              ...prevData,
+              bikePrice: defaultPrices.bikePrice,
+              carPrice: defaultPrices.carPrice,
+              threeWheelerPrice: defaultPrices.threeWheelerPrice,
+              lorryPrice: defaultPrices.lorryPrice,
+            }));
+          }
+        } else {
+          console.error("Failed to fetch PMC type", data.message);
+        }
+      } catch (err) {
+        console.error("Failed to fetch PMC type", err);
+      }
+    };
+
+    fetchPMCType();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    if (name === "sketch") {
+      setFormData({ ...formData, sketch: files[0] });
+    } else if (name === "images") {
+      setFormData({ ...formData, images: Array.from(files) });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -38,14 +96,25 @@ const AddParkingLot = () => {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token: token,
-        },
-        body: JSON.stringify(formData),
-      });
+      const data = new FormData();
+      for (let key in formData) {
+        if (key === "images") {
+          formData[key].forEach((file) => data.append(key, file));
+        } else {
+          data.append(key, formData[key]);
+        }
+      }
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/add`,
+        {
+          method: "POST",
+          headers: {
+            token: token,
+          },
+          body: data,
+        }
+      );
 
       const parseRes = await response.json();
 
@@ -85,7 +154,7 @@ const AddParkingLot = () => {
                 className={styles.input}
               />
               <br />
-              <span>Parking capacity Details: </span>
+              <span>Parking Capacity Details: </span>
               <input
                 type="number"
                 placeholder="Bike Capacity"
@@ -96,25 +165,9 @@ const AddParkingLot = () => {
               />
               <input
                 type="number"
-                placeholder="Three-Wheeler Capacity"
-                name="twCapacity"
-                value={formData.twCapacity}
-                onChange={handleChange}
-                className={styles.input}
-              />
-              <input
-                type="number"
                 placeholder="Car Capacity"
                 name="carCapacity"
                 value={formData.carCapacity}
-                onChange={handleChange}
-                className={styles.input}
-              />
-              <input
-                type="number"
-                placeholder="XL Vehicle Capacity"
-                name="xlVehicleCapacity"
-                value={formData.xlVehicleCapacity}
                 onChange={handleChange}
                 className={styles.input}
               />
@@ -160,20 +213,66 @@ const AddParkingLot = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              <br />
             </div>
-
             <div className={styles.formGroupii}>
-              {/* <div className={styles.formGrouppic}>
+              <div className={styles.formGrouppic}>
+                <span>Parking Prices (per vehicle): </span>
+                <input
+                  type="number"
+                  placeholder="Bike Price"
+                  name="bikePrice"
+                  value={isPublicPMC ? formData.bikePrice : formData.bikePrice}
+                  onChange={handleChange}
+                  className={styles.input}
+                  disabled={isPublicPMC === true}  // Disable input if PMC is public
+                />
+                <input
+                  type="number"
+                  placeholder="Car Price"
+                  name="carPrice"
+                  value={isPublicPMC ? formData.carPrice : formData.carPrice}
+                  onChange={handleChange}
+                  className={styles.input}
+                  disabled={isPublicPMC === true}  // Disable input if PMC is public
+                />
+                <input
+                  type="number"
+                  placeholder="Three-Wheeler Price"
+                  name="threeWheelerPrice"
+                  value={isPublicPMC ? formData.threeWheelerPrice : formData.threeWheelerPrice}
+                  onChange={handleChange}
+                  className={styles.input}
+                  disabled={isPublicPMC === true}  // Disable input if PMC is public
+                />
+                <input
+                  type="number"
+                  placeholder="Lorry Price"
+                  name="lorryPrice"
+                  value={isPublicPMC ? formData.lorryPrice : formData.lorryPrice}
+                  onChange={handleChange}
+                  className={styles.input}
+                  disabled={isPublicPMC === true}  // Disable input if PMC is public
+                />
+                <br />
                 <span>Drawn parking lot sketch: </span>
-                <input type="file" accept="image/*" multiple name="skectch" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="sketch"
+                  onChange={handleFileChange}
+                />
                 <br />
                 <span>Add Pictures of the parking lot: </span>
-                <input type="file" accept="image/*" multiple name="images" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  name="images"
+                  onChange={handleFileChange}
+                />
                 <br />
-
-                <span>Mark location on the map: </span>
-                <img src="images/map.png"/>
-              </div> */}
+              </div>
               <div>
                 <Button
                   label="Add Parking Lot"
