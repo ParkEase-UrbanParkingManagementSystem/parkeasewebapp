@@ -9,6 +9,7 @@ router.get("/wardens", authorization, authorizeRole([2]), PMCController.getAllWa
 router.get("/total-pmcs", PMCController.getTotalPMCs);
 router.get('/all-pmcs', PMCController.getAllPMCDetails);
 router.get('/total-collections', PMCController.getTotalCollectionsByPMC);
+router.get("/pmctype", authorization, authorizeRole([2]), PMCController.getPmcType);
 
 module.exports = router;
     
