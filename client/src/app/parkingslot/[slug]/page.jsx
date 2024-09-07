@@ -7,8 +7,8 @@ import {
   faCar,
   faMotorcycle,
   faClock,
-  faPlus,
   faTruck,
+  faPlus,
   faEdit, // Import the edit icon
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import ActionButton from "../../../ui/button/newButton";
 
-library.add(faCar, faMotorcycle, faClock, faPlus, faEdit, faTruck);
+library.add(faCar, faMotorcycle, faClock, faTruck, faPlus, faEdit);
 
 const ParkingSlotDetail = () => {
   const renderStars = (rating) => {
@@ -163,15 +163,7 @@ const ParkingSlotDetail = () => {
               />
               <div className={styles.headerText}>
                 <h2 className="font-semibold">{parkingLotDetails.lot.name}</h2>
-                <h3 className="mb-2">
-                  Parking Lot ID -{" "}
-                  <span className="font-bold">
-                    L
-                    {`${parkingLotDetails.lot.lot_id
-                      .substring(0, 4)
-                      .toUpperCase()}`}
-                  </span>
-                </h3>
+                <h3 className="mb-2">Parking Lot ID - <span className="font-bold">L{`${parkingLotDetails.lot.lot_id.substring(0,4).toUpperCase()}`}</span></h3>
                 <p>
                   <span>Status: </span>
                   <span
@@ -213,10 +205,7 @@ const ParkingSlotDetail = () => {
                 </div>
                 <div className={styles.detail}>
                   <label>Number of Slots</label>
-                  <p className="font-semibold">
-                    Total:{" "}
-                    {parkingLotDetails.lot.full_capacity}
-                  </p>
+                  <p>Total : {parkingLotDetails.lot.full_capacity}</p>
                   <p>
                     <FontAwesomeIcon icon={faCar} />{" "}
                     {parkingLotDetails.lot.car_capacity}
@@ -224,6 +213,18 @@ const ParkingSlotDetail = () => {
                   <p>
                     <FontAwesomeIcon icon={faMotorcycle} />{" "}
                     {parkingLotDetails.lot.bike_capacity}
+                  </p>
+                  <div className="flex items-center opacity-70">
+                    <img
+                      src="/images/tuk-tuk.png"
+                      className="w-6 h-5 mr-1"
+                      alt="Tuk Tuk"
+                    />
+                    <span>{parkingLotDetails.lot.tw_capacity}</span>
+                  </div>
+                  <p>
+                    <FontAwesomeIcon icon={faTruck} />{" "}
+                    {parkingLotDetails.lot.xlvehicle_capacity}
                   </p>
                 </div>
                 <div className={styles.detail}>
@@ -234,41 +235,41 @@ const ParkingSlotDetail = () => {
                 </div>
               </div>
               <div className={styles.detailColumn}>
-                <div className={styles.detail}>
+              <div className={styles.detail}>
                   <label>Prices per Hour</label>
                   {parkingLotDetails.slotPrices.map((slot, i) => (
                     <p key={i}>
-                      {slot.type_name === "Bike" && (
+                      {slot.type === "bike" && (
                         <>
                           <FontAwesomeIcon icon={faMotorcycle} />{" "}
-                          {slot.amount_per_vehicle}
+                          {slot.amount_per_slot}
                         </>
                       )}
-                      {slot.type_name === "ThreeWheeler" && (
+                      {slot.type === "tw" && (
                         <div className="flex items-center">
                           <img
                             src="/images/tuk-tuk.png"
                             className="w-6 h-5 mr-1 opacity-70"
                           />
-                          {slot.amount_per_vehicle}
+                          {slot.amount_per_slot}
                         </div>
                       )}
-                      {slot.type_name === "Car" && (
+                      {slot.type === "car" && (
                         <>
                           <FontAwesomeIcon icon={faCar} />{" "}
-                          {slot.amount_per_vehicle}
+                          {slot.amount_per_slot}
                         </>
                       )}
-                      {slot.type_name === "Large Vehicle" && (
+                      {slot.type === "lorry" && (
                         <>
                           <FontAwesomeIcon icon={faTruck} />{" "}
-                          {slot.amount_per_vehicle}
+                          {slot.amount_per_slot}
                         </>
                       )}
                     </p>
                   ))}
                 </div>
-
+                
                 <div className={styles.detail}>
                   <label>Address</label>
                   <p>
@@ -292,10 +293,24 @@ const ParkingSlotDetail = () => {
                 </span>
               </div>
               <div className={styles.card}>
+                <img src="/images/tuk-tuk.png" className={styles.icon} />
+                &nbsp; <strong>6</strong>:
+                <span className={styles.totalSlots}>
+                  {parkingLotDetails.lot.tw_capacity}
+                </span>
+              </div>
+              <div className={styles.card}>
                 <FontAwesomeIcon icon={faCar} className={styles.icon} />
                 &nbsp; <strong>5</strong>:
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.car_capacity}
+                </span>
+              </div>
+              <div className={styles.card}>
+                <FontAwesomeIcon icon={faTruck} className={styles.icon} />
+                &nbsp; <strong>1</strong>:
+                <span className={styles.totalSlots}>
+                  {parkingLotDetails.lot.xlvehicle_capacity}
                 </span>
               </div>
             </div>
@@ -304,62 +319,46 @@ const ParkingSlotDetail = () => {
             <p>Add More Location Pictures:</p>
             <div className={styles.galleryContainer}>
               <div className={styles.gallery}>
-                {parkingLotDetails.lot.images.map((image, index) => (
-                  <div key={index} className={styles.galleryItem}>
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_API_KEY}/uploads/${image
-                        .replace(/\\/g, "/")
-                        .split("/")
-                        .pop()}`} // Corrected path
-                      alt={`Parking Lot Image ${index + 1}`}
-                    />
-                  </div>
-                ))}
+                <img src="/images/parking-lot.jpg" />
+                <img src="/images/parking-lot.jpg" />
+                <img src="/images/parking-lot.jpg" />
               </div>
+              <div className={styles.gallerysquare}>
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  className="w-16 h-16 opacity-10"
+                />
               </div>
-              <div className={styles.galleryContainer}>
-                <div className={styles.gallery}>
-              <p>Parking Lot Sketch:</p>
-              {parkingLotDetails.lot.sketch && (
-                <div className={styles.galleryItem}>
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_API_KEY}/uploads/${parkingLotDetails.lot.sketch
-                      .replace(/\\/g, "/")
-                      .split("/")
-                      .pop()}`} // Corrected path
-                    alt="Parking Lot Sketch"
-                  />
-                </div>
-              )}
-              </div>
-            </div>            
+            </div>
+            <p>Parking Lot Location Sketch:</p>
+            <img src="/images/lot.png" className="w-72" />
           </div>
         </div>
+      </div>
 
-        <div className={styles.reviewsOuterCont}>
-          {parkingLotDetails.reviews &&
-            parkingLotDetails.reviews.length > 0 && (
-              <div className={styles.reviewsContainer}>
-                <h1 className="text-[20px] font-semibold">
-                  Reviews and Ratings for {parkingLotDetails.lot.name}
-                </h1>
-                {parkingLotDetails.reviews.map((review) => (
-                  <div key={review.id} className={styles.reviewCard}>
-                    <h4 className={styles.reviewRating}>
-                      Rating: {renderStars(review.rating)}
-                    </h4>
-                    <p className={styles.reviewText}>{review.review}</p>
-                    <p className={styles.reviewDate}>
-                      Reviewed on:{" "}
-                      {new Date(review.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                ))}
+      <div className={styles.reviewsOuterCont}>
+        {parkingLotDetails.reviews && parkingLotDetails.reviews.length > 0 && (
+          <div className={styles.reviewsContainer}>
+            <h1 className="text-[20px] font-semibold">
+              Reviews and Ratings for {parkingLotDetails.lot.name}
+            </h1>
+            {parkingLotDetails.reviews.map((review) => (
+              <div key={review.id} className={styles.reviewCard}>
+                <h4 className={styles.reviewRating}>
+                  Rating: {renderStars(review.rating)}
+                </h4>
+                <p className={styles.reviewText}>{review.review}</p>
+                <p className={styles.reviewDate}>
+                  Reviewed on:{" "}
+                  {new Date(review.created_at).toLocaleDateString()}
+                </p>
               </div>
-            )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 };
+
 export default ParkingSlotDetail;

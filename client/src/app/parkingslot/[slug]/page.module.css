@@ -146,7 +146,7 @@
   margin-bottom: 10px;
 }
 
-.galleryItem{
+.gallery img {
   margin-right: 16px;
   flex-shrink: 0;
   width: 6rem;

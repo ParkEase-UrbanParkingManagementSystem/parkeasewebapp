@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
-const path = require("path");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -17,7 +16,6 @@ app.use(cors())
 //ROUTES
 
 //register and login routes
-
 app.use("/auth", require("./routes/jwtAuth"));
 app.use("/wardens", require("./routes/wardens"));
 app.use("/pmc", require("./routes/pmcRoutes"));
@@ -26,10 +24,7 @@ app.use("/driver", require('./routes/driverRoutes'));
 app.use("/vehicle",require('./routes/vehicleRoutes'));
 app.use("/parking",require('./routes/parkingRoute'));
 app.use("/reviews", require('./routes/reviewRoutes'));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// app.get('/', (req, res) => {
-//     res.send('Static file server running');
-//   });
+
 // //Dashboard route
 
 // app.use("/dashboard", require("./routes/dashboard"))
