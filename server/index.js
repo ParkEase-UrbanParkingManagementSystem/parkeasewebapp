@@ -1,13 +1,8 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const dotenv = require("dotenv");
 
-// Load environment variables from .env file
-dotenv.config();
 
-// Use the PORT variable from the .env file or default to 3000
-const port = process.env.PORT || 3000;
 
 //middleware
 app.use(express.json()) //req.body
@@ -16,6 +11,7 @@ app.use(cors())
 //ROUTES
 
 //register and login routes
+
 app.use("/auth", require("./routes/jwtAuth"));
 app.use("/wardens", require("./routes/wardens"));
 app.use("/pmc", require("./routes/pmcRoutes"));
@@ -29,6 +25,6 @@ app.use("/reviews", require('./routes/reviewRoutes'));
 
 // app.use("/dashboard", require("./routes/dashboard"))
 
-app.listen(port, () => {
-    console.log(`The server is running on port ${port}`);
-});
+app.listen(5000,()=>{
+    console.log("The server is running on port 5000");
+})

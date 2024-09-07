@@ -66,8 +66,7 @@ router.post("/registerPMC", validInfo, async (req, res) => {
 router.post("/registerDriver", async (req, res) => {
     try {
         // Destructure the req.body
-
-        const { fname, lname, nic, email, password, contact, addressNo, street1, street2, city, district, isverified, role_id, clerkid } = req.body;
+        const { fname, lname, nic, email, password, contact, addressNo, street1, street2, city, district } = req.body;
         const { age, gender } = extractAgeAndGenderFromNIC(nic);
 
         // Check if the user email already exists
@@ -85,13 +84,12 @@ router.post("/registerDriver", async (req, res) => {
             const salt = await bcrypt.genSalt(saltRound);
             const bcryptPassword = await bcrypt.hash(password, salt);
 
-            // role id of driver is 1
             const role_id = 1;
 
             // Insert new user into the users table
             const newUser = await pool.query(
-                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province, contact, role_id, isverified, clerkid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING user_id",
-                [email, bcryptPassword, addressNo, street1, street2, city, district, contact, role_id, isverified, clerkid]
+                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province, contact, role_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING user_id",
+                [email, bcryptPassword, addressNo, street1, street2, city, district, contact, role_id]
             );
 
             const userId = newUser.rows[0].user_id;

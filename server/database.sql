@@ -19,10 +19,6 @@ CREATE TABLE users(
     role_id INT
 );
 
--- adding clerkId column
-ALTER TABLE users
-    ADD COLUMN clerkId VARCHAR(255);
-
 CREATE TABLE user_contactno (
     contactNo VARCHAR(20) NOT NULL,
     user_id uuid,
