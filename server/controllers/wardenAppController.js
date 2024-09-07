@@ -453,7 +453,7 @@ router.get('/fetch_available_slots', async (req, res) => {
   }
 });
 
-router.post('/update_slots', async (req, res) => {
+app.post('/update_slots', async (req, res) => {
   const { user_id, carSlots, bikeSlots } = req.body;
   console.log('user_id in update slots:', user_id);
   console.log("number of carssss #######################################################",carSlots);

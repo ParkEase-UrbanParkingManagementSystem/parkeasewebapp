@@ -7,10 +7,10 @@ import Button from "../../ui/button/button";
 import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 
 const defaultPrices = {
-  bikePrice: 30,  // Default prices for public PMC
+  bikePrice: 30, // Default prices for public PMC
   carPrice: 70,
   threeWheelerPrice: 50,
-  lorryPrice: 100
+  lorryPrice: 100,
 };
 
 const AddParkingLot = () => {
@@ -39,21 +39,24 @@ const AddParkingLot = () => {
   useEffect(() => {
     const fetchPMCType = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/pmc/pmctype`, {
-          method: "GET",
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_KEY}/pmc/pmctype`,
+          {
+            method: "GET",
+            headers: {
+              token: localStorage.getItem("token"),
+            },
+          }
+        );
 
         const data = await response.json();
         if (response.ok) {
-          const publicPMC = data.sector === 'Public';
+          const publicPMC = data.sector === "Public";
           setIsPublicPMC(publicPMC);
 
           // Set default prices if PMC is public
           if (publicPMC) {
-            setFormData(prevData => ({
+            setFormData((prevData) => ({
               ...prevData,
               bikePrice: defaultPrices.bikePrice,
               carPrice: defaultPrices.carPrice,
@@ -119,8 +122,15 @@ const AddParkingLot = () => {
       const parseRes = await response.json();
 
       if (response.ok) {
-        console.log("Parking lot added successfully", parseRes);
-        router.push("/parkingslot");
+        const userConfirmed = window.confirm(
+          "Parking lot added successfully. Click OK to proceed."
+        );
+
+        if (userConfirmed) {
+          console.log("Parking lot added successfully", parseRes);
+          router.push("/parkingslot");
+        }
+        // router.push("/parkingslot");
       } else {
         console.error("Error adding parking lot", parseRes);
       }
@@ -225,7 +235,7 @@ const AddParkingLot = () => {
                   value={isPublicPMC ? formData.bikePrice : formData.bikePrice}
                   onChange={handleChange}
                   className={styles.input}
-                  disabled={isPublicPMC === true}  // Disable input if PMC is public
+                  disabled={isPublicPMC === true} // Disable input if PMC is public
                 />
                 <input
                   type="number"
@@ -234,25 +244,31 @@ const AddParkingLot = () => {
                   value={isPublicPMC ? formData.carPrice : formData.carPrice}
                   onChange={handleChange}
                   className={styles.input}
-                  disabled={isPublicPMC === true}  // Disable input if PMC is public
+                  disabled={isPublicPMC === true} // Disable input if PMC is public
                 />
                 <input
                   type="number"
                   placeholder="Three-Wheeler Price"
                   name="threeWheelerPrice"
-                  value={isPublicPMC ? formData.threeWheelerPrice : formData.threeWheelerPrice}
+                  value={
+                    isPublicPMC
+                      ? formData.threeWheelerPrice
+                      : formData.threeWheelerPrice
+                  }
                   onChange={handleChange}
                   className={styles.input}
-                  disabled={isPublicPMC === true}  // Disable input if PMC is public
+                  disabled={isPublicPMC === true} // Disable input if PMC is public
                 />
                 <input
                   type="number"
                   placeholder="Lorry Price"
                   name="lorryPrice"
-                  value={isPublicPMC ? formData.lorryPrice : formData.lorryPrice}
+                  value={
+                    isPublicPMC ? formData.lorryPrice : formData.lorryPrice
+                  }
                   onChange={handleChange}
                   className={styles.input}
-                  disabled={isPublicPMC === true}  // Disable input if PMC is public
+                  disabled={isPublicPMC === true} // Disable input if PMC is public
                 />
                 <br />
                 <span>Drawn parking lot sketch: </span>
@@ -263,7 +279,9 @@ const AddParkingLot = () => {
                   onChange={handleFileChange}
                 />
                 <br />
-                <span>Add Pictures of the parking lot: </span>
+                <span>
+                  Add Pictures of the parking lot: (Up to 10 pictures)
+                </span>
                 <input
                   type="file"
                   accept="image/*"
