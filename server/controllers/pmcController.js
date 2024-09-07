@@ -35,6 +35,59 @@ const getPMCDetails = async (req, res) => {
     }
 };
 
+// Function to fetch the total number of PMCs
+const getTotalPMCs = async (req, res) => {
+    try {
+        // Query to count the total number of PMCs
+        const totalPMCs = await pool.query(`
+            SELECT COUNT(*) AS count FROM pmc
+        `);
+
+        res.status(200).json({
+            message: "Success",
+            data: totalPMCs.rows[0].count
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Server Error" });
+    }
+}
+
+
+
+//Function to fetch all PMCs 
+const getAllPMCDetails = async (req, res) => {
+    try {
+        const pmcDetails = await pool.query(`
+            SELECT 
+                pmc.pmc_id, 
+                pmc.name, 
+                pmc.regNo, 
+                users.email, 
+                users.addressNo, 
+                users.street_1, 
+                users.street_2, 
+                users.city, 
+                users.province
+            FROM 
+                pmc
+            JOIN 
+                users ON pmc.user_id = users.user_id
+        `);
+
+        if (pmcDetails.rows.length === 0) {
+            return res.status(404).json({ msg: "No PMCs found" });
+        }
+
+        res.status(200).json({
+            message: "Success",
+            data: pmcDetails.rows
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Server Error" });
+    }
+};
 
 
 
@@ -57,7 +110,42 @@ const getAllWardens = async (req, res) => {
     }
 }
 
+//To get total collections per PMC
+const getTotalCollectionsByPMC = async (req, res) => {
+    try {
+        const totalCollections = await pool.query(`
+            SELECT 
+                p.name AS pmc_name, 
+                CURRENT_DATE AS transaction_date,
+                SUM(t.amount) AS total_collected
+            FROM 
+                warden w
+            JOIN 
+                parking_instance pi ON w.warden_id = pi.warden_id
+            JOIN 
+                transaction t ON pi.transaction_id = t.transaction_id
+            JOIN 
+                pmc p ON w.pmc_id = p.pmc_id
+            WHERE 
+                t.date = CURRENT_DATE
+            GROUP BY 
+                p.name;
+        `);
+
+        res.status(200).json({
+            message: "Success",
+            data: totalCollections.rows
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Server Error" });
+    }
+};
+
 module.exports = {
     getPMCDetails,
-    getAllWardens
+    getAllWardens,
+    getTotalPMCs,
+    getAllPMCDetails,
+    getTotalCollectionsByPMC
 };

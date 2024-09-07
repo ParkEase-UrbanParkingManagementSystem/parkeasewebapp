@@ -27,7 +27,7 @@ const DriverVehicleList = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        token:token // Use 'Authorization' instead of 'token'
+                        token: token // Use 'Authorization' instead of 'token'
                     }
                 });
 
@@ -79,7 +79,7 @@ const DriverVehicleList = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    token:token  // Use 'Authorization' instead of 'token'
+                    token: token  // Use 'Authorization' instead of 'token'
                 },
                 body: JSON.stringify({
                     vehicle_number: newVehicle.number,
@@ -109,17 +109,17 @@ const DriverVehicleList = () => {
                 <>
                     <h2 className='text-[20px] font-bold items-center'>Choose your ride</h2>
 
-                    {vehicles.length === 0 && 
+                    {vehicles.length === 0 &&
 
-                    <div className='flex flex-col items-center justify-center mt-4'>
-                        <Image 
-                        src={"/images/question-mark.png"} 
-                        width={80} 
-                        height={100} 
-                        alt={`image`} 
-                    />
-                    <p className='text-[15px]  mb-1 mt-3 text-center'>No Vehicles added. Please add a vehicle</p>
-                    </div>
+                        <div className='flex flex-col items-center justify-center mt-4'>
+                            <Image
+                                src={"/images/question-mark.png"}
+                                width={80}
+                                height={100}
+                                alt={`image`}
+                            />
+                            <p className='text-[15px]  mb-1 mt-3 text-center'>No Vehicles added. Please add a vehicle</p>
+                        </div>
                     }
 
                     {vehicles.map((item, index) => (
@@ -165,7 +165,7 @@ const DriverVehicleList = () => {
                             <option value='3'>Threewheeler</option>
                             <option value='4'>Large Vehicle</option>
                         </select>
-                    </div>    
+                    </div>
 
                     <div className='mb-1'>
                         <label className='block mb-1'>Vehicle Number</label>
@@ -196,18 +196,18 @@ const DriverVehicleList = () => {
 
             {selectedVehicle?.name && showQRCode && (
                 <div className='fixed inset-0 flex items-center justify-center z-10'>
-                <div className='flex flex-col items-center bg-white p-3 shadow-xl rounded-lg w-full md:w-[30%] border-[1px]'>
-                  <h2 className='mb-2'>QR Code for {selectedVehicle.name}</h2>
-                  <QRCode value={`Vehicle: ${selectedVehicle.vehicle_id}, User: ${driverId}`} size={256} />
-                  <button className='mt-3 p-2 bg-red-500 text-white rounded-lg' onClick={handleCloseQRCode}>
-                    Close
-                  </button>
-                  <button className='mt-3 p-2 bg-green-500 text-white rounded-lg' onClick={handleParkedButton}>
-                    Parked
-                  </button>
+                    <div className='flex flex-col items-center bg-white p-3 shadow-xl rounded-lg w-full md:w-[30%] border-[1px]'>
+                        <h2 className='mb-2'>QR Code for {selectedVehicle.name}</h2>
+                        <QRCode value={`Vehicle: ${selectedVehicle.vehicle_id}, User: ${driverId}`} size={256} />
+                        <button className='mt-3 p-2 bg-red-500 text-white rounded-lg' onClick={handleCloseQRCode}>
+                            Close
+                        </button>
+                        <button className='mt-3 p-2 bg-green-500 text-white rounded-lg' onClick={handleParkedButton}>
+                            Parked
+                        </button>
+                    </div>
                 </div>
-              </div>
-              
+
             )}
         </div>
     );

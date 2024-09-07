@@ -338,4 +338,42 @@ VALUES
   (3, 'car', 70.00),
   (4, 'lorry', 100.00);
 
+--Card types table
+CREATE TABLE card_type (
+    card_type_id INT PRIMARY KEY,
+    card_type VARCHAR(50) NOT NULL UNIQUE
+);
+
+INSERT INTO card_type (card_type_id, card_type) VALUES (1, 'Visa');
+INSERT INTO card_type (card_type_id, card_type) VALUES (2, 'MasterCard');
+
+--New card table
+CREATE TABLE card (
+    card_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    card_name VARCHAR(100),
+    card_number VARCHAR(20) NOT NULL UNIQUE,
+    expiration_date DATE,
+    CVV VARCHAR(4),
+    driver_id uuid,
+    CONSTRAINT fk_driver_card
+        FOREIGN KEY(driver_id) 
+        REFERENCES driver(driver_id),
+    type_id INT,
+    CONSTRAINT fk_type_card
+        FOREIGN KEY(type_id)
+        REFERENCES card_type(card_type_id)
+);
+
+--Driver's card details
+CREATE TABLE driver_card (
+    driver_card_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    driver_id uuid,
+    card_id uuid,
+    CONSTRAINT fk_driver
+        FOREIGN KEY(driver_id) 
+        REFERENCES driver(driver_id),
+    CONSTRAINT fk_card
+        FOREIGN KEY(card_id) 
+        REFERENCES card(card_id)
+);
 
