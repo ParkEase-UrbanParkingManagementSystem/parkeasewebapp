@@ -19,10 +19,15 @@ const getPMCDetails = async (req, res) => {
       return res.status(404).json({ msg: "PMC details not found" });
     }
 
+    // Format the registered_at field to YYYY-MM-DD
+    const pmc = pmcDetails.rows[0];
+    pmc.registered_at = pmc.registered_at.toISOString().split('T')[0];
+
     const combinedDetails = {
-      pmc: pmcDetails.rows[0],
+      pmc,
       user: userDetails.rows[0],
     };
+    console.log(combinedDetails);
 
     res.status(200).json({
       message: "success",
@@ -33,7 +38,6 @@ const getPMCDetails = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
-
 // Function to fetch all the wardens of PMC
 
 const getAllWardens = async (req, res) => {
@@ -56,27 +60,31 @@ const getAllWardens = async (req, res) => {
 };
 
 const getPmcType = async (req, res) => {
-    try {
-      const userID = req.user;
-  
-      // Query the database using pool.query
-      const result = await pool.query(
-        "SELECT sector FROM pmc WHERE user_id = $1",
-        [userID]
-      );
-  
-      // console.log(result.rows);
-  
-      if (result.rows.length > 0) {
-        res.json({ sector: result.rows[0].sector });
-      } else {
-        res.status(404).json({ message: "PMC type not found" });
-      }
-    } catch (error) {
-      console.error("Error fetching PMC type:", error);
-      res.status(500).json({ message: "Internal server error" });
+  try {
+    const userID = req.user;
+
+    if (!userID) {
+      return res.status(400).json({ message: "User ID is missing" });
     }
-  };
+
+    const result = await pool.query(
+      "SELECT sector FROM pmc WHERE user_id = $1",
+      [userID]
+    );
+
+    console.log(result);
+
+    if (result.rows.length > 0) {
+      res.json({ sector: result.rows[0].sector });
+    } else {
+      res.status(404).json({ message: "PMC type not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching PMC type:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
   
 module.exports = {
   getPMCDetails,
