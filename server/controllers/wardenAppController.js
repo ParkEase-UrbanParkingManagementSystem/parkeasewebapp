@@ -108,7 +108,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Test route to print warden ID
-router.get('/test', authenticateToken, (req, res) => {
+app.get('/test', authenticateToken, (req, res) => {
   console.log('Warden ID:', req.userId);
   res.json({ message: 'Warden ID logged in console', userId: req.userId });
 });
@@ -412,8 +412,8 @@ router.get('/fetch_parked_vehicles', async (req, res) => {
   }
 });
 
-router.get('/fetch_available_slots', async (req, res) => {
-  console.log('user_id in fetching availableeeee Badu awaaaaaaa:');
+app.get('/fetch_available_slots', async (req, res) => {
+  console.log('user_id in fetching availableeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:', req.query);
   const { user_id } = req.query;
   try{
     const getWardenId = `
@@ -554,8 +554,7 @@ router.get('/get-parking-instance/', async (req, res) => {
   }
 });
 
-router.get('/fetchPersonalInfo', async (req, res) => {
-  console.log("Meka wadaa");
+app.get('/fetchPersonalInfo', async (req, res) => {
   const  {user_id}  = req.query;
   try {
     // Get the warden_id from the user_id
@@ -621,7 +620,7 @@ router.get('/fetchPersonalInfo', async (req, res) => {
 });
 
 //fetchWorkingInfo endpoint
-router.get('/fetchWorkingInfo', async (req, res) => {
+app.get('/fetchWorkingInfo', async (req, res) => {
   const  {user_id}  = req.query;
   try {
     // Get the warden_id from the user_id
