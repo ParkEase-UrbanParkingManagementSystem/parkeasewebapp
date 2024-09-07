@@ -20,14 +20,15 @@ const getPMCDetails = async (req, res) => {
 
         const combinedDetails = {
 
-        pmc:  pmcDetails.rows[0],
-        user:  userDetails.rows[0]
+            pmc: pmcDetails.rows[0],
+            user: userDetails.rows[0]
 
         }
 
         res.status(200).json({
-            message:"success",
-            data:combinedDetails});
+            message: "success",
+            data: combinedDetails
+        });
 
     } catch (err) {
         console.error(err.message);
@@ -94,7 +95,7 @@ const getAllPMCDetails = async (req, res) => {
 // Function to fetch all the wardens of PMC
 
 const getAllWardens = async (req, res) => {
-    try {        
+    try {
         const user_id = req.user;
         const wardens = await pool.query('SELECT * FROM wardens WHERE pmc_id = $1', [user_id]);
 
@@ -103,12 +104,38 @@ const getAllWardens = async (req, res) => {
         }
 
         res.json(wardens.rows); // Returning only the rows, not the whole query object
-    
+
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Server Error");
     }
 }
+
+const getPmcType = async (req, res) => {
+    try {
+        const userID = req.user;
+
+        if (!userID) {
+            return res.status(400).json({ message: "User ID is missing" });
+        }
+
+        const result = await pool.query(
+            "SELECT sector FROM pmc WHERE user_id = $1",
+            [userID]
+        );
+
+        console.log(result);
+
+        if (result.rows.length > 0) {
+            res.json({ sector: result.rows[0].sector });
+        } else {
+            res.status(404).json({ message: "PMC type not found" });
+        }
+    } catch (error) {
+        console.error("Error fetching PMC type:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
 
 //To get total collections per PMC
 const getTotalCollectionsByPMC = async (req, res) => {
@@ -147,5 +174,6 @@ module.exports = {
     getAllWardens,
     getTotalPMCs,
     getAllPMCDetails,
-    getTotalCollectionsByPMC
+    getTotalCollectionsByPMC,
+    getPmcType
 };
