@@ -35,7 +35,8 @@ exports.getParkingDetails = async (req, res) => {
                 u.contact AS warden_contact,
                 pl.lot_id,
                 pl.name AS lot_name,
-                pl.city AS lot_city
+                pl.city AS lot_city,
+                ta.amount_per_vehicle AS parking_toll_amount
             FROM
                 driver_vehicle dv
             JOIN
@@ -50,6 +51,8 @@ exports.getParkingDetails = async (req, res) => {
                 users u ON w.user_id = u.user_id
             JOIN
                 parking_lot pl ON p.lot_id = pl.lot_id
+            JOIN
+                toll_amount ta ON pl.lot_id = ta.lot_id AND v.type_id = ta.type_id
             WHERE
                 d.driver_id = $1
                 AND v.isparked = true
@@ -57,9 +60,10 @@ exports.getParkingDetails = async (req, res) => {
                 AND p.iscompleted = false;
         `, [driver_id]);
         
+        
 
         if (detailsQuery.rows.length === 0) {
-            return res.status(404).json({ message: "Could not find details of this parking instance" });
+            return res.status(200).json({ message: "No parking details found", data: null });
         }
 
         console.log("Ah haloooo",detailsQuery.rows[0]);
@@ -154,6 +158,8 @@ exports.getAfterParkingDetails = async (req, res) => {
         client.release();
     }
 };
+
+
 
 exports.getAfterParkingDetailsMobile = async (req, res) => {
     const client = await pool.connect();
@@ -629,3 +635,4 @@ exports.getParkingInstanceDetails = async (req, res) => {
         client.release();
     }
 }
+

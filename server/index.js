@@ -5,7 +5,6 @@ const path = require("path");
 
 
 
-
 //middleware
 app.use(express.json()) //req.body
 app.use(cors())
