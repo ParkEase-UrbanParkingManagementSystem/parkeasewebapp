@@ -32,6 +32,6 @@ app.use("/wardenApp", wardenAppController);
 
 // app.use("/dashboard", require("./routes/dashboard"))
 
-app.listen(port, () => {
-    console.log(`The server is running on port ${port}`);
-});
+app.listen(5000,()=>{
+    console.log("The server is running on port 5000");
+})
