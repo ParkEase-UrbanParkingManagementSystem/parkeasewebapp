@@ -1,15 +1,10 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const dotenv = require("dotenv");
 const path = require("path");
 const wardenAppController = require("./controllers/wardenAppController");
 
-// Load environment variables from .env file
-dotenv.config();
 
-// Use the PORT variable from the .env file or default to 3000
-const port = process.env.PORT || 3000;
 
 //middleware
 app.use(express.json()) //req.body
