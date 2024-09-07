@@ -77,7 +77,7 @@ const Profile = () => {
               <ul className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
                 <li className="flex items-center py-3">
                   <span>Member since</span>
-                  <span className="ml-auto">{pmcDetails.pmc.registered_at}</span>
+                  <span className="ml-auto">July 13, 2024</span>
                 </li>
               </ul>
             </div>

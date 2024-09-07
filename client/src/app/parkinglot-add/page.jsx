@@ -48,7 +48,8 @@ const AddParkingLot = () => {
 
         const data = await response.json();
         if (response.ok) {
-          const publicPMC = data.sector === 'Public';
+          // Set isPublicPMC based on the sector
+          const publicPMC = data.sector === 'public';
           setIsPublicPMC(publicPMC);
 
           // Set default prices if PMC is public
@@ -222,7 +223,7 @@ const AddParkingLot = () => {
                   type="number"
                   placeholder="Bike Price"
                   name="bikePrice"
-                  value={isPublicPMC ? formData.bikePrice : formData.bikePrice}
+                  value={isPublicPMC ? defaultPrices.bikePrice : formData.bikePrice}
                   onChange={handleChange}
                   className={styles.input}
                   disabled={isPublicPMC === true}  // Disable input if PMC is public
@@ -231,7 +232,7 @@ const AddParkingLot = () => {
                   type="number"
                   placeholder="Car Price"
                   name="carPrice"
-                  value={isPublicPMC ? formData.carPrice : formData.carPrice}
+                  value={isPublicPMC ? defaultPrices.carPrice : formData.carPrice}
                   onChange={handleChange}
                   className={styles.input}
                   disabled={isPublicPMC === true}  // Disable input if PMC is public
@@ -240,7 +241,7 @@ const AddParkingLot = () => {
                   type="number"
                   placeholder="Three-Wheeler Price"
                   name="threeWheelerPrice"
-                  value={isPublicPMC ? formData.threeWheelerPrice : formData.threeWheelerPrice}
+                  value={isPublicPMC ? defaultPrices.threeWheelerPrice : formData.threeWheelerPrice}
                   onChange={handleChange}
                   className={styles.input}
                   disabled={isPublicPMC === true}  // Disable input if PMC is public
@@ -249,7 +250,7 @@ const AddParkingLot = () => {
                   type="number"
                   placeholder="Lorry Price"
                   name="lorryPrice"
-                  value={isPublicPMC ? formData.lorryPrice : formData.lorryPrice}
+                  value={isPublicPMC ? defaultPrices.lorryPrice : formData.lorryPrice}
                   onChange={handleChange}
                   className={styles.input}
                   disabled={isPublicPMC === true}  // Disable input if PMC is public
