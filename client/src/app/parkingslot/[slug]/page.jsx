@@ -7,8 +7,8 @@ import {
   faCar,
   faMotorcycle,
   faClock,
-  faTruck,
   faPlus,
+  faTruck,
   faEdit, // Import the edit icon
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import ActionButton from "../../../ui/button/newButton";
 
-library.add(faCar, faMotorcycle, faClock, faTruck, faPlus, faEdit);
+library.add(faCar, faMotorcycle, faClock, faPlus, faEdit, faTruck);
 
 const ParkingSlotDetail = () => {
   const renderStars = (rating) => {
@@ -75,6 +75,29 @@ const ParkingSlotDetail = () => {
 
   const handleStatus = async () => {
     const token = localStorage.getItem("token");
+
+    // Check if the parking lot has assigned wardens
+    const hasAssignedWardens =
+      parkingLotDetails.warden &&
+      parkingLotDetails.warden.fname &&
+      parkingLotDetails.warden.lname;
+
+    if (hasAssignedWardens) {
+      // Show an error message and abort the function
+      alert(
+        "You cannot set this parking lot status to Inactive because there are assigned wardens."
+      );
+      return;
+    }
+
+    // Ask for confirmation before proceeding
+    const confirmed = window.confirm(
+      "Are you sure you want to set this parking lot status to Inactive? Click OK to proceed or Cancel to abort."
+    );
+
+    if (!confirmed) {
+      return; // Abort the function if the user clicks Cancel
+    }
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/inactive/${slug}`,
@@ -91,18 +114,22 @@ const ParkingSlotDetail = () => {
         throw new Error("Failed to set parking lot status to inactive");
       }
 
-      // Fetch the updated parking lot details
-      await fetchParkingLotDetails();
+      // // Fetch the updated parking lot details
+      // await fetchParkingLotDetails();
 
-      // Update the state to reflect the new status
-      setParkingLotDetails((prevDetails) => ({
-        ...prevDetails,
-        lot: {
-          ...prevDetails.lot,
-          status: "Inactive",
-        },
-      }));
-      alert("Parking lot status set to Inactive successfully");
+      // // Update the state to reflect the new status
+      // setParkingLotDetails((prevDetails) => ({
+      //   ...prevDetails,
+      //   lot: {
+      //     ...prevDetails.lot,
+      //     status: "Inactive",
+      //   },
+      // }));
+      // Notify the user and reload the page
+      alert(
+        "Parking lot status set to Inactive successfully. Click OK to refresh the page."
+      );
+      window.location.reload();
     } catch (error) {
       console.error("Error setting parking lot status to inactive:", error);
       // setError("Failed to set parking lot status to inactive");
@@ -111,6 +138,14 @@ const ParkingSlotDetail = () => {
 
   const handleActivate = async () => {
     const token = localStorage.getItem("token");
+    // Ask for confirmation before proceeding
+    const confirmed = window.confirm(
+      "Are you sure you want to set this parking lot status to Active? Click OK to proceed or Cancel to abort."
+    );
+
+    if (!confirmed) {
+      return; // Abort the function if the user clicks Cancel
+    }
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/active/${slug}`,
@@ -127,23 +162,39 @@ const ParkingSlotDetail = () => {
         throw new Error("Failed to set parking lot status to active");
       }
 
-      // Fetch the updated parking lot details
-      await fetchParkingLotDetails();
+      // // Fetch the updated parking lot details
+      // await fetchParkingLotDetails();
 
-      // Update the state to reflect the new status
-      setParkingLotDetails((prevDetails) => ({
-        ...prevDetails,
-        lot: {
-          ...prevDetails.lot,
-          status: "Active",
-        },
-      }));
-      alert("Parking lot status set to Active successfully");
+      // // Update the state to reflect the new status
+      // setParkingLotDetails((prevDetails) => ({
+      //   ...prevDetails,
+      //   lot: {
+      //     ...prevDetails.lot,
+      //     status: "active",
+      //   },
+      // }));
+      // Notify the user and reload the page
+      alert(
+        "Parking lot status set to Active successfully. Click OK to refresh the page."
+      );
+      window.location.reload();
     } catch (error) {
       console.error("Error setting parking lot status to active:", error);
       // setError("Failed to set parking lot status to active");
     }
   };
+
+  const defaultImage = "/images/parking-lot.jpg";
+
+  const headerImageSrc =
+    parkingLotDetails && parkingLotDetails.lot.images.length > 0
+      ? `${
+          process.env.NEXT_PUBLIC_API_KEY
+        }/uploads/${parkingLotDetails.lot.images[0]
+          .replace(/\\/g, "/")
+          .split("/")
+          .pop()}`
+      : defaultImage;
 
   if (!parkingLotDetails) {
     return <div>Loading...</div>;
@@ -157,13 +208,21 @@ const ParkingSlotDetail = () => {
           <div className={styles.header}>
             <div className={styles.headerContent}>
               <img
-                src="/images/parking-lot.jpg"
+                src={headerImageSrc} // Use the image URL from the array or default
                 alt="Parking Lot"
                 className={styles.headerImage}
               />
               <div className={styles.headerText}>
                 <h2 className="font-semibold">{parkingLotDetails.lot.name}</h2>
-                <h3 className="mb-2">Parking Lot ID - <span className="font-bold">L{`${parkingLotDetails.lot.lot_id.substring(0,4).toUpperCase()}`}</span></h3>
+                <h3 className="mb-2">
+                  Parking Lot ID -{" "}
+                  <span className="font-bold">
+                    L
+                    {`${parkingLotDetails.lot.lot_id
+                      .substring(0, 4)
+                      .toUpperCase()}`}
+                  </span>
+                </h3>
                 <p>
                   <span>Status: </span>
                   <span
@@ -205,7 +264,9 @@ const ParkingSlotDetail = () => {
                 </div>
                 <div className={styles.detail}>
                   <label>Number of Slots</label>
-                  <p>Total : {parkingLotDetails.lot.full_capacity}</p>
+                  <p className="font-semibold">
+                    Total: {parkingLotDetails.lot.full_capacity}
+                  </p>
                   <p>
                     <FontAwesomeIcon icon={faCar} />{" "}
                     {parkingLotDetails.lot.car_capacity}
@@ -213,18 +274,6 @@ const ParkingSlotDetail = () => {
                   <p>
                     <FontAwesomeIcon icon={faMotorcycle} />{" "}
                     {parkingLotDetails.lot.bike_capacity}
-                  </p>
-                  <div className="flex items-center opacity-70">
-                    <img
-                      src="/images/tuk-tuk.png"
-                      className="w-6 h-5 mr-1"
-                      alt="Tuk Tuk"
-                    />
-                    <span>{parkingLotDetails.lot.tw_capacity}</span>
-                  </div>
-                  <p>
-                    <FontAwesomeIcon icon={faTruck} />{" "}
-                    {parkingLotDetails.lot.xlvehicle_capacity}
                   </p>
                 </div>
                 <div className={styles.detail}>
@@ -235,41 +284,41 @@ const ParkingSlotDetail = () => {
                 </div>
               </div>
               <div className={styles.detailColumn}>
-              <div className={styles.detail}>
+                <div className={styles.detail}>
                   <label>Prices per Hour</label>
                   {parkingLotDetails.slotPrices.map((slot, i) => (
                     <p key={i}>
-                      {slot.type === "bike" && (
+                      {slot.type_name === "Bike" && (
                         <>
                           <FontAwesomeIcon icon={faMotorcycle} />{" "}
-                          {slot.amount_per_slot}
+                          {slot.amount_per_vehicle}
                         </>
                       )}
-                      {slot.type === "tw" && (
+                      {slot.type_name === "ThreeWheeler" && (
                         <div className="flex items-center">
                           <img
                             src="/images/tuk-tuk.png"
                             className="w-6 h-5 mr-1 opacity-70"
                           />
-                          {slot.amount_per_slot}
+                          {slot.amount_per_vehicle}
                         </div>
                       )}
-                      {slot.type === "car" && (
+                      {slot.type_name === "Car" && (
                         <>
                           <FontAwesomeIcon icon={faCar} />{" "}
-                          {slot.amount_per_slot}
+                          {slot.amount_per_vehicle}
                         </>
                       )}
-                      {slot.type === "lorry" && (
+                      {slot.type_name === "Large Vehicle" && (
                         <>
                           <FontAwesomeIcon icon={faTruck} />{" "}
-                          {slot.amount_per_slot}
+                          {slot.amount_per_vehicle}
                         </>
                       )}
                     </p>
                   ))}
                 </div>
-                
+
                 <div className={styles.detail}>
                   <label>Address</label>
                   <p>
@@ -287,78 +336,89 @@ const ParkingSlotDetail = () => {
             <div className={styles.slotcard}>
               <div className={styles.card}>
                 <FontAwesomeIcon icon={faMotorcycle} className={styles.icon} />
+                {/* change the slot availablity */}
                 &nbsp; <strong>6</strong>:
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.bike_capacity}
                 </span>
               </div>
               <div className={styles.card}>
-                <img src="/images/tuk-tuk.png" className={styles.icon} />
-                &nbsp; <strong>6</strong>:
-                <span className={styles.totalSlots}>
-                  {parkingLotDetails.lot.tw_capacity}
-                </span>
-              </div>
-              <div className={styles.card}>
                 <FontAwesomeIcon icon={faCar} className={styles.icon} />
+                {/* change the slot availablity */}
                 &nbsp; <strong>5</strong>:
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.car_capacity}
                 </span>
               </div>
-              <div className={styles.card}>
-                <FontAwesomeIcon icon={faTruck} className={styles.icon} />
-                &nbsp; <strong>1</strong>:
-                <span className={styles.totalSlots}>
-                  {parkingLotDetails.lot.xlvehicle_capacity}
-                </span>
-              </div>
             </div>
           </div>
           <div className={styles.picscard}>
-            <p>Add More Location Pictures:</p>
+            <p>
+              {parkingLotDetails.lot.images.length >= 10
+                ? "Parking Lot Location Images:"
+                : "Add More Location Pictures:"}
+            </p>
             <div className={styles.galleryContainer}>
               <div className={styles.gallery}>
-                <img src="/images/parking-lot.jpg" />
-                <img src="/images/parking-lot.jpg" />
-                <img src="/images/parking-lot.jpg" />
-              </div>
-              <div className={styles.gallerysquare}>
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  className="w-16 h-16 opacity-10"
-                />
+                {parkingLotDetails.lot.images.map((image, index) => (
+                  <div key={index} className={styles.galleryItem}>
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_API_KEY}/uploads/${image
+                        .replace(/\\/g, "/")
+                        .split("/")
+                        .pop()}`} // Corrected path
+                      alt={`Parking Lot Image ${index + 1}`}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
-            <p>Parking Lot Location Sketch:</p>
-            <img src="/images/lot.png" className="w-72" />
+
+            <div className={styles.galleryContainer}>
+              {/* <div className={styles.gallery}> */}
+              <p>Parking Lot Sketch:</p>
+              {parkingLotDetails.lot.sketch && (
+                <div className={styles.galleryItem}>
+                  <img
+                    src={`${
+                      process.env.NEXT_PUBLIC_API_KEY
+                    }/uploads/${parkingLotDetails.lot.sketch
+                      .replace(/\\/g, "/")
+                      .split("/")
+                      .pop()}`} // Corrected path
+                    alt="Parking Lot Sketch"
+                  />
+                </div>
+              )}
+              {/* </div> */}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className={styles.reviewsOuterCont}>
-        {parkingLotDetails.reviews && parkingLotDetails.reviews.length > 0 && (
-          <div className={styles.reviewsContainer}>
-            <h1 className="text-[20px] font-semibold">
-              Reviews and Ratings for {parkingLotDetails.lot.name}
-            </h1>
-            {parkingLotDetails.reviews.map((review) => (
-              <div key={review.id} className={styles.reviewCard}>
-                <h4 className={styles.reviewRating}>
-                  Rating: {renderStars(review.rating)}
-                </h4>
-                <p className={styles.reviewText}>{review.review}</p>
-                <p className={styles.reviewDate}>
-                  Reviewed on:{" "}
-                  {new Date(review.created_at).toLocaleDateString()}
-                </p>
+        <div className={styles.reviewsOuterCont}>
+          {parkingLotDetails.reviews &&
+            parkingLotDetails.reviews.length > 0 && (
+              <div className={styles.reviewsContainer}>
+                <h1 className="text-[20px] font-semibold">
+                  Reviews and Ratings for {parkingLotDetails.lot.name}
+                </h1>
+                {parkingLotDetails.reviews.map((review) => (
+                  <div key={review.id} className={styles.reviewCard}>
+                    <h4 className={styles.reviewRating}>
+                      Rating: {renderStars(review.rating)}
+                    </h4>
+                    <p className={styles.reviewText}>{review.review}</p>
+                    <p className={styles.reviewDate}>
+                      Reviewed on:{" "}
+                      {new Date(review.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
+            )}
+        </div>
       </div>
     </div>
   );
 };
-
 export default ParkingSlotDetail;

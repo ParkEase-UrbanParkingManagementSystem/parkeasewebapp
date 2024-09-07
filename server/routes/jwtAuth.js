@@ -12,7 +12,7 @@ const extractAgeAndGenderFromNIC = require("../utils/extractFromNic")
 router.post("/registerPMC", validInfo, async (req, res) => {
     try {
         // Destructure the req.body
-        const { name, email, password, regNo, addressNo, street1, street2, city, district } = req.body;
+        const { name, email, password, regNo, addressNo, street1, street2, city, district, sector, cmc, contact } = req.body;
 
         // Check if the user email already exists
         const existingUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
@@ -28,20 +28,20 @@ router.post("/registerPMC", validInfo, async (req, res) => {
             const saltRound = 10;
             const salt = await bcrypt.genSalt(saltRound);
             const bcryptPassword = await bcrypt.hash(password, salt);
-            const role_id = 2;
+            const role_id = 2; // Assuming this is a constant value for PMC
 
             // Insert new user into the users table
             const newUser = await pool.query(
-                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province, role_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING user_id",
-                [email, bcryptPassword, addressNo, street1, street2, city, district, role_id]
+                "INSERT INTO users (email, password, addressNo, street_1, street_2, city, province, role_id, contact) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING user_id",
+                [email, bcryptPassword, addressNo, street1, street2, city, district, role_id, contact]
             );
 
             const userId = newUser.rows[0].user_id;
 
             // Insert PMC details into the pmc table
             await pool.query(
-                "INSERT INTO pmc (name, regNo, user_id) VALUES ($1, $2, $3)",
-                [name, regNo, userId]
+                "INSERT INTO pmc (name, regNo, user_id, sector, cmc) VALUES ($1, $2, $3, $4, $5)",
+                [name, regNo, userId, sector, cmc]
             );
 
             // Commit the transaction

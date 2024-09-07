@@ -8,20 +8,25 @@ import {
   faSquarePlus,
   faCar,
   faMotorcycle,
-  faTruck,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import Link from "next/link";
 import Card from "../../ui/card/horizontalcard/card";
 import Router from "next/router"; // Import Router
 
-library.add(faSquarePlus, faCar, faMotorcycle, faTruck);
+library.add(faSquarePlus, faCar, faMotorcycle);
 
 const ParkingLot = () => {
   const [parkingLots, setParkingLots] = useState([]);
+  const [totalParkingLots, setTotalParkingLots] = useState(0);
+  const [activeParkingLots, setActiveParkingLots] = useState(0);
+  const [inactiveParkingLots, setInactiveParkingLots] = useState(0);
+
+  const [assignedWardenPercentage, setAssignedWardenPercentage] = useState(0);
+  const [notAssignedWardenPercentage, setNotAssignedWardenPercentage] = useState(0);
 
   useEffect(() => {
-    async function fetchParkingLots() {
+    async function fetchData() {
       const token = localStorage.getItem("token");
 
       if (!token) {
@@ -30,7 +35,8 @@ const ParkingLot = () => {
       }
 
       try {
-        const response = await fetch(
+        // Fetch parking lots
+        const responseParkingLots = await fetch(
           `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots`,
           {
             method: "GET",
@@ -41,40 +47,107 @@ const ParkingLot = () => {
           }
         );
 
-        if (!response.ok) {
+        if (!responseParkingLots.ok) {
           throw new Error("Failed to fetch Parking Lots");
         }
 
-        const data = await response.json();
+        const dataParkingLots = await responseParkingLots.json();
 
-        if (Array.isArray(data)) {
-          setParkingLots(data);
+        if (Array.isArray(dataParkingLots)) {
+          setParkingLots(dataParkingLots);
+
+          // Calculate total and categorize parking lots
+          let total = dataParkingLots.length;
+          let active = 0;
+          let inactive = 0;
+
+          dataParkingLots.forEach((lot) => {
+            if (lot.status === "active") {
+              active++;
+            } else if (lot.status === "Inactive") {
+              inactive++;
+            }
+          });
+
+          setTotalParkingLots(total);
+          setActiveParkingLots(active);
+          setInactiveParkingLots(inactive);
         } else {
-          throw new Error("Data received is not in expected format");
+          throw new Error("Data received is not in expected format for parking lots");
         }
+
+        // Fetch wardens
+        const responseWardens = await fetch(
+          `${process.env.NEXT_PUBLIC_API_KEY}/wardens`,
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+              token: token,
+            },
+          }
+        );
+
+        if (!responseWardens.ok) {
+          throw new Error("Failed to fetch Wardens");
+        }
+
+        const wardensData = await responseWardens.json();
+        const wardens = wardensData.data || []; // Access the data property
+        console.log("Fetched wardens data:", wardens); // Log wardens data for debugging
+
+        if (Array.isArray(wardens)) {
+          let totalWardens = wardens.length;
+          let assignedWardens = wardens.filter(warden => warden.isassigned).length;
+          let notAssignedWardens = totalWardens - assignedWardens;
+
+          setAssignedWardenPercentage(totalWardens > 0 ? ((assignedWardens / totalWardens) * 100).toFixed(2) : 0);
+          setNotAssignedWardenPercentage(totalWardens > 0 ? ((notAssignedWardens / totalWardens) * 100).toFixed(2) : 0);
+        } else {
+          throw new Error("Data received is not in expected format for wardens");
+        }
+
       } catch (error) {
-        console.error("Error fetching Parking Lots:", error);
+        console.error("Error fetching data:", error);
         // Handle error (e.g., show error message)
       }
     }
 
-    fetchParkingLots();
+    fetchData();
   }, []);
 
   // Render loading state or handle empty parking lots array case
-  // if (parkingLots.length === 0) {
-  //   return <p>Loading...</p>; // or any other loading indicator
-  // }
+  
 
   return (
     <div className={styles.container}>
       <div className={styles.title}>Registered Parking Lots</div>
       <div className={styles.cardcontainer}>
         <div className="w-1/5">
-          <Card title="Occupied Slots" amount="10%" />
+          <Card title="Assigned Wardens" amount={`${assignedWardenPercentage}%`} />
         </div>
         <div className="w-1/5">
-          <Card title="Remaining Slots" amount="30%" />
+          <Card title="Not Yet Assigned" amount={`${notAssignedWardenPercentage}%`} />
+        </div>
+        <div className="w-1/5">
+          <Card
+            title="Active Slots"
+            amount={`${
+              totalParkingLots > 0
+                ? ((activeParkingLots / totalParkingLots) * 100).toFixed(2)
+                : 0
+            }%`}
+          />
+        </div>
+        <div className="w-1/5">
+          <Card
+            title="Inactive Slots"
+            amount={`${
+              totalParkingLots > 0
+                ? ((inactiveParkingLots / totalParkingLots) * 100).toFixed(2)
+                : 0
+            }%`}
+          />
         </div>
       </div>
       <div>
@@ -122,14 +195,7 @@ const ParkingLot = () => {
                         icon={faMotorcycle}
                         className={styles.icon}
                       />
-                      {lot.bike_capacity} &nbsp;&nbsp;
-                      <FontAwesomeIcon icon={faTruck} className={styles.icon} />
-                      {lot.xlvehicle_capacity} &nbsp;&nbsp;
-                      <img
-                        src="/images/tuk-tuk.png"
-                        className={`${styles.icon} w-6 h-5 mr-1`}
-                      />
-                      {lot.tw_capacity}
+                      {lot.bike_capacity}
                     </div>
                   </td>
                   <td

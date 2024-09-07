@@ -32,6 +32,7 @@ exports.getWardens = async (req, res) => {
     `, [pmc_id]);
     
     if (result.rows.length === 0) {
+      
         return res.status(404).json({ message: "No wardens found for this PMC" });
     }
 
@@ -54,7 +55,6 @@ exports.getWardens = async (req, res) => {
       // Ensure your pool setup manages connections correctly
   }
 };
-
 
 exports.unassignParkingLot = async (req, res) => {
     const { id } = req.params;
@@ -101,10 +101,7 @@ exports.unassignParkingLot = async (req, res) => {
       console.error('Error unassigning parking lot:', error);
       res.status(500).json({ message: 'Failed to unassign parking lot' });
     }
-  };
-
-
-
+};
 
   exports.getWardenDetails = async (req, res) => {
     const { id } = req.params;
@@ -177,14 +174,8 @@ exports.unassignParkingLot = async (req, res) => {
       if (!res.headersSent) {
         res.status(500).json({ message: 'Internal Server Error' });
       }
-    }
-  };
-  
-
-
-
-
-  //register Warden
+  }
+};
 
 exports.registerWarden = async (req, res) => {
   const client = await pool.connect();

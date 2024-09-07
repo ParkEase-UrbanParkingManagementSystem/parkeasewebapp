@@ -1,4 +1,3 @@
-// Import necessary modules and components
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -13,6 +12,8 @@ library.add(faSquarePlus);
 
 const WardenPage = () => {
   const [wardens, setWardens] = useState([]);
+  const [assignedPercentage, setAssignedPercentage] = useState(0);
+  const [notAssignedPercentage, setNotAssignedPercentage] = useState(0);
 
   useEffect(() => {
     async function fetchWardens() {
@@ -24,13 +25,16 @@ const WardenPage = () => {
       }
 
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/wardens`, {
-          method: "GET",
-          headers: {
-            "Content-type": "application/json",
-            token: token,
-          },
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_KEY}/wardens`,
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+              token: token,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch wardens");
@@ -40,6 +44,22 @@ const WardenPage = () => {
 
         if (Array.isArray(data.data)) {
           setWardens(data.data);
+
+          const totalWardens = data.data.length;
+          console.log(totalWardens);
+          const assignedWardens = data.data.filter(
+            (warden) => warden.isassigned
+          ).length;
+          console.log(assignedWardens);
+          const notAssignedWardens = totalWardens - assignedWardens;
+          console.log(notAssignedWardens);
+
+          setAssignedPercentage(
+            ((assignedWardens / totalWardens) * 100).toFixed(2)
+          );
+          setNotAssignedPercentage(
+            ((notAssignedWardens / totalWardens) * 100).toFixed(2)
+          );
         } else {
           throw new Error("Data received is not in expected format");
         }
@@ -52,13 +72,10 @@ const WardenPage = () => {
     fetchWardens();
   }, []);
 
-  // Render loading state or handle empty wardens array case
-  if (wardens.length === 0) {
-    return <p>Loading...</p>; // or any other loading indicator
-  }
+  
+  
 
   const title = ["Assigned Wardens", "Not Assigned Wardens"];
-  const amount = ["10%", "30%"];
 
   return (
     <div className={styles.container}>
@@ -67,10 +84,10 @@ const WardenPage = () => {
       </div>
       <div className={styles.cardcontainer}>
         <div className="w-1/4">
-          <Card title={title[0]} amount={amount[0]} />
+          <Card title={title[0]} amount={`${assignedPercentage}%`} />
         </div>
         <div className="w-1/4">
-          <Card title={title[1]} amount={amount[1]} />
+          <Card title={title[1]} amount={`${notAssignedPercentage}%`} />
         </div>
       </div>
       <Link href="/register-warden">

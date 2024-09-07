@@ -146,7 +146,7 @@
   margin-bottom: 10px;
 }
 
-.gallery img {
+.galleryItem{
   margin-right: 16px;
   flex-shrink: 0;
   width: 6rem;
@@ -263,5 +263,14 @@
   padding: 25px;
   padding-top: 20px;
   padding-bottom: 20px;
+}
+
+.buttonDisabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.buttonDisabled:hover {
+  background-color: #ccc;
 }
 
