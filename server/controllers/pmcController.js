@@ -3,41 +3,41 @@ const pool = require('../db');
 // Function to fetch PMC details
 const getPMCDetails = async (req, res) => {
     try {
-      const user_id = req.user;
-  
-      const pmcDetails = await pool.query(
-        "SELECT * FROM pmc WHERE user_id = $1",
-        [user_id]
-      );
-  
-      const userDetails = await pool.query(
-        "SELECT * FROM users WHERE user_id = $1",
-        [user_id]
-      );
-  
-      if (pmcDetails.rows.length === 0 || userDetails.rows.length === 0) {
-        return res.status(404).json({ msg: "PMC details not found" });
-      }
-  
-      // Format the registered_at field to YYYY-MM-DD
-      const pmc = pmcDetails.rows[0];
-      pmc.registered_at = pmc.registered_at.toISOString().split('T')[0];
-  
-      const combinedDetails = {
-        pmc,
-        user: userDetails.rows[0],
-      };
-      console.log(combinedDetails);
-  
-      res.status(200).json({
-        message: "success",
-        data: combinedDetails,
-      });
+        const user_id = req.user;
+
+        const pmcDetails = await pool.query(
+            "SELECT * FROM pmc WHERE user_id = $1",
+            [user_id]
+        );
+
+        const userDetails = await pool.query(
+            "SELECT * FROM users WHERE user_id = $1",
+            [user_id]
+        );
+
+        if (pmcDetails.rows.length === 0 || userDetails.rows.length === 0) {
+            return res.status(404).json({ msg: "PMC details not found" });
+        }
+
+        // Format the registered_at field to YYYY-MM-DD
+        const pmc = pmcDetails.rows[0];
+        pmc.registered_at = pmc.registered_at.toISOString().split('T')[0];
+
+        const combinedDetails = {
+            pmc,
+            user: userDetails.rows[0],
+        };
+        console.log(combinedDetails);
+
+        res.status(200).json({
+            message: "success",
+            data: combinedDetails,
+        });
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server Error");
+        console.error(err.message);
+        res.status(500).send("Server Error");
     }
-  };
+};
 
 
 // Function to fetch the total number of PMCs
