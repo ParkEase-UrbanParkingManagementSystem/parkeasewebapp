@@ -17,6 +17,7 @@ import { useAuth } from '@/utils/authContext';
 import QRCode from 'qrcode.react';
 import GlobalApi from "@/services/GlobalApi";
 
+
 const DriverPage = () => {
     // States
     const [userDetails, setUserDetails] = useState(null);
@@ -83,7 +84,7 @@ const DriverPage = () => {
                 setParkingList(resp.data.results);
             });
     };
-
+ 
     // Loading indicator
     if (loading) {
         return (

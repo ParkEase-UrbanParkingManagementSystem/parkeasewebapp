@@ -144,6 +144,8 @@ router.post("/login", validInfo, async(req,res)=> {
 
         const role_id = user.rows[0].role_id;
 
+        console.log(token); // Debugging decoded token
+
         res.status(200).json({token, role_id});
 
     } catch (err) {

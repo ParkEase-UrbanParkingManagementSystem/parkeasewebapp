@@ -33,7 +33,6 @@ const ParkedDetails = () => {
                   }
                 }); 
 
-
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
