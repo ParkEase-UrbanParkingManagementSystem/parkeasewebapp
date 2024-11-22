@@ -591,7 +591,10 @@ exports.getRecentParkingInstances = async (req, res) => {
                 pl.status,
                 pl.sketch,
                 pl.images,
-                v.name AS vehicle_name
+                v.name AS vehicle_name,
+                v.vehicle_number AS licensePlate,
+                v.type_id
+                
             FROM
                 driver_vehicle dv
             JOIN
