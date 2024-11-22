@@ -1,0 +1,105 @@
+.gradientBackground {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:100vh;
+    background: linear-gradient(to bottom, #ffd981, #d1d2d5);
+  }
+  
+  .container {
+    text-align: center;
+    padding: 5px;
+  }
+  
+  .titleText {
+    font-size: 1.8rem;
+    color: #1a2131;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  
+  .infoText {
+    font-size: 1rem;
+    color: #6b6b6b;
+    margin-bottom: 5px;
+    line-height: 1.5;
+  }
+  
+  
+  
+  .walletWrapper {
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 5px;
+    width:60%
+  }
+
+  .buttons_container{
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 5px;
+  }
+  
+  .walletAmount {
+    font-size: 1.8rem;
+    color: #1e2952;
+    margin-bottom: 5px;
+  }
+  
+  .walletLabel {
+    font-size: 1.2rem;
+    color: #6b6b6b;
+  }
+  
+  .topUpButton,
+  .topUpButton2 {
+    background: #1a2131;
+    color: #fff;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 30px;
+    margin: 10px 0;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 30%;
+  }
+  
+  .topUpButton2 {
+    background: #ffb403;
+  }
+  
+  .topUpButton:hover,
+  .topUpButton2:hover {
+    opacity: 0.9;
+  }
+  
+  .footer {
+    margin-top: 5px;
+  }
+  
+  .footerText {
+    font-size: 1rem;
+    color: #6b6b6b;
+  }
+  
+  .paymentIcons {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .icon {
+    margin: 0 10px;
+  }
+
+  .wallet_and_balance{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  

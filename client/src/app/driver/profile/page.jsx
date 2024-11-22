@@ -209,7 +209,7 @@ const Profile = () => {
                 image="https://img.freepik.com/free-photo/3d-cryptocurrency-rendering-design_23-2149074564.jpg?t=st=1724691943~exp=1724695543~hmac=ee0dcdc4de41b24cf25b5322c89d040999556e598877c16ac5df2801e6e8f85b&w=996"
                 title="PayPark Wallet"
                 description="PayPark Wallet is a secure and convenient digital wallet designed specifically for parking payments within the PayPark platform. Easily top up your wallet using your credit or debit cards and use the balance to pay for parking at various locations."
-                link="#"
+                link="/driver/wallet"
                 count={5}
                 currency="LKR"
             />
