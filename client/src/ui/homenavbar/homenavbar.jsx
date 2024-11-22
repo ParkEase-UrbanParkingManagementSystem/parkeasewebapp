@@ -102,7 +102,7 @@ const Navbar = () => {
                 href = "/driver/activity";
                 break;
             case 'Home':
-                href = "/";
+                href = "/driver";
                 break;
             case 'Contact Us':
                 href = "/contact";
@@ -128,7 +128,7 @@ const Navbar = () => {
                 <Toolbar disableGutters>
                     {/* Logo for Desktop View */}
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-                        <Link href="/" passHref legacyBehavior>
+                        <Link href="/driver" passHref legacyBehavior>
                             <a>
                                 <Image src="/images/Group 177.png" alt="Logo" width={170} height={170} />
                             </a>
