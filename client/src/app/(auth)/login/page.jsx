@@ -1,9 +1,11 @@
 "use client";
 
+import Navbar2 from "@/ui/navbar2/navbar2";
 import styles from "./login.module.css";
 import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation"; // Importing Next.js router for navigation
 import Image from "next/image";
+import Footer from "@/ui/footer/Footer"
 // Correctly importing jwt-decode
 import Link from "next/link"; // Importing Link from next/link for client-side navigation
 
@@ -54,18 +56,22 @@ const Login = () => {
 
   return (
     <Fragment>
+      <div>
+        <Navbar2/>
       <div className={styles.login_container}>
         <div className={styles.left}>
           <div className="m-3">
-            <Image
-              src="/images/Group 1782.png"
-              alt="Description of the image"
-              width={160}
-              height={160}
-              className={styles.image}
-            ></Image>
+          <Link href="/">
+        <Image
+            src="/images/Group 1782.png"
+            alt="Description of the image"
+            width={160}
+            height={160}
+            className={styles.image}
+        />
+          </Link>
           </div>
-          <div className="text-[20px] text-white tracking-widest m-5 font-bold text-center">
+          <div className="text-[20px] text-white tracking-widest m-24 font-bold text-center">
             Where Finding Parking is a Breeze
           </div>
           <div className="justify-self-center">
@@ -81,7 +87,7 @@ const Login = () => {
         <div className={styles.right}>
           <div className={styles.center}>
             <div className="py-7">
-              <h1 className="text-[20px] mb-4 text-center" style={{ fontWeight: 'bold', color:'#ffb403' }}>Hello there!</h1> 
+              <h1 className="text-[23px] mb-2 text-center" style={{ fontWeight: 'bold', color:'#ffb403' }}>Hello there!</h1> 
               <h1 className="text-2xl font-extrabold text-center">Log In</h1>
             </div>
 
@@ -120,6 +126,9 @@ const Login = () => {
             </div>
           </div>
         </div>
+        
+      </div>
+      <Footer/>
       </div>
     </Fragment>
   );

@@ -13,10 +13,10 @@ import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 import { AccountCircle } from "@mui/icons-material";
-import styles from "./navbar.module.css";
+import styles from "./navbar2.module.css";
 import Link from 'next/link';
 
-const Navbar = () => {
+const Navbar2 = () => {
 const [openMenu, setOpenMenu] = useState(false);
 const menuOptions = [
 {
@@ -34,7 +34,7 @@ const menuOptions = [
 ];
 return (
 <div className={styles["navbar"]}>
-    <Link href = "/">
+<Link href = "/">
     <div className={styles["nav-logo-container"]}>
     <img src='/images/Group 1782.png' alt="" />
     </div>
@@ -46,7 +46,7 @@ return (
 
     {/* <button className={styles["primary-button"]}>Get Started</button> */}
     <Link href="/select-user" legacyBehavior>
-    <a className={styles["primary-button"]}>Get Started</a>
+    <a className={styles["primary-button"]}><span className="text-black">Get Started</span></a>
     </Link>
     </div>
     <div className={styles["navbar-menu-container"]}>
@@ -76,4 +76,4 @@ return (
 );
 };
 
-export default Navbar;
+export default Navbar2;
