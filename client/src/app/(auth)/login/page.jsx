@@ -4,6 +4,7 @@ import styles from "./login.module.css";
 import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation"; // Importing Next.js router for navigation
 import Image from "next/image";
+import Footer from "@/ui/footer/Footer"
 // Correctly importing jwt-decode
 import Link from "next/link"; // Importing Link from next/link for client-side navigation
 
@@ -54,16 +55,19 @@ const Login = () => {
 
   return (
     <Fragment>
+      <div>
       <div className={styles.login_container}>
         <div className={styles.left}>
           <div className="m-3">
-            <Image
-              src="/images/Group 1782.png"
-              alt="Description of the image"
-              width={160}
-              height={160}
-              className={styles.image}
-            ></Image>
+          <Link href="/">
+        <Image
+            src="/images/Group 1782.png"
+            alt="Description of the image"
+            width={160}
+            height={160}
+            className={styles.image}
+        />
+          </Link>
           </div>
           <div className="text-[20px] text-white tracking-widest m-5 font-bold text-center">
             Where Finding Parking is a Breeze
@@ -120,6 +124,9 @@ const Login = () => {
             </div>
           </div>
         </div>
+        
+      </div>
+      <Footer/>
       </div>
     </Fragment>
   );

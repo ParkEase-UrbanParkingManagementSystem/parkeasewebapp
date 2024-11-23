@@ -112,7 +112,7 @@ const Activity = () => {
                             const daysAgo = calculateDaysAgo(instance.in_time);
 
                             return (
-                                <div key={index} className="flex h-full w-full items-start justify-between rounded-md border-[1px] border-[transparent] dark:hover:border-white/20 bg-white px-3 py-[10px] transition-all duration-150 hover:border-gray-200 dark:!bg-navy-800 dark:hover:!bg-navy-700">
+                                <div key={index} className="flex h-full w-full items-start justify-between rounded-md border-[1px] border-gray-400 dark:hover:border-white/20 bg-white px-3 py-[10px] transition-all duration-150 hover:border-gray-200 dark:!bg-navy-800 dark:hover:!bg-navy-700 m-1">
                                     <div className="flex items-center gap-3">
                                         <div className="flex h-12 w-12 items-center justify-center">
                                             <img className="h-full w-full rounded-xl"

@@ -3,6 +3,7 @@ import Navbar from "@/ui/navbar/navbar";
 import { FiArrowRight } from "react-icons/fi";
 import styles from "./hero.module.css";
 import Image from "next/image";
+import Link from "next/link";
 
 const Hero = () => {
 return (
@@ -21,9 +22,12 @@ return (
         Say goodbye to the hassle of searching for parking spots and dealing with outdated payment methods.
         </p>
         
+        <Link href="/select-user">
         <button className={styles["secondary-button"]}>
         Get Started <FiArrowRight />{" "}
         </button>
+        </Link>
+
     </div>
     <div className={styles["home-image-section"]}>
         <img src='/images/home-banner-image.png' alt="" />

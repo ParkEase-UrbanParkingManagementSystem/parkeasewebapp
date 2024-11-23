@@ -49,15 +49,17 @@ const Register = () => {
       <div className={styles.register_container}>
         <div className={styles.left}>
           <div className="m-3">
-            <Image
-              src="/images/Group 1782.png"
-              alt="Description of the image"
-              width={160}
-              height={160}
-              className={styles.image}
-            />
+          <Link href="/">
+        <Image
+            src="/images/Group 1782.png"
+            alt="Description of the image"
+            width={160}
+            height={160}
+            className={styles.image}
+        />
+        </Link>
           </div>
-          <div className="text-[20px] text-white tracking-widest m-5 font-bold text-center max-w-[600px]">
+          <div className="text-[25px] text-white tracking-widest m-5 font-bold text-center max-w-[600px]">
             Your gateway to hassle-free parking
           </div>
           <div className="justify-self-center">
