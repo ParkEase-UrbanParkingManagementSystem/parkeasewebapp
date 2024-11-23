@@ -4,6 +4,7 @@ import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation"; // Importing Next.js router for navigation
 import Link from "next/link"; // Importing Next.js Link for routing
 import Image from "next/image";
+import Navbar2 from "@/ui/navbar2/navbar2";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -46,6 +47,8 @@ const Register = () => {
 };
   return (
     <Fragment>
+      <div>
+      <Navbar2/>
       <div className={styles.register_container}>
         <div className={styles.left}>
           <div className="m-3">
@@ -193,6 +196,7 @@ const Register = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </Fragment>
   );
