@@ -401,3 +401,7 @@ CREATE TABLE wardenreviews (
     FOREIGN KEY (driver_id) REFERENCES driver(driver_id),
     FOREIGN KEY (warden_id) REFERENCES warden(warden_id)
 );
+
+
+ALTER TABLE parking_lot
+ADD COLUMN link VARCHAR(255);
