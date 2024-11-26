@@ -401,6 +401,7 @@ router.get('/fetch_parked_vehicles', async (req, res) => {
     pi.lot_id,
     pi.warden_id,
     vt.type_name AS vehicle_type_name,
+    vt.vehicle_type_id AS vehicle_type_id,
     v.vehicle_number,
     v.name,
     pl.name AS parking_lot_name,
