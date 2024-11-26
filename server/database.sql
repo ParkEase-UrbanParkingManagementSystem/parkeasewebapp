@@ -405,3 +405,25 @@ CREATE TABLE wardenreviews (
 
 ALTER TABLE parking_lot
 ADD COLUMN link VARCHAR(255);
+
+
+-- Notification Table new ---------> Drop the previous notification table and create this -------------------------------------------------------------------- 
+
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    receiver_id UUID NOT NULL,
+    sender_id UUID DEFAULT NULL,
+    title TEXT NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE,
+    role_id INTEGER DEFAULT NULL,
+    CONSTRAINT notifications_receiver_id_fkey FOREIGN KEY (receiver_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    CONSTRAINT notifications_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES users (user_id) ON DELETE SET NULL,
+    CONSTRAINT notifications_role_id_fkey FOREIGN KEY (role_id) REFERENCES user_role (role_id) ON DELETE SET NULL
+);
+
+
+ALTER TABLE notifications
+ADD COLUMN target_route TEXT DEFAULT NULL;
+

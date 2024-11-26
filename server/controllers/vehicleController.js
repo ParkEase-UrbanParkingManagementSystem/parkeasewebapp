@@ -41,12 +41,11 @@ const getVehicles = async (req,res) => {
 }
 
 const addVehicle = async (req, res) => {
-    
     try {
         const user_id = req.user; // Assuming req.user contains the user_id of the logged-in user
         const { vehicle_number, name, type_id } = req.body;
 
-        console.log("Req eka aawaaaaaaa")
+        console.log("Req eka aawaaaaaaa");
 
         // Getting the driverID from the userID
         const driverDetails = await pool.query(
@@ -72,6 +71,15 @@ const addVehicle = async (req, res) => {
         await pool.query(
             "INSERT INTO driver_vehicle (driver_id, vehicle_id) VALUES ($1, $2)",
             [driver_id, vehicle_id]
+        );
+
+        // Sending a notification to the user
+        const notificationTitle = "Vehicle Added";
+        const notificationMessage = `Your ${name} (${vehicle_number}) has been successfully added. Now you can park using this vehicle.`;
+
+        await pool.query(
+            "INSERT INTO notifications (receiver_id, title, message) VALUES ($1, $2, $3)",
+            [user_id, notificationTitle, notificationMessage]
         );
 
         return res.status(201).json({
