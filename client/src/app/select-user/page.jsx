@@ -1,24 +1,30 @@
 import Link from "next/link"
-import Image from "next/image"
-import Navbar2 from "@/ui/navbar2/navbar2"
-import Footer from "@/ui/footer/Footer"
+// import Image from "next/image"
+import Navbar3 from "@/ui/navbar3/navbar3"
+// import Footer from "@/ui/footer/Footer"
 
 export default function SelectUser() {
   return (
     <div >
-      <Navbar2/>
+      <Navbar3/>
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-yellow-500 to-white p-4">
-      <Link href="/" className="mb-8">
+      {/* <Link href="/">
         <Image
           src="/images/Group 178.png"
           alt="Company Logo"
           width={160}
           height={160}
-          className="mt-5"
+          // className="mt-5"
+          style={{
+            position: "absolute",
+            top: "0",
+            left: "0",
+            margin: "0.75 rem", // optional for spacing from edges
+          }}
         />
-      </Link>
+      </Link> */}
       
-      <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">Choose Your Role</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mt-4 mb-4 text-center">Choose Your Role</h1>
       <p className="text-gray-700 mb-8 text-center max-w-md font-semibold text-lg">
         Select the option that best describes you to get started with our services.
       </p>
@@ -39,7 +45,7 @@ export default function SelectUser() {
       </div>
     </div>
 
-    <Footer/>
+    {/* <Footer/> */}
 
     </div>
   )
