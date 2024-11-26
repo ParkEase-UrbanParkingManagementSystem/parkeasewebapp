@@ -62,13 +62,15 @@ const Profile = () => {
           {/* Left Side */}
           <div className="w-full md:w-3/12 md:mx-2">
             {/* Profile Card */}
-            <div className="bg-white p-3 border-t-4 border-yellow-400 rounded-xl">
+            <div className="bg-white p-3 border-t-4 border-yellow-400 rounded-xl flex flex-col items-center justify-center">
               <div className="image overflow-hidden">
-                <img
-                  className="h-auto w-full mx-auto rounded-full"
-                  src="/images/OIP.jpeg"
-                  alt="Profile"
-                />
+                <div className="relative">
+                  {/* Profile Picture or Initials */}
+                  <div className="flex items-center justify-center w-[100px] h-[100px] rounded-full bg-[#ffb403] text-black font-bold text-[40px]">
+                    {pmcDetails.pmc.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  {/* Hidden File Input */}
+                </div>
               </div>
               <h1 className="text-gray-900 font-bold text-xl leading-8 my-1 mt-3">
                 {pmcDetails.pmc.name}
@@ -76,15 +78,21 @@ const Profile = () => {
 
               <ul className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
                 <li className="flex items-center py-3">
-                  <span>Member since</span>
-                  <span className="ml-auto">{pmcDetails.pmc.registered_at}</span>
+                  {/* <span>Member since{" "}</span>
+                  <span className="ml-auto">
+                    {pmcDetails.pmc.registered_at}
+                  </span> */}
+                  <span>
+                    Member since:&nbsp;
+                    {pmcDetails.pmc.registered_at}
+                  </span>
                 </li>
               </ul>
             </div>
             {/* End of profile card */}
-            <div className="my-4"></div>
+            {/* <div className="my-4"></div> */}
             {/* Friends card */}
-            <div className="bg-white p-3 hover:shadow rounded-xl">
+            {/* <div className="bg-white p-3 hover:shadow rounded-xl">
               <div className="flex items-center space-x-3 font-semibold text-gray-900 text-xl leading-8">
                 <span className="text-yellow-500">
                   <svg
@@ -104,7 +112,7 @@ const Profile = () => {
                 </span>
                 <span>PMC Details</span>
               </div>
-              <div className="py-2">
+              <div className="py-3">
                 <div className="text-gray-700">
                   <div className="py-1">
                     <span className="font-semibold">CEO/Owner Name:</span> Rajiv
@@ -121,14 +129,14 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* End of friends card */}
           </div>
           {/* Right Side */}
-          <div className="w-full md:w-9/12 mx-2 h-64">
+          <div className="w-full lg:w-9/12 mx-8 h-auto">
             {/* Profile tab */}
             {/* About Section */}
-            <div className="bg-white p-3 shadow-sm rounded-xl ">
+            <div className="bg-white p-4 shadow-sm rounded-xl ">
               <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
                 <span className="text-yellow-500">
                   <svg
@@ -149,59 +157,59 @@ const Profile = () => {
                 <span className="tracking-wide">About</span>
               </div>
               <div className="text-gray-700">
-                <div className="grid md:grid-cols-2">
-                  <div className="grid grid-cols-2">
-                    <div className="px-4 py-2 ">PMC Name</div>
-                    <div className="px-4 py-2 font-bold">
-                      {pmcDetails.pmc.name}
-                    </div>
+                {/* <div className="grid md:grid-cols-2"> */}
+                <div className="grid grid-cols-2">
+                  <div className="px-4 py-3 ">PMC Name</div>
+                  <div className="px-4 py-3 font-bold">
+                    {pmcDetails.pmc.name}
                   </div>
-                  <div className="grid grid-cols-2">
-                    <div className="px-4 py-2 ">Registration Number</div>
-                    <div className="px-4 py-2 font-bold">
-                      {pmcDetails.pmc.regno}
-                    </div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="px-4 py-3 ">Registration Number</div>
+                  <div className="px-4 py-3 font-bold">
+                    {pmcDetails.pmc.regno}
                   </div>
-                  <div className="grid grid-cols-2">
-                    <div className="px-4 py-2 ">Company Sector</div>
-                    <div className="px-4 py-2 font-bold">
-                      {pmcDetails.pmc.sector}
-                    </div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="px-4 py-3 ">Company Sector</div>
+                  <div className="px-4 py-3 font-bold">
+                    {pmcDetails.pmc.sector}
                   </div>
-                  <div className="grid grid-cols-2">
-                    <div className="px-4 py-2 ">Email</div>
-                    <div className="px-4 py-2 font-bold">
-                      {pmcDetails.user.email}
-                    </div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="px-4 py-3 ">Email</div>
+                  <div className="px-4 py-3 font-bold">
+                    {pmcDetails.user.email}
                   </div>
-                  <div className="grid grid-cols-2">
-                    <div className="px-4 py-2 ">Contact No.</div>
-                    <div className="px-4 py-2 font-bold">
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="px-4 py-3 ">Contact No.</div>
+                  <div className="px-4 py-3 font-bold">
                     {pmcDetails.user.contact}
-                    </div>
                   </div>
-                  <div className="grid grid-cols-2">
-                    <div className="px-4 py-2 ">Current Address</div>
-                    <div className="px-4 py-2 font-bold">
-                      {pmcDetails.user.addressno}, {pmcDetails.user.street_1},{" "}
-                      {pmcDetails.user.street_2}, {pmcDetails.user.city}.
-                    </div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="px-4 py-3 ">Current Address</div>
+                  <div className="px-4 py-3 font-bold">
+                    {pmcDetails.user.addressno}, {pmcDetails.user.street_1},{" "}
+                    {pmcDetails.user.street_2}, {pmcDetails.user.city}.
                   </div>
-                  <div className="grid grid-cols-2">
-                    <div className="px-4 py-2 ">District</div>
-                    <div className="px-4 py-2 font-bold">
-                      {pmcDetails.user.province}
-                    </div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="px-4 py-3 ">District</div>
+                  <div className="px-4 py-3 font-bold">
+                    {pmcDetails.user.province}
                   </div>
+                  {/* </div> */}
                 </div>
               </div>
             </div>
             {/* End of about section */}
 
-            <div className="my-4"></div>
+            {/* <div className="my-4"></div> */}
 
             {/* Legal and Compliance Section */}
-            <div className="bg-white p-3 shadow-sm rounded-xl">
+            {/* <div className="bg-white p-3 shadow-sm rounded-xl">
               <h1 className="mb-2 text-lg font-bold">Legal and Compliance</h1>
               <div className="grid grid-cols-1 gap-4 p-4">
                 <div className="bg-white p-2 rounded-lg shadow-md">
@@ -234,7 +242,7 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* End of Legal and Compliance Section */}
             {/* End of profile tab */}
           </div>
