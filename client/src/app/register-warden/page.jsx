@@ -47,8 +47,14 @@ const Register = () => {
       const parseRes = await response.json();
 
       if (response.ok) {
-        console.log("Warden registered successfully", parseRes);
-        router.push("/warden");
+        const userConfirmed = window.confirm(
+          "Warden added successfully. Click OK to proceed."
+        );
+
+        if (userConfirmed) {
+          console.log("Warden registered successfully", parseRes);
+          router.push("/warden");
+        }
       } else {
         console.error("Error registering warden", parseRes);
       }
@@ -163,11 +169,8 @@ const Register = () => {
             <div className="mt-3 flex justify-self-start p-2">
               <Button label="Register" type="submit" />
             </div>
-            
           </form>
-
         </div>
-        
       </div>
     </Fragment>
   );

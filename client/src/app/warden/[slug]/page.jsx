@@ -18,12 +18,12 @@ const WardenDetailsPage = () => {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 >= 0.5;
     const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-  
+
     return (
       <>
-        {'★'.repeat(fullStars)}
-        {halfStar && '☆'}
-        {'☆'.repeat(emptyStars)}
+        {"★".repeat(fullStars)}
+        {halfStar && "☆"}
+        {"☆".repeat(emptyStars)}
       </>
     );
   };
@@ -132,13 +132,13 @@ const WardenDetailsPage = () => {
   const handleUnassign = async () => {
     const token = localStorage.getItem("token");
     // Show confirmation dialog
-  const confirmed = window.confirm(
-    "Are you sure you want to unassign from this parking lot? Click OK to proceed or Cancel to abort."
-  );
+    const confirmed = window.confirm(
+      "Are you sure you want to unassign from this parking lot? Click OK to proceed or Cancel to abort."
+    );
 
-  if (!confirmed) {
-    return; // Abort the function if the user clicks Cancel
-  }
+    if (!confirmed) {
+      return; // Abort the function if the user clicks Cancel
+    }
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_KEY}/wardens/unassign/${slug}`,
@@ -184,14 +184,25 @@ const WardenDetailsPage = () => {
       <div className={styles.wardendetail}>
         <div className={styles.profile}>
           <div className={styles.profileCard}>
-            <img
-              src={"/images/profile-pic.jpg"}
-              alt={warden.name}
-              className={styles.profilePic}
-            />
+            <div className={styles.profilePic}>
+              {warden.fname && warden.lname ? (
+                <span className={styles.initials}>
+                  {warden.fname[0].toUpperCase()}
+                  {warden.lname[0].toUpperCase()}
+                </span>
+              ) : (
+                <span>No Name</span>
+              )}
+            </div>
+
             <div className={styles.profileDetails}>
               <h2 className="font-semibold text-[36px]">{`${warden.fname} ${warden.lname}`}</h2>
-              <h3 className="mb-2">Warden ID - <span className="font-bold">W{`${warden.warden_id.substring(0,4).toUpperCase()}`}</span> </h3>
+              <h3 className="mb-2">
+                Warden ID -{" "}
+                <span className="font-bold">
+                  W{`${warden.warden_id.substring(0, 4).toUpperCase()}`}
+                </span>{" "}
+              </h3>
               <p>
                 <span>Status:</span>
                 <span
@@ -287,7 +298,9 @@ const WardenDetailsPage = () => {
                     <ActionButton label="Change" onClick={handleAssign} />
                   </>
                 ) : (
-                  <div className="text-red">No Parking Lots available to assign</div>
+                  <div className="text-red">
+                    No Parking Lots available to assign
+                  </div>
                 )}
               </div>
             )}
@@ -320,52 +333,43 @@ const WardenDetailsPage = () => {
             />
           </div>
         </div>
-
-       
-
-
       </div>
       <div className={styles.reviewcard}>
-      <h1 className="text-[20px] font-semibold mt-4">
-            Reviews and Ratings for Warden - {warden.fname} {warden.lname}
-          </h1>
+        <h1 className="text-[20px] font-semibold mt-4">
+          Reviews and Ratings for Warden - {warden.fname} {warden.lname}
+        </h1>
 
-      <div className={styles.reviewsOuterCont}>
-      {warden.reviews && warden.reviews.length > 0 ? (
-        
-        <div className={styles.reviewsContainer}>
-          
-          {warden.reviews.map((review) => (
-            <div key={review.id} className={styles.reviewCard}>
-              <h4 className={styles.reviewRating}>
-                Rating: {renderStars(review.rating)}
-              </h4>
-              <p className={styles.reviewText}>{review.review}</p>
-              <p className={styles.reviewDate}>
-                Reviewed on: {new Date(review.created_at).toLocaleDateString()}
-              </p>
-              {review.profile_pic && (
-                <img
-                  src={review.profile_pic}
-                  alt={`${review.driver_fname} ${review.driver_lname}`}
-                  className={styles.driverProfilePic}
-                />
-              )}
-              <p className={styles.driverName}>
-                Reviewed by: {review.driver_fname} {review.driver_lname}
-              </p>
+        <div className={styles.reviewsOuterCont}>
+          {warden.reviews && warden.reviews.length > 0 ? (
+            <div className={styles.reviewsContainer}>
+              {warden.reviews.map((review) => (
+                <div key={review.id} className={styles.reviewCard}>
+                  <h4 className={styles.reviewRating}>
+                    Rating: {renderStars(review.rating)}
+                  </h4>
+                  <p className={styles.reviewText}>{review.review}</p>
+                  <p className={styles.reviewDate}>
+                    Reviewed on:{" "}
+                    {new Date(review.created_at).toLocaleDateString()}
+                  </p>
+                  {review.profile_pic && (
+                    <img
+                      src={review.profile_pic}
+                      alt={`${review.driver_fname} ${review.driver_lname}`}
+                      className={styles.driverProfilePic}
+                    />
+                  )}
+                  <p className={styles.driverName}>
+                    Reviewed by: {review.driver_fname} {review.driver_lname}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
+          ) : (
+            <p>No reviews available for this warden.</p>
+          )}
         </div>
-      ) : (
-        <p>No reviews available for this warden.</p>
-      )}
       </div>
-    </div>
-
-
-
-
     </div>
   );
 };

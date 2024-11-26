@@ -35,15 +35,31 @@
 .headerContent {
   display: flex;
   align-items: center;
+  gap: 20px;
 }
 
-.headerImage {
+/* .headerImage {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 20px;
+} */
+
+.initials {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffb403;
+  color: black;
+  font-size: 40px;
+  font-weight: bold;
+  border-radius: 50%;
+  letter-spacing: 2px;
 }
+
 
 .headerText {
   flex: 1;
