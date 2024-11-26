@@ -516,7 +516,9 @@ exports.getRecentParkingLotsHome = async (req, res) => {
                 pl.description AS description,
                 pl.status AS status,
                 pl.sketch AS sketch,
-                pl.images AS images
+                pl.images AS images,
+                pl.bike_capacity_available AS bike_available,
+                pl.car_capacity_available AS car_available
             FROM
                 driver_vehicle dv
             JOIN
