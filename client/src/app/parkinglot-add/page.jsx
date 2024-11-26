@@ -24,6 +24,7 @@ const AddParkingLot = () => {
     street2: "",
     city: "",
     district: "",
+    link:"",
     sketch: null,
     images: [],
     bikePrice: "",
@@ -164,24 +165,16 @@ const AddParkingLot = () => {
                 className={styles.input}
               />
               <br />
-              <span>Parking Capacity Details: </span>
+              <span>Parking Lot Location Link: </span>
               <input
-                type="number"
-                placeholder="Bike Capacity"
-                name="bikeCapacity"
-                value={formData.bikeCapacity}
+                type="text"
+                placeholder="Location Link"
+                name="link"
+                value={formData.link}
                 onChange={handleChange}
                 className={styles.input}
               />
-              <input
-                type="number"
-                placeholder="Car Capacity"
-                name="carCapacity"
-                value={formData.carCapacity}
-                onChange={handleChange}
-                className={styles.input}
-              />
-              <br />
+                <br />
               <span>Parking Address Details: </span>
               <input
                 type="text"
@@ -227,6 +220,24 @@ const AddParkingLot = () => {
             </div>
             <div className={styles.formGroupii}>
               <div className={styles.formGrouppic}>
+              <span>Parking Capacity Details: </span>
+              <input
+                type="number"
+                placeholder="Bike Capacity"
+                name="bikeCapacity"
+                value={formData.bikeCapacity}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <input
+                type="number"
+                placeholder="Car Capacity"
+                name="carCapacity"
+                value={formData.carCapacity}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              <br />
                 <span>Parking Prices (per vehicle): </span>
                 <input
                   type="number"
