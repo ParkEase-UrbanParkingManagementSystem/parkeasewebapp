@@ -175,7 +175,7 @@ router.post('/check-parking-status', async (req, res) => {
 
 //assign parking endpoint
 router.post('/assign-parking', async (req, res) => {
-  const { vehicle_id, driver_id, user_id } = req.body;
+  const { vehicle_id, driver_id, user_id,numberOfSlots } = req.body;
   console.log('userissdddd:', user_id);
 
   try {
@@ -231,6 +231,37 @@ router.post('/assign-parking', async (req, res) => {
       UPDATE driver SET isparked = true WHERE driver_id = $1;
       `;
     await pool.query(updateDriverTable, [driver_id]);
+
+    //get the vehicle type id
+    const getVehicleTypeId = `
+      SELECT type_id 
+      FROM vehicle 
+      WHERE vehicle_id = $1;
+    `;
+    const resultGetVehicleTypeId = await pool.query(getVehicleTypeId, [vehicle_id]);
+
+    const vehicle_type_id = resultGetVehicleTypeId.rows[0].type_id;
+    console.log('vehicle_type_id:', vehicle_type_id);
+
+    if (vehicle_type_id === 2) {
+      const updateAvailableBikeslots = `
+      UPDATE parking_lot SET bike_capacity_available = bike_capacity_available - $2 WHERE lot_id = $1;
+      `;
+      await pool.query(updateAvailableBikeslots, [lot_id , numberOfSlots]);
+    }
+    else{
+      const updateAvailableCarslots = `
+      UPDATE parking_lot SET car_capacity_available = car_capacity_available - $2 WHERE lot_id = $1;
+      `;
+      await pool.query(updateAvailableCarslots, [lot_id , numberOfSlots]);
+    }
+
+
+  //   const availableslots = `
+  //   UPDATE driver SET isparked = true WHERE driver_id = $1;
+  //   `;
+  // await pool.query(updateDriverTable, [driver_id]);
+
     console.log('update isparked in driver table:', driver_id);
 
 
