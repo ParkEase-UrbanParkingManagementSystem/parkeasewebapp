@@ -13,8 +13,8 @@
   
   .right {
     /* flex: 5; */
-    border-top-left-radius: 7%;
-    border-bottom-left-radius: 7%;
+    /* border-top-left-radius: 7%; */
+    /* border-bottom-left-radius: 7%; */
     background-color: white;
     display: flex;
     justify-content: center;

@@ -1,11 +1,11 @@
 "use client";
 
-import Navbar2 from "@/ui/navbar2/navbar2";
+// import Navbar2 from "@/ui/navbar2/navbar2";
 import styles from "./login.module.css";
 import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation"; // Importing Next.js router for navigation
 import Image from "next/image";
-import Footer from "@/ui/footer/Footer"
+// import Footer from "@/ui/footer/Footer"
 // Correctly importing jwt-decode
 import Link from "next/link"; // Importing Link from next/link for client-side navigation
 
@@ -56,8 +56,8 @@ const Login = () => {
 
   return (
     <Fragment>
-      <div>
-        <Navbar2/>
+      {/* <div> */}
+        {/* <Navbar2/> */}
       <div className={styles.login_container}>
         <div className={styles.left}>
           <div className="m-3">
@@ -128,8 +128,8 @@ const Login = () => {
         </div>
         
       </div>
-      <Footer/>
-      </div>
+      {/* <Footer/> */}
+      {/* </div> */}
     </Fragment>
   );
 };
