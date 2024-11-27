@@ -76,6 +76,67 @@ const Navbar = () => {
         }
     };
 
+    const markAsRead = async (id) => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error("No token found");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/notifications/mark-read`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    token: token
+                },
+                body: JSON.stringify({ id })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            setNotifications(prevNotifications =>
+                prevNotifications.map(notification =>
+                    notification.id === id ? { ...notification, is_read: true } : notification
+                )
+            );
+        } catch (error) {
+            console.error("Error marking notification as read:", error);
+        }
+    };
+
+    const markAllAsRead = async () => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error("No token found");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/notifications/mark-read-all`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    token: token
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            setNotifications(prevNotifications =>
+                prevNotifications.map(notification => ({ ...notification, is_read: true }))
+            );
+        } catch (error) {
+            console.error("Error marking all notifications as read:", error);
+        }
+    };
+
     const fetchUserDetails = async () => {
         const token = localStorage.getItem("token");
 
@@ -302,6 +363,7 @@ const Navbar = () => {
                                     variant="outlined"
                                     size="small"
                                     fullWidth
+                                    onClick={markAllAsRead}
                                     sx={{ mb: 1, textTransform: 'none', fontSize: '0.85rem',  color: '#FFB403', borderColor: '#FFB403', '&:hover': {
                                                     backgroundColor: '#fbffe0',
                                                     borderColor: '#FFB403',
@@ -364,18 +426,24 @@ const Navbar = () => {
                                                 }}>
                                                     {new Date(notification.created_at).toLocaleString()}
                                                 </Typography>
-                                                <Button
-                                                    variant="text"
-                                                    size="small"
-                                                    sx={{ 
-                                                        fontSize: '0.7rem', 
-                                                        color: '#FFB403', 
-                                                        textTransform: 'none',
-                                                        padding: '2px 8px' 
-                                                    }}
-                                                >
-                                                    Mark as Read
-                                                </Button>
+                                                {!notification.is_read && (
+                                                    <Button
+                                                        variant="text"
+                                                        size="small"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            markAsRead(notification.id);
+                                                        }}
+                                                        sx={{ 
+                                                            fontSize: '0.7rem', 
+                                                            color: '#FFB403', 
+                                                            textTransform: 'none',
+                                                            padding: '2px 8px' 
+                                                        }}
+                                                    >
+                                                        Mark as Read
+                                                    </Button>
+                                                )}
                                             </Box>
                                         </MenuItem>
                                     ))

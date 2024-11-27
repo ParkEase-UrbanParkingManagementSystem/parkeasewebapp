@@ -16,6 +16,37 @@ const getNotifications = async (req, res) => {
     }
 }
 
+
+const markRead = async (req, res) => {
+    try {
+        const user_id = req.user;
+        const { id } = req.body;
+        console.log(user_id);
+        const result = await pool.query(
+            "UPDATE notifications SET is_read = TRUE WHERE receiver_id = $1 AND id = $2",
+            [user_id, id]
+        );
+        res.status(200).json({ message: "Notification marked as read" });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const markReadAll = async (req, res) => {
+    try {
+        const user_id = req.user;
+        const result = await pool.query(
+            "UPDATE notifications SET is_read = TRUE WHERE receiver_id = $1",
+            [user_id]
+        );
+        res.status(200).json({ message: "All notifications marked as read" });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 module.exports = {
-    getNotifications
+    getNotifications,
+    markRead,
+    markReadAll
 }
