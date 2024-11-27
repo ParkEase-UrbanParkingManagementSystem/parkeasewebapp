@@ -610,8 +610,8 @@ router.get('/get-parking-instance/', async (req, res) => {
   }
 });
 
+//fetchPersonalInfo endpoint
 router.get('/fetchPersonalInfo', async (req, res) => {
-  console.log("Meka wadaa");
   const  {user_id}  = req.query;
   try {
     // Get the warden_id from the user_id
@@ -953,5 +953,11 @@ console.log('in exit from qr driver id:',driver_id);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+
+
+
+//updated fetchInsight endpoint
+
 
 module.exports = router;
