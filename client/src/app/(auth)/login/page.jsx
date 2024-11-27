@@ -1,75 +1,88 @@
 "use client";
 
-// import Navbar2 from "@/ui/navbar2/navbar2";
 import styles from "./login.module.css";
 import { Fragment, useState } from "react";
-import { useRouter } from "next/navigation"; // Importing Next.js router for navigation
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-// import Footer from "@/ui/footer/Footer"
-// Correctly importing jwt-decode
-import Link from "next/link"; // Importing Link from next/link for client-side navigation
+import Link from "next/link";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter(); // Using Next.js router
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const router = useRouter();
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted");
+    setError("");
+    setEmailError(false);
+    setPasswordError(false);
+    setIsLoading(true);
+
+    if (!email) {
+      setEmailError(true);
+      setError("Please enter your email");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!password) {
+      setPasswordError(true);
+      setError("Please enter your password");
+      setIsLoading(false);
+      return;
+    }
 
     try {
-      const body = { email, password };
-      console.log("Sending request with body:", body);
-
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ email, password }),
       });
 
       const parseRes = await response.json();
-      console.log("Response:", parseRes); // Debugging response
 
       if (parseRes.token) {
-        console.log("Received token:", parseRes.token); // Debugging received token
         localStorage.setItem("token", parseRes.token);
-
         const role_id = parseRes.role_id;
-        console.log("Role ID:", role_id); // Debugging decoded token
-        
 
         if (role_id === 2) {
-          router.push("/dashboard"); // Navigate to dashboard for role 2
+          router.push("/dashboard");
         } else if (role_id === 1) {
-          router.push("/driver"); // Navigate to home for role 1
+          router.push("/driver");
         } else {
-          alert("Successful login but unknown role");
+          setError("Successful login but unknown role");
         }
       } else {
-        alert("Login failed, please check your credentials.");
+        setError("Login failed, please check your credentials.");
+        setEmailError(true);
+        setPasswordError(true);
       }
     } catch (err) {
-      console.error("Error during login:", err.message);
+      setError("An error occurred during login. Please try again.");
+      console.error("Error during login:", err);
     }
+
+    setIsLoading(false);
   };
 
   return (
     <Fragment>
-      {/* <div> */}
-        {/* <Navbar2/> */}
       <div className={styles.login_container}>
         <div className={styles.left}>
           <div className="m-3">
-          <Link href="/">
-        <Image
-            src="/images/Group 1782.png"
-            alt="Description of the image"
-            width={160}
-            height={160}
-            className={styles.image}
-        />
-          </Link>
+            <Link href="/">
+              <Image
+                src="/images/Group 1782.png"
+                alt="Description of the image"
+                width={160}
+                height={160}
+                className={styles.image}
+              />
+            </Link>
           </div>
           <div className="text-[20px] text-white tracking-widest m-24 font-bold text-center">
             Where Finding Parking is a Breeze
@@ -81,7 +94,7 @@ const Login = () => {
               width={500}
               height={500}
               className={styles.image}
-            ></Image>
+            />
           </div>
         </div>
         <div className={styles.right}>
@@ -97,41 +110,46 @@ const Login = () => {
                   type="email"
                   name="email"
                   placeholder="Email"
-                  className="form-control my-3 w-96"
-                  onChange={(e) => setEmail(e.target.value)}
+                  className={`form-control my-3 w-96 ${emailError ? 'border-red-500' : ''}`}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setEmailError(false);
+                  }}
                   value={email}
                 />
                 <input
                   type="password"
                   name="password"
                   placeholder="Password"
-                  className="form-control my-3 w-96"
-                  onChange={(e) => setPassword(e.target.value)}
+                  className={`form-control my-3 w-96 ${passwordError ? 'border-red-500 bg-red-100' : ''}`}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setPasswordError(false);
+                  }}
                   value={password}
                 />
-                <button type="submit" className={styles.button}>
-                  Login
+                <button type="submit" className={styles.button} disabled={isLoading}>
+                  {isLoading ? "Logging in..." : "Login"}
                 </button>
               </form>
             </div>
 
+            {error && <div className="text-red-500 text-center mt-2  py-1 rounded-xl">{error}</div>}
+
             <div className="text-center mt-3">
               <p>
                 Don't have an account?{" "}
-                <a href="/select-user" className="text-blue-600">
-
+                <Link href="/select-user" className="text-blue-600">
                   Register
-                </a>
+                </Link>
               </p>
             </div>
           </div>
         </div>
-        
       </div>
-      {/* <Footer/> */}
-      {/* </div> */}
     </Fragment>
   );
 };
 
 export default Login;
+
