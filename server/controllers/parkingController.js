@@ -296,6 +296,14 @@ exports.payByParkPoints = async (req, res) => {
             return res.status(404).json({ message: "Parking instance not found or already updated" });
         }
 
+        const notificationTitle = "Payment Successful - Parking Completed";
+        const notificationMessage = "Your payment was successful. You have paid using ParkPoints.";
+
+        await client.query(`
+            INSERT INTO notifications (receiver_id, title, message)
+            VALUES ($1, $2, $3)`, [user_id, notificationTitle, notificationMessage]);
+
+
         return res.status(200).json({ message: "Payment successful" });
 
     } catch (error) {
@@ -305,6 +313,92 @@ exports.payByParkPoints = async (req, res) => {
         client.release();
     }
 }
+
+// exports.payByParkPoints = async (req, res) => {
+//     const client = await pool.connect();
+
+//     try {
+//         const user_id = req.user;
+//         const { amount, method, instance_id } = req.body;
+
+//         // Input validation
+//         if (!amount || amount <= 0 || !method || !instance_id) {
+//             return res.status(400).json({ message: "Invalid input data" });
+//         }
+
+//         // Start transaction
+//         await client.query('BEGIN');
+
+//         // Get the driver_id based on the user_id
+//         const driverIdQuery = await client.query(`
+//             SELECT driver_id FROM driver WHERE user_id = $1`, [user_id]);
+
+//         if (driverIdQuery.rows.length === 0) {
+//             throw new Error("No driver found for this user");
+//         }
+
+//         const driver_id = driverIdQuery.rows[0].driver_id;
+
+//         // Get the parkpoints of the driver
+//         const parkPointsQuery = await client.query(`
+//             SELECT no_of_points FROM parkpoints WHERE driver_id = $1`, [driver_id]);
+
+//         if (parkPointsQuery.rows.length === 0) {
+//             throw new Error("No parkpoints found for this driver");
+//         }
+
+//         const parkPoints = parkPointsQuery.rows[0].no_of_points;
+
+//         if (parkPoints < amount) {
+//             throw new Error("Insufficient parkpoints");
+//         }
+
+//         // Deduct the parkpoints
+//         const newParkPoints = parkPoints - amount;
+//         const parkPointsUpdate = await client.query(`
+//             UPDATE parkpoints SET no_of_points = $1 WHERE driver_id = $2`, [newParkPoints, driver_id]);
+
+//         if (parkPointsUpdate.rowCount === 0) {
+//             throw new Error("Failed to update parkpoints");
+//         }
+
+//         // Update parking_instance table
+//         const updateQuery = await client.query(`
+//             UPDATE parking_instance
+//             SET iscompleted = true,
+//                 method_id = $1
+//             WHERE instance_id = $2
+//         `, [method, instance_id]);
+
+//         if (updateQuery.rowCount === 0) {
+//             throw new Error("Parking instance not found or already updated");
+//         }
+
+//         // Send notification to the user
+//         const notificationTitle = "Payment Successful - Parking Completed";
+//         const notificationMessage = "Your payment was successful. You have paid using parkpoints.";
+
+//         await client.query(`
+//             INSERT INTO notifications (receiver_id, title, message)
+//             VALUES ($1, $2, $3)`, [user_id, notificationTitle, notificationMessage]);
+
+//         // Commit transaction
+//         await client.query('COMMIT');
+
+//         return res.status(200).json({ message: "Payment successful" });
+
+//     } catch (error) {
+//         console.error(error);
+
+//         // Rollback transaction on error
+//         await client.query('ROLLBACK');
+//         res.status(500).json({ message: error.message || "Server error" });
+//     } finally {
+//         // Release client
+//         client.release();
+//     }
+// };
+
 
 exports.payByWallet = async (req, res) => {
     const client = await pool.connect();
@@ -359,6 +453,13 @@ exports.payByWallet = async (req, res) => {
             return res.status(404).json({ message: "Parking instance not found or already updated" });
         }
 
+        const notificationTitle = "Payment Successful - Parking Completed";
+        const notificationMessage = "Your payment was successful. You have paid using PayPark Wallet.";
+
+        await client.query(`
+            INSERT INTO notifications (receiver_id, title, message)
+            VALUES ($1, $2, $3)`, [user_id, notificationTitle, notificationMessage]);
+
         return res.status(200).json({ message: "Payment successful" });
 
     } catch (error) {
@@ -394,6 +495,13 @@ exports.payByCash = async(req,res) => {
         if (updateQuery.rowCount === 0) {
             return res.status(404).json({ message: "Parking instance not found or already updated" });
         }
+
+        const notificationTitle = "Payment Successful - Parking Completed";
+        const notificationMessage = "Your payment was successful. You have paid using cash.";
+
+        await client.query(`
+            INSERT INTO notifications (receiver_id, title, message)
+            VALUES ($1, $2, $3)`, [user_id, notificationTitle, notificationMessage]);
 
         return res.status(200).json({ message: "Payment successful" });
 
@@ -516,7 +624,9 @@ exports.getRecentParkingLotsHome = async (req, res) => {
                 pl.description AS description,
                 pl.status AS status,
                 pl.sketch AS sketch,
-                pl.images AS images
+                pl.images AS images,
+                pl.bike_capacity_available AS bike_available,
+                pl.car_capacity_available AS car_available
             FROM
                 driver_vehicle dv
             JOIN
