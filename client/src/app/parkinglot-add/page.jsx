@@ -24,7 +24,7 @@ const AddParkingLot = () => {
     street2: "",
     city: "",
     district: "",
-    link:"",
+    link: "",
     sketch: null,
     images: [],
     bikePrice: "",
@@ -34,6 +34,7 @@ const AddParkingLot = () => {
   });
 
   const [isPublicPMC, setIsPublicPMC] = useState(null); // null to determine if PMC type is loaded
+  const [validationErrors, setValidationErrors] = useState({});
 
   const router = useRouter();
 
@@ -79,19 +80,52 @@ const AddParkingLot = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setValidationErrors({ ...validationErrors, [name]: "" });
   };
 
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     if (name === "sketch") {
       setFormData({ ...formData, sketch: files[0] });
+      setValidationErrors({ ...validationErrors, sketch: "" });
     } else if (name === "images") {
       setFormData({ ...formData, images: Array.from(files) });
+      setValidationErrors({ ...validationErrors, images: "" });
     }
+  };
+
+  const fieldLabels = {
+    name: "Parking Lot Name",
+    description: "Parking Lot Description",
+    bikeCapacity: "Bike Capacity",
+    carCapacity: "Car Capacity",
+    addressNo: "Address Number",
+    street1: "Street 1",
+    city: "City",
+    district: "District",
+    link: "Location Link",
+    sketch: "Parking Lot Sketch",
+    images: "Parking Lot Images",
+    bikePrice: "Bike Price",
+    carPrice: "Car Price",
+    threeWheelerPrice: "Three-Wheeler Price",
+    lorryPrice: "Lorry Price",
+  };
+
+  const validateFields = () => {
+    const errors = {};
+    Object.keys(formData).forEach((key) => {
+      if (!formData[key] || (key === "images" && formData[key].length === 0)) {
+        errors[key] = `${fieldLabels[key]} is required`;
+      }
+    });
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateFields()) return;
 
     try {
       const token = localStorage.getItem("token");
@@ -156,6 +190,9 @@ const AddParkingLot = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.name && (
+                <p className="text-red-500 text-xs">*{validationErrors.name}</p>
+              )}
               <input
                 type="text"
                 placeholder="Parking Lot Description"
@@ -164,6 +201,11 @@ const AddParkingLot = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.description && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.description}
+                </p>
+              )}
               <br />
               <span>Parking Lot Location Link: </span>
               <input
@@ -174,7 +216,10 @@ const AddParkingLot = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
-                <br />
+              {validationErrors.link && (
+                <p className="text-red-500 text-xs">*{validationErrors.link}</p>
+              )}
+              <br />
               <span>Parking Address Details: </span>
               <input
                 type="text"
@@ -184,6 +229,11 @@ const AddParkingLot = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.addressNo && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.addressNo}
+                </p>
+              )}
               <input
                 type="text"
                 placeholder="Street 1"
@@ -192,6 +242,11 @@ const AddParkingLot = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.street1 && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.street1}
+                </p>
+              )}
               <input
                 type="text"
                 placeholder="Street 2"
@@ -208,6 +263,9 @@ const AddParkingLot = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.city && (
+                <p className="text-red-500 text-xs">*{validationErrors.city}</p>
+              )}
               <input
                 type="text"
                 placeholder="District"
@@ -216,28 +274,43 @@ const AddParkingLot = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.district && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.district}
+                </p>
+              )}
               <br />
             </div>
             <div className={styles.formGroupii}>
               <div className={styles.formGrouppic}>
-              <span>Parking Capacity Details: </span>
-              <input
-                type="number"
-                placeholder="Bike Capacity"
-                name="bikeCapacity"
-                value={formData.bikeCapacity}
-                onChange={handleChange}
-                className={styles.input}
-              />
-              <input
-                type="number"
-                placeholder="Car Capacity"
-                name="carCapacity"
-                value={formData.carCapacity}
-                onChange={handleChange}
-                className={styles.input}
-              />
-              <br />
+                <span>Parking Capacity Details: </span>
+                <input
+                  type="number"
+                  placeholder="Bike Capacity"
+                  name="bikeCapacity"
+                  value={formData.bikeCapacity}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
+                {validationErrors.bikeCapacity && (
+                  <p className="text-red-500 text-xs">
+                    *{validationErrors.bikeCapacity}
+                  </p>
+                )}
+                <input
+                  type="number"
+                  placeholder="Car Capacity"
+                  name="carCapacity"
+                  value={formData.carCapacity}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
+                {validationErrors.carCapacity && (
+                  <p className="text-red-500 text-xs">
+                    *{validationErrors.carCapacity}
+                  </p>
+                )}
+                <br />
                 <span>Parking Prices (per vehicle): </span>
                 <input
                   type="number"
@@ -248,6 +321,11 @@ const AddParkingLot = () => {
                   className={styles.input}
                   disabled={isPublicPMC === true} // Disable input if PMC is public
                 />
+                {validationErrors.bikePrice && (
+                  <p className="text-red-500 text-xs">
+                    *{validationErrors.bikePrice}
+                  </p>
+                )}
                 <input
                   type="number"
                   placeholder="Car Price"
@@ -257,6 +335,11 @@ const AddParkingLot = () => {
                   className={styles.input}
                   disabled={isPublicPMC === true} // Disable input if PMC is public
                 />
+                {validationErrors.carPrice && (
+                  <p className="text-red-500 text-xs">
+                    *{validationErrors.carPrice}
+                  </p>
+                )}
                 <input
                   type="number"
                   placeholder="Three-Wheeler Price"
@@ -270,6 +353,11 @@ const AddParkingLot = () => {
                   className={styles.input}
                   disabled={isPublicPMC === true} // Disable input if PMC is public
                 />
+                {validationErrors.threeWheelerPrice && (
+                  <p className="text-red-500 text-xs">
+                    *{validationErrors.threeWheelerPrice}
+                  </p>
+                )}
                 <input
                   type="number"
                   placeholder="Lorry Price"
@@ -281,6 +369,11 @@ const AddParkingLot = () => {
                   className={styles.input}
                   disabled={isPublicPMC === true} // Disable input if PMC is public
                 />
+                {validationErrors.lorryPrice && (
+                  <p className="text-red-500 text-xs">
+                    *{validationErrors.lorryPrice}
+                  </p>
+                )}
                 <br />
                 <span>Drawn parking lot sketch: </span>
                 <input
@@ -289,6 +382,11 @@ const AddParkingLot = () => {
                   name="sketch"
                   onChange={handleFileChange}
                 />
+                {validationErrors.sketch && (
+                  <p className="text-red-500 text-xs">
+                    *{validationErrors.sketch}
+                  </p>
+                )}
                 <br />
                 <span>
                   Add Pictures of the parking lot: (Up to 10 pictures)
@@ -300,6 +398,11 @@ const AddParkingLot = () => {
                   name="images"
                   onChange={handleFileChange}
                 />
+                {validationErrors.images && (
+                  <p className="text-red-500 text-xs">
+                    *{validationErrors.images}
+                  </p>
+                )}
                 <br />
               </div>
               <div>
