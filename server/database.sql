@@ -263,16 +263,16 @@ CREATE TABLE ParkingLotReviews (
 );
 
 
-CREATE TABLE ParkingLotReviews (
-     id SERIAL PRIMARY KEY,
-     driver_id UUID NOT NULL,
-     lot_id UUID NOT NULL,
-     rating INT CHECK (rating >= 1 AND rating <= 5),
-     review TEXT,
-     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-     FOREIGN KEY (driver_id) REFERENCES driver(driver_id),
-     FOREIGN KEY (parking_lot_id) REFERENCES parking_lot(lot_id)
-);
+-- CREATE TABLE ParkingLotReviews (
+--      id SERIAL PRIMARY KEY,
+--      driver_id UUID NOT NULL,
+--      lot_id UUID NOT NULL,
+--      rating INT CHECK (rating >= 1 AND rating <= 5),
+--      review TEXT,
+--      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--      FOREIGN KEY (driver_id) REFERENCES driver(driver_id),
+--      FOREIGN KEY (parking_lot_id) REFERENCES parking_lot(lot_id)
+-- );
 
 --Alter queries
 
@@ -311,20 +311,20 @@ INSERT INTO vehicle_type (vehicle_type_id, type_name) VALUES (4, 'Large Vehicle'
 
 --calculate full_capacity
 -- Create the trigger function
-CREATE OR REPLACE FUNCTION calculate_full_capacity() 
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.full_capacity := COALESCE(NEW.bike_capacity, 0) + 
-                         COALESCE(NEW.car_capacity, 0); 
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+-- CREATE OR REPLACE FUNCTION calculate_full_capacity() 
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     NEW.full_capacity := COALESCE(NEW.bike_capacity, 0) + 
+--                          COALESCE(NEW.car_capacity, 0); 
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
 -- Create the trigger
-CREATE TRIGGER set_full_capacity
-BEFORE INSERT OR UPDATE ON parking_lot
-FOR EACH ROW
-EXECUTE FUNCTION calculate_full_capacity();
+-- CREATE TRIGGER set_full_capacity
+-- BEFORE INSERT OR UPDATE ON parking_lot
+-- FOR EACH ROW
+-- EXECUTE FUNCTION calculate_full_capacity();
 
 -- INSERT INTO slot_price (slot_id, type, amount_per_slot)
 -- VALUES
@@ -401,3 +401,29 @@ CREATE TABLE wardenreviews (
     FOREIGN KEY (driver_id) REFERENCES driver(driver_id),
     FOREIGN KEY (warden_id) REFERENCES warden(warden_id)
 );
+
+
+ALTER TABLE parking_lot
+ADD COLUMN link VARCHAR(255);
+
+
+-- Notification Table new ---------> Drop the previous notification table and create this -------------------------------------------------------------------- 
+
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    receiver_id UUID NOT NULL,
+    sender_id UUID DEFAULT NULL,
+    title TEXT NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE,
+    role_id INTEGER DEFAULT NULL,
+    CONSTRAINT notifications_receiver_id_fkey FOREIGN KEY (receiver_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    CONSTRAINT notifications_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES users (user_id) ON DELETE SET NULL,
+    CONSTRAINT notifications_role_id_fkey FOREIGN KEY (role_id) REFERENCES user_role (role_id) ON DELETE SET NULL
+);
+
+
+ALTER TABLE notifications
+ADD COLUMN target_route TEXT DEFAULT NULL;
+

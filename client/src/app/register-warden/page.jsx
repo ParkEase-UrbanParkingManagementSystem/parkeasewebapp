@@ -21,13 +21,40 @@ const Register = () => {
   });
 
   const router = useRouter();
+  const [validationErrors, setValidationErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setValidationErrors({ ...validationErrors, [name]: "" });
+  };
+
+  const fieldLabels = {
+    email: "Email",
+    password: "Password",
+    fname: "Warden first name",
+    lname: "Warden last name",
+    nic: "NIC",
+    addressNo: "Address No.",
+    street1: "Street 1",
+    city: "City",
+    province: "District",
+    contact: "Contact",
+  };
+
+  const validateFields = () => {
+    const errors = {};
+    Object.keys(formData).forEach((key) => {
+      if (!formData[key] || formData[key].length === 0) {
+        errors[key] = `${fieldLabels[key]} is required`;
+      }
+    });
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateFields()) return;
 
     try {
       const token = localStorage.getItem("token");
@@ -47,8 +74,14 @@ const Register = () => {
       const parseRes = await response.json();
 
       if (response.ok) {
-        console.log("Warden registered successfully", parseRes);
-        router.push("/warden");
+        const userConfirmed = window.confirm(
+          "Warden added successfully. Click OK to proceed."
+        );
+
+        if (userConfirmed) {
+          console.log("Warden registered successfully", parseRes);
+          router.push("/warden");
+        }
       } else {
         console.error("Error registering warden", parseRes);
       }
@@ -73,6 +106,11 @@ const Register = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.email && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.email}
+                </p>
+              )}
               <input
                 type="password"
                 placeholder="Password"
@@ -81,6 +119,11 @@ const Register = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.password && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.password}
+                </p>
+              )}
               <br />
               <span>Personal Details: </span>
               <input
@@ -91,6 +134,11 @@ const Register = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.fname && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.fname}
+                </p>
+              )}
               <input
                 type="text"
                 placeholder="Last Name"
@@ -99,6 +147,11 @@ const Register = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.lname && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.lname}
+                </p>
+              )}
               <input
                 type="text"
                 placeholder="National Identity Card"
@@ -107,6 +160,9 @@ const Register = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.nic && (
+                <p className="text-red-500 text-xs">*{validationErrors.nic}</p>
+              )}
               <input
                 type="text"
                 placeholder="Contact Number" // Added contact input
@@ -115,6 +171,11 @@ const Register = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.contact && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.contact}
+                </p>
+              )}
             </div>
             <div className={styles.formGroup}>
               <span>Address Details: </span>
@@ -126,6 +187,11 @@ const Register = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.addressNo && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.addressNo}
+                </p>
+              )}
               <input
                 type="text"
                 placeholder="Street 1"
@@ -134,6 +200,11 @@ const Register = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.street1 && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.street1}
+                </p>
+              )}
               <input
                 type="text"
                 placeholder="Street 2"
@@ -150,6 +221,9 @@ const Register = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.city && (
+                <p className="text-red-500 text-xs">*{validationErrors.city}</p>
+              )}
               <input
                 type="text"
                 placeholder="District"
@@ -158,16 +232,18 @@ const Register = () => {
                 onChange={handleChange}
                 className={styles.input}
               />
+              {validationErrors.province && (
+                <p className="text-red-500 text-xs">
+                  *{validationErrors.province}
+                </p>
+              )}
             </div>
 
             <div className="mt-3 flex justify-self-start p-2">
               <Button label="Register" type="submit" />
             </div>
-            
           </form>
-
         </div>
-        
       </div>
     </Fragment>
   );

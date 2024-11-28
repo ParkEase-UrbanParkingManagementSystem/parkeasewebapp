@@ -46,6 +46,7 @@ exports.parkingLotAdd = [
         street2,
         city,
         district,
+        link,
         description,
         bikePrice,
         carPrice,
@@ -65,9 +66,9 @@ exports.parkingLotAdd = [
       const insertParkingLotQuery = `
         INSERT INTO parking_lot (
           pmc_id, name, bike_capacity, car_capacity, full_capacity,
-          addressno, street1, street2, city, district, description, sketch, images
+          addressno, street1, street2, city, district,link, description, sketch, images
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
         RETURNING lot_id;
       `;
 
@@ -82,6 +83,7 @@ exports.parkingLotAdd = [
         street2,
         city,
         district,
+        link,
         description,
         sketchPath,
         JSON.stringify(imagePaths),
@@ -241,6 +243,8 @@ exports.getAParkingLotDetails = async (req, res) => {
           description: row.description,
           status: row.status,
           review_count: row.review_count,
+          car_available: row.car_capacity_available,
+          bike_available: row.bike_capacity_available,
           sketch: row.sketch,
           images: Array.isArray(row.images)
             ? row.images

@@ -207,11 +207,9 @@ const ParkingSlotDetail = () => {
         <div className={styles.profiledetail}>
           <div className={styles.header}>
             <div className={styles.headerContent}>
-              <img
-                src={headerImageSrc} // Use the image URL from the array or default
-                alt="Parking Lot"
-                className={styles.headerImage}
-              />
+              <div className={styles.initials}>
+                {parkingLotDetails.lot.name.slice(0, 2).toUpperCase()}
+              </div>
               <div className={styles.headerText}>
                 <h2 className="font-semibold">{parkingLotDetails.lot.name}</h2>
                 <h3 className="mb-2">

@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,9 +16,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Image from 'next/image';
-
-// Icons
-import NotificationsIcon from '@mui/icons-material/Notifications'; // Notification icon
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Badge from '@mui/material/Badge';
 
 const pages = ['Home', 'Contact Us', 'Your Activity'];
 const settings = ['Profile', 'Logout'];
@@ -25,42 +25,148 @@ const settings = ['Profile', 'Logout'];
 const Navbar = () => {
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
-    const [anchorElNotifications, setAnchorElNotifications] = useState(null); // State for notifications
+    const [anchorElNotifications, setAnchorElNotifications] = useState(null);
     const [userDetails, setUserDetails] = useState(null);
+    const [notifications, setNotifications] = useState([]);
+    const [unreadCount, setUnreadCount] = useState(0);
     const router = useRouter();
 
     useEffect(() => {
-        const fetchUserDetails = async () => {
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-                console.error("No token found");
-                return;
-            }
-
-            try {
-                const response = await fetch("http://localhost:5000/driver/details", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        token: token
-                    }
-                });
-
-                const parseRes = await response.json();
-
-                if (response.ok) {
-                    setUserDetails(parseRes.data);
-                } else {
-                    console.error("Can't get the details");
-                }
-            } catch (error) {
-                console.error(error.message);
-            }
-        };
-
         fetchUserDetails();
-    }, [router]);
+        fetchNotifications();
+    }, []);
+
+    useEffect(() => {
+        const count = notifications.filter(notification => !notification.is_read).length;
+        setUnreadCount(count);
+    }, [notifications]);
+
+    const fetchNotifications = async () => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error("No token found");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/notifications/get-notifications`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    token: token
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const notifications = await response.json();
+
+            if (Array.isArray(notifications)) {
+                setNotifications(notifications);
+            } else {
+                console.error("Invalid data format: expected an array");
+                setNotifications([]);
+            }
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
+            setNotifications([]);
+        }
+    };
+
+    const markAsRead = async (id) => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error("No token found");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/notifications/mark-read`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    token: token
+                },
+                body: JSON.stringify({ id })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            setNotifications(prevNotifications =>
+                prevNotifications.map(notification =>
+                    notification.id === id ? { ...notification, is_read: true } : notification
+                )
+            );
+        } catch (error) {
+            console.error("Error marking notification as read:", error);
+        }
+    };
+
+    const markAllAsRead = async () => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error("No token found");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/notifications/mark-read-all`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    token: token
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            setNotifications(prevNotifications =>
+                prevNotifications.map(notification => ({ ...notification, is_read: true }))
+            );
+        } catch (error) {
+            console.error("Error marking all notifications as read:", error);
+        }
+    };
+
+    const fetchUserDetails = async () => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error("No token found");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/driver/details`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    token: token
+                }
+            });
+
+            const parseRes = await response.json();
+
+            if (response.ok) {
+                setUserDetails(parseRes.data);
+            } else {
+                console.error("Can't get the details");
+                setUserDetails(null);
+            }
+        } catch (error) {
+            console.error("Error fetching user details:", error);
+            setUserDetails(null);
+        }
+    };
 
     const arrayWithColors = [
         '#2ecc71', '#3498db', '#8e44ad', '#e67e22', '#e74c3c', '#1abc9c', '#2c3e50'
@@ -191,14 +297,39 @@ const Navbar = () => {
 
                     {/* Menu for Desktop View */}
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, ml: 'auto', justifyContent: 'flex-end' }}>
-                        {pages.map(renderMenuItem)}
+                        {pages.map((page) => (
+                            <Button
+                                key={page}
+                                onClick={handleCloseNavMenu}
+                                sx={{ my: 2, color: 'white', display: 'block', fontFamily: 'Montserrat, sans-serif' }}
+                            >
+                                <Link href={page === 'Home' ? '/driver' : page === 'Your Activity' ? '/driver/activity' : '/contact'} passHref>
+                                    {page}
+                                </Link>
+                            </Button>
+                        ))}
                     </Box>
 
                     {/* Notification Icon */}
                     <Box sx={{ flexGrow: 0, mr: 2 }}>
                         <Tooltip title="Notifications">
                             <IconButton onClick={handleOpenNotificationMenu} color="inherit">
-                                <NotificationsIcon />
+                                <Badge 
+                                    badgeContent={unreadCount} 
+                                    color="error"
+                                    sx={{
+                                        '& .MuiBadge-badge': {
+                                            backgroundColor: '#ff4444',
+                                            color: 'white',
+                                            fontWeight: 'bold',
+                                            minWidth: '20px',
+                                            height: '20px',
+                                            borderRadius: '10px',
+                                        }
+                                    }}
+                                >
+                                    <NotificationsIcon />
+                                </Badge>
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -216,10 +347,112 @@ const Navbar = () => {
                             }}
                             open={Boolean(anchorElNotifications)}
                             onClose={handleCloseNotificationMenu}
+                            PaperProps={{
+                                style: {
+                                    maxHeight: '80vh',
+                                    width: '450px', 
+                                    overflowX: 'hidden',
+                                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                                    borderRadius: '8px',
+                                },
+                            }}
                         >
-                            <MenuItem onClick={handleCloseNotificationMenu}>
-                                <Typography>No new notifications</Typography>
-                            </MenuItem>
+                            <Box sx={{ p: 2, borderBottom: '1px solid #e0e0e0', position: 'sticky', top: 0, bgcolor: 'background.paper', zIndex: 1 }}>
+                                <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>Notifications</Typography>
+                                <Button
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    onClick={markAllAsRead}
+                                    sx={{ mb: 1, textTransform: 'none', fontSize: '0.85rem',  color: '#FFB403', borderColor: '#FFB403', '&:hover': {
+                                                    backgroundColor: '#fbffe0',
+                                                    borderColor: '#FFB403',
+                                                    
+                                                } }}
+                                >
+                                    Mark All as Read
+                                </Button>
+                            </Box>
+                            <Box sx={{ maxHeight: 'calc(80vh - 100px)', overflowY: 'auto' }}>
+                                {notifications && notifications.length > 0 ? (
+                                    notifications.map((notification) => (
+                                        <MenuItem
+                                            key={notification.id}
+                                            onClick={handleCloseNotificationMenu}
+                                            sx={{
+                                                borderBottom: '1px solid #f0f0f0',
+                                                flexDirection: 'column',
+                                                alignItems: 'flex-start',
+                                               
+                                                py: 2,
+                                                px: 2,
+                                                '&:hover': {
+                                                    backgroundColor: '#f5f5f5',
+                                                },
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <Typography variant="subtitle2" sx={{ 
+                                                fontWeight: 600, 
+                                                mb: 0.5, 
+                                                color: '#',
+                                                fontSize: '1rem'
+                                            }}>
+                                                {notification.title}
+                                            </Typography>
+                                            <Typography 
+                                                variant="body2" 
+                                                sx={{ 
+                                                    mb: 1, 
+                                                    color: '#333',
+                                                    lineHeight: 1.4,
+                                                    fontSize: '0.85rem', 
+                                                    fontWeight: 200, 
+                                                    wordWrap: 'break-word', 
+                                                    whiteSpace: 'normal' 
+                                                }}
+                                            >
+                                                {notification.message}
+                                            </Typography>
+                                            <Box sx={{ 
+                                                display: 'flex', 
+                                                justifyContent: 'space-between', 
+                                                width: '100%', 
+                                                alignItems: 'center'
+                                            }}>
+                                                <Typography variant="caption" sx={{ 
+                                                    color: 'text.secondary',
+                                                    fontSize: '0.75rem' 
+                                                }}>
+                                                    {new Date(notification.created_at).toLocaleString()}
+                                                </Typography>
+                                                {!notification.is_read && (
+                                                    <Button
+                                                        variant="text"
+                                                        size="small"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            markAsRead(notification.id);
+                                                        }}
+                                                        sx={{ 
+                                                            fontSize: '0.7rem', 
+                                                            color: '#FFB403', 
+                                                            textTransform: 'none',
+                                                            padding: '2px 8px' 
+                                                        }}
+                                                    >
+                                                        Mark as Read
+                                                    </Button>
+                                                )}
+                                            </Box>
+                                        </MenuItem>
+                                    ))
+                                ) : (
+                                    <MenuItem onClick={handleCloseNotificationMenu}>
+                                        <Typography sx={{ color: 'text.secondary', py: 2 }}>No new notifications</Typography>
+                                    </MenuItem>
+                                )}
+                            </Box>
                         </Menu>
                     </Box>
 
@@ -228,7 +461,7 @@ const Navbar = () => {
                         <Tooltip title="View More">
                             <IconButton onClick={handleOpenUserMenu} sx={{ paddingLeft: 4 }}>
                                 <LetteredAvatar
-                                    name={userDetails?.fname}
+                                    name={userDetails && userDetails.fname ? userDetails.fname : ''}
                                     size={40}
                                     radius={50}
                                     color="#fff"
@@ -276,3 +509,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
