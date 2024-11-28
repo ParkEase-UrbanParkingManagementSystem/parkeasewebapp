@@ -1173,7 +1173,8 @@ router.get('/fetch_history_list', async (req, res) => {
     JOIN warden w ON pi.warden_id = w.warden_id
     JOIN parking_lot pl ON pi.lot_id = pl.lot_id
 
-    WHERE pi.lot_id = $1 AND pi.warden_id =$2 AND pi.out_time IS NOT NULL;
+    WHERE pi.lot_id = $1 AND pi.warden_id =$2 AND pi.out_time IS NOT NULL
+    ORDER BY pi.out_time DESC;
     `
     const resultParkingHistory = await pool.query(parkingHistoryQuery, [lotId,warden_id]);
     console.log('resultParkingHistory:', resultParkingHistory.rows);
