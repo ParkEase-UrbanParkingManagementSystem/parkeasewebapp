@@ -401,6 +401,7 @@ exports.payByParkPoints = async (req, res) => {
 
 
 exports.payByWallet = async (req, res) => {
+
     const client = await pool.connect();
 
     try {
@@ -447,12 +448,23 @@ exports.payByWallet = async (req, res) => {
                 method_id = $1
             WHERE instance_id = $2
         `, [method, instance_id]);
-        
 
         if (updateQuery.rowCount === 0) {
             return res.status(404).json({ message: "Parking instance not found or already updated" });
         }
 
+        // Add 5 parkpoints to the parkpoints table
+        const parkPointsUpdateQuery = await client.query(`
+            UPDATE parkpoints
+            SET no_of_points = no_of_points + 5
+            WHERE driver_id = $1
+        `, [driver_id]);
+
+        if (parkPointsUpdateQuery.rowCount === 0) {
+            return res.status(404).json({ message: "Failed to update parkpoints for this driver" });
+        }
+
+        // Add a notification for successful payment
         const notificationTitle = "Payment Successful - Parking Completed";
         const notificationMessage = "Your payment was successful. You have paid using PayPark Wallet.";
 
@@ -460,7 +472,7 @@ exports.payByWallet = async (req, res) => {
             INSERT INTO notifications (receiver_id, title, message)
             VALUES ($1, $2, $3)`, [user_id, notificationTitle, notificationMessage]);
 
-        return res.status(200).json({ message: "Payment successful" });
+        return res.status(200).json({ message: "Payment successful and 5 parkpoints added!" });
 
     } catch (error) {
         console.error(error);
@@ -468,20 +480,31 @@ exports.payByWallet = async (req, res) => {
     } finally {
         client.release();
     }
-}
+};
+
 
 //Pay by Cash
 
-exports.payByCash = async(req,res) => {
+exports.payByCash = async (req, res) => {
     const client = await pool.connect();
 
     try {
         const user_id = req.user;
-        const {method, instance_id } = req.body; // Ensure instance_id is included in the request body
+        const { method, instance_id } = req.body; // Ensure instance_id is included in the request body
 
         if (!instance_id) {
             return res.status(400).json({ message: "Instance ID is required" });
         }
+
+        // Get the driver_id based on the user_id
+        const driverIdQuery = await client.query(`
+            SELECT driver_id FROM driver WHERE user_id = $1`, [user_id]);
+
+        if (driverIdQuery.rows.length === 0) {
+            return res.status(404).json({ message: "No driver found for this user" });
+        }
+
+        const driver_id = driverIdQuery.rows[0].driver_id;
 
         // Update parking_instance table
         const updateQuery = await client.query(`
@@ -490,12 +513,23 @@ exports.payByCash = async(req,res) => {
                 method_id = $1
             WHERE instance_id = $2
         `, [method, instance_id]);
-        
 
         if (updateQuery.rowCount === 0) {
             return res.status(404).json({ message: "Parking instance not found or already updated" });
         }
 
+        // Add 5 parkpoints to the parkpoints table
+        const parkPointsUpdateQuery = await client.query(`
+            UPDATE parkpoints
+            SET no_of_points = no_of_points + 5
+            WHERE driver_id = $1
+        `, [driver_id]);
+
+        if (parkPointsUpdateQuery.rowCount === 0) {
+            return res.status(404).json({ message: "Failed to update parkpoints for this driver" });
+        }
+
+        // Add a notification for successful payment
         const notificationTitle = "Payment Successful - Parking Completed";
         const notificationMessage = "Your payment was successful. You have paid using cash.";
 
@@ -503,7 +537,7 @@ exports.payByCash = async(req,res) => {
             INSERT INTO notifications (receiver_id, title, message)
             VALUES ($1, $2, $3)`, [user_id, notificationTitle, notificationMessage]);
 
-        return res.status(200).json({ message: "Payment successful" });
+        return res.status(200).json({ message: "Payment successful and 5 parkpoints added!" });
 
     } catch (error) {
         console.error(error);
@@ -511,7 +545,8 @@ exports.payByCash = async(req,res) => {
     } finally {
         client.release();
     }
-}
+};
+
 
 //Checking Driver status
 
