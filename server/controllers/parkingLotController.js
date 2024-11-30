@@ -54,6 +54,9 @@ exports.parkingLotAdd = [
         lorryPrice,
       } = req.body;
 
+      bike_capacity_available = bikeCapacity;
+      car_capacity_available = carCapacity;
+
       const fullCapacity = Number(bikeCapacity) + Number(carCapacity);
 
       const formatImagePaths = (paths) => paths.map((path) => path.replace(/\\/g, '/'));
@@ -66,9 +69,9 @@ exports.parkingLotAdd = [
       const insertParkingLotQuery = `
         INSERT INTO parking_lot (
           pmc_id, name, bike_capacity, car_capacity, full_capacity,
-          addressno, street1, street2, city, district,link, description, sketch, images
+          addressno, street1, street2, city, district,link, description, sketch, images, bike_capacity_available, car_capacity_available
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
         RETURNING lot_id;
       `;
 
@@ -87,6 +90,8 @@ exports.parkingLotAdd = [
         description,
         sketchPath,
         JSON.stringify(imagePaths),
+        bike_capacity_available,
+        car_capacity_available,
       ];
 
       const parkingLotResult = await client.query(insertParkingLotQuery, parkingLotValues);
@@ -102,7 +107,7 @@ exports.parkingLotAdd = [
         RETURNING *;
       `;
 
-      const tollAmountValues = [lot_id, bikePrice, carPrice, threeWheelerPrice, lorryPrice];
+      const tollAmountValues = [lot_id, carPrice, bikePrice , threeWheelerPrice, lorryPrice];
 
       await client.query(insertTollAmountQuery, tollAmountValues);
 
