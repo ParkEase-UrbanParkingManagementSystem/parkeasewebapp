@@ -799,10 +799,13 @@ exports.getParkingInstanceDetails = async (req, res) => {
 
         const driver_id = driverIdQuery.rows[0].driver_id;
 
+        console.log(driver_id);
+
         // Get the parking instance details
         const instanceQuery = await client.query(`
             SELECT
             dv.driver_id,
+                p.instance_id,
                 p.out_time,
                 p.in_time,
                 p.toll_amount AS cost,
@@ -820,6 +823,8 @@ exports.getParkingInstanceDetails = async (req, res) => {
                 pl.sketch,
                 pl.images,
                 v.name AS vehicle_name,
+                v.type_id,
+                v.vehicle_number AS licensePlate,
                 w.warden_id,
                 w.fname AS warden_fname,
                 w.lname AS warden_lname,
