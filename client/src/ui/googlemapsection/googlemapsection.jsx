@@ -20,7 +20,7 @@ const GoogleMapSection = () => {
 
     const [center, setCenter] = useState({ lat: userLocation.lat, lng: userLocation.lng });
     const [directionRoutePoints, setDirectionRoutePoints] = useState(null);
-    const { isLoaded } = useJsApiLoader({ googleMapsApiKey: "AIzaSyAQzkKKubDkwzdBGhdUWrPoiQEuOzxpH4M" });
+    const { isLoaded } = useJsApiLoader({ googleMapsApiKey: "AIzaSyBoxehPHj1ptymdJCDWBbbzFYC-ccf-1uQ" });
 
     useEffect(() => {
         if (navigator.geolocation) {

@@ -39,6 +39,11 @@ const menuItems = [
                 icon: <MdSupervisedUserCircle />,
             },
             {
+                title: "Parking Spaces",
+                path: "/admin/parkingLocations/tileview",
+                icon: <MdSupervisedUserCircle />,
+            },
+            {
                 title: "Transactions",
                 path: "/admin/allTransactions",
                 icon: <MdAttachMoney />,
