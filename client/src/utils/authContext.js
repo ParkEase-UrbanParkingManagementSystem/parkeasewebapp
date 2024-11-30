@@ -51,6 +51,11 @@ export const AuthProvider = ({ children }) => {
     if (!loading && 
       !isAuthenticated && 
       pathname !== '/' && 
+      pathname !== '/admin' &&
+      pathname !== '/admin/allDrivers' &&
+      pathname !== '/admin/allPmcs' &&
+      pathname !== '/admin/transactions' &&
+      pathname !== '/admin/sllTransactions' &&
       pathname !== '/select-user' && 
       pathname !== '/register-pmc' &&
       pathname !== '/contact' && 
