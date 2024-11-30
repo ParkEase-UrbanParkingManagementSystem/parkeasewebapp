@@ -26,6 +26,7 @@ app.use("/card", require('./routes/cardRoutes'));
 app.use("/notifications", require('./routes/notificationRoutes'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/wardenApp", wardenAppController);
+
 // app.get('/', (req, res) => {
 //     res.send('Static file server running');
 //   });
