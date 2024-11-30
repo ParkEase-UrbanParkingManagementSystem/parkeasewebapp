@@ -6,7 +6,7 @@ import AddLocationButton from '../../../ui/admin/location/addlocationbutton/addl
 const LocationsTemplate = ({ children }) => {
     return (
         <div>
-            <AddLocationButton />
+            
             {/* <Separator className="bg-blue-200 w-full my-4" />
             <LayoutSwitcher /> */}
             {children}

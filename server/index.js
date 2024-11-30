@@ -30,6 +30,7 @@ app.use("/vehicle", require('./routes/vehicleRoutes'));
 app.use("/parking", require('./routes/parkingRoute'));
 app.use("/reviews", require('./routes/reviewRoutes'));
 app.use("/card", require('./routes/cardRoutes'));
+app.use("/admin", require('./routes/adminRoutes'));
 app.use("/notifications", require('./routes/notificationRoutes'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/wardenApp", wardenAppController);
