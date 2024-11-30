@@ -965,11 +965,6 @@ exports.topUpWallet = async (req, res) => {
 
 
 
-
-
-
-
-
 exports.getParkingLotsForMap = async (req, res) => {
     const client = await pool.connect();
   
@@ -999,6 +994,8 @@ exports.getParkingLotsForMap = async (req, res) => {
         client.release();
     }
   };
+
+
 
 
 
