@@ -17,7 +17,6 @@ router.get("/get-parking-status", authorization, parkingController.checkDriverSt
 router.get("/top-up-wallet", authorization, parkingController.topUpWallet);
 router.get("/get-parking-lots-map", authorization, parkingController.getParkingLotsForMap);
 
-
 //HEllo
 
 

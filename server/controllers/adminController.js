@@ -138,3 +138,84 @@ exports.submitParking = async (req, res) => {
 };
 
 
+exports.getPMC = async (req, res) =>{
+    try {
+        const pmcDetails = await pool.query(`
+            SELECT 
+                pmc.pmc_id, 
+                pmc.name, 
+                pmc.regNo, 
+                users.email, 
+                users.addressNo, 
+                users.street_1, 
+                users.street_2, 
+                users.city, 
+                users.province
+            FROM 
+                pmc
+            JOIN 
+                users ON pmc.user_id = users.user_id
+        `);
+
+        console.log(pmcDetails.rows);
+
+        if (pmcDetails.rows.length === 0) {
+            return res.status(404).json({ msg: "No PMCs found" });
+        }
+
+        res.status(200).json({
+            message: "Success",
+            data: pmcDetails.rows
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Server Error" });
+    }
+};
+
+exports.getCount = async (req, res) => {
+
+    try {
+        // Query to get the count of drivers
+        const driverCountRes = await pool.query('SELECT COUNT(*) FROM driver');
+        const driverCount = parseInt(driverCountRes.rows[0].count, 10);
+
+        // Query to get the count of PMCs
+        const pmcCountRes = await pool.query('SELECT COUNT(*) FROM pmc');
+        const pmcCount = parseInt(pmcCountRes.rows[0].count, 10);
+
+        // Query to get the count of wardens
+        const wardenCountRes = await pool.query('SELECT COUNT(*) FROM warden');
+        const wardenCount = parseInt(wardenCountRes.rows[0].count, 10);
+
+        // Query to get the count of parking lots
+        const parkingLotCountRes = await pool.query('SELECT COUNT(*) FROM parking_lot');
+        const parkingLotCount = parseInt(parkingLotCountRes.rows[0].count, 10);
+
+        // Query to get the count of parking instances
+        const parkingInstanceCountRes = await pool.query('SELECT COUNT(*) FROM parking_instance WHERE iscompleted = FALSE');
+        const parkingInstanceCount = parseInt(parkingInstanceCountRes.rows[0].count, 10);
+
+        // Sending the response with the counts
+        console.log("Driver Count", driverCount, "PMC Count", pmcCount, "Warden Count", wardenCount, "Parking Lot Count", parkingLotCount, "Parking Instance Count", parkingInstanceCount);
+        res.status(200).json({
+            message: "Success",
+            data: {
+                driverCount,
+                pmcCount,
+                wardenCount,
+                parkingLotCount,
+                parkingInstanceCount
+            }
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Server Error" });
+    }
+};
+
+
+
+
+

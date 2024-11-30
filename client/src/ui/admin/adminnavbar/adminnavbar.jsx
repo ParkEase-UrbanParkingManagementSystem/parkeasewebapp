@@ -14,7 +14,7 @@ const AdminNavbar = () => {
     return (
         <div className={styles.container}>
             {/* <div className={styles.title}>{pathname.split("/").pop()}</div> */}
-            <div className={styles.title}>Welcome!</div>
+            <div className={styles.title}>Welcome Admin!</div>
             <div className={styles.menu}>
                 <div className={styles.search}>
                     <MdSearch />
