@@ -1050,48 +1050,73 @@ const walletRevenueQuery = `
 
 // updated release vehicle
 router.post('/release-vehicle', async (req, res) => {
-  const { instance_id, amount ,vehicle_type_id,lot_id} = req.body;
-  const out_time = new Date().toISOString(); // Convert to ISO 8601 format
+  
+  const { instance_id, amount, vehicle_type_id, lot_id } = req.body;
+  const out_time = new Date().toISOString();
 
   try {
-  //   const query = `
-  //     UPDATE parking_instance 
-  //     SET out_time = $2, toll_amount = $3
-  //     WHERE instance_id = $1
-  //     RETURNING *;
-  //   `;
-  //   const values = [instance_id, out_time, amount];
-  const query = `
-  UPDATE parking_instance 
-  SET out_time = NOW(), toll_amount = $2, method_id=4
-  WHERE instance_id = $1
-  RETURNING *;
-`;
-const values = [instance_id, amount]; // No need to pass `out_time` from JavaScript
+    const query = `
+      UPDATE parking_instance 
+      SET out_time = NOW(), toll_amount = $2, method_id = 4
+      WHERE instance_id = $1
+      RETURNING *;
+    `;
+    const values = [instance_id, amount];
 
     const result = await pool.query(query, values);
 
     if (result.rows.length > 0) {
-      // Update vehicle and driver tables
       const instance = result.rows[0];
-      await pool.query('UPDATE vehicle SET isparked = false WHERE vehicle_id = (SELECT vehicle_id FROM driver_vehicle WHERE driver_vehicle_id = $1)', [instance.driver_vehicle_id]);
-      await pool.query('UPDATE driver SET isparked = false WHERE driver_id = (SELECT driver_id FROM driver_vehicle WHERE driver_vehicle_id = $1)', [instance.driver_vehicle_id]);
 
+      // Update vehicle and driver tables
+      await pool.query(
+        'UPDATE vehicle SET isparked = false WHERE vehicle_id = (SELECT vehicle_id FROM driver_vehicle WHERE driver_vehicle_id = $1)',
+        [instance.driver_vehicle_id]
+      );
+      await pool.query(
+        'UPDATE driver SET isparked = false WHERE driver_id = (SELECT driver_id FROM driver_vehicle WHERE driver_vehicle_id = $1)',
+        [instance.driver_vehicle_id]
+      );
 
-            // Update parking_lot capacity
-            if (vehicle_type_id === 2) {
-              // Increment bike capacity
-              await pool.query(
-                'UPDATE parking_lot SET bike_capacity_available = bike_capacity_available + 1 WHERE lot_id = $1',
-                [lot_id]
-              );
-            } else {
-              // Increment car capacity
-              await pool.query(
-                'UPDATE parking_lot SET car_capacity_available = car_capacity_available + 1 WHERE lot_id = $1',
-                [lot_id]
-              );
-            }
+      // Update parking_lot capacity
+      if (vehicle_type_id === 2) {
+        await pool.query(
+          'UPDATE parking_lot SET bike_capacity_available = bike_capacity_available + 1 WHERE lot_id = $1',
+          [lot_id]
+        );
+      } else {
+        await pool.query(
+          'UPDATE parking_lot SET car_capacity_available = car_capacity_available + 1 WHERE lot_id = $1',
+          [lot_id]
+        );
+      }
+
+      // Fetch driver's user_id
+      const userIdQuery = `
+        SELECT d.user_id 
+        FROM driver d
+        INNER JOIN driver_vehicle dv ON d.driver_id = dv.driver_id
+        WHERE dv.driver_vehicle_id = $1
+      `;
+      const userIdResult = await pool.query(userIdQuery, [instance.driver_vehicle_id]);
+
+      if (userIdResult.rows.length > 0) {
+        const userId = userIdResult.rows[0].user_id;
+        const title = 'Payment Required';
+        const message = `Your vehicle has been released. Please pay the amount of ${amount}.`;
+
+        // Insert notification
+        const notificationQuery = `
+          INSERT INTO notifications (receiver_id, title, message, target_route)
+          VALUES ($1, $2, $3, $4);
+        `;
+        await pool.query(notificationQuery, [
+          userId,
+          title,
+          message,
+          '/payment-screen', // Replace with the actual payment route
+        ]);
+      }
 
       res.status(200).json({ message: 'Vehicle exited successfully', data: result.rows[0] });
     } else {
@@ -1102,6 +1127,7 @@ const values = [instance_id, amount]; // No need to pass `out_time` from JavaScr
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 // updated fetch history - list
 router.get('/fetch_history_list', async (req, res) => {

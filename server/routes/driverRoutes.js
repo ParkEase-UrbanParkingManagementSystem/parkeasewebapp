@@ -15,4 +15,5 @@ router.get('/all',driverController.getAllDrivers);
 router.delete('/remove/:driver_id', authorization, authorizeRole([1]), driverController.removeDriver);
 
 
+
 module.exports = router;

@@ -191,6 +191,7 @@ exports.getAfterParkingDetailsMobile = async (req, res) => {
                 p.in_time,
                 p.out_time,
                 p.toll_amount,
+                p.method_id, 
                 w.warden_id,
                 u.city AS warden_city,
                 u.user_id AS warden_userID,
@@ -897,4 +898,63 @@ exports.getParkingInstanceDetails = async (req, res) => {
         client.release();
     }
 }
+
+// --------------------------------------------------------------------------Haven't tested yet---------------------------------------------------------------------------------------------------------
+
+
+exports.topUpWallet = async (req, res) => {
+    const client = await pool.connect();
+
+    try {
+        const user_id = req.user; // Get the user_id from the request
+        const { amount } = req.body; // Ensure the amount is included in the request body
+
+        if (!amount || amount <= 0) {
+            return res.status(400).json({ message: "Valid amount is required" });
+        }
+
+        // Get the driver_id based on the user_id
+        const driverIdQuery = await client.query(`
+            SELECT driver_id FROM driver WHERE user_id = $1`, [user_id]);
+
+        if (driverIdQuery.rows.length === 0) {
+            return res.status(404).json({ message: "No driver found for this user" });
+        }
+
+        const driver_id = driverIdQuery.rows[0].driver_id;
+
+        // Get the current wallet balance of the driver
+        const walletQuery = await client.query(`
+            SELECT available_amount FROM payparkwallet WHERE driver_id = $1`, [driver_id]);
+
+        if (walletQuery.rows.length === 0) {
+            return res.status(404).json({ message: "No wallet found for this driver" });
+        }
+
+        const walletAmount = walletQuery.rows[0].available_amount;
+
+        // Add the amount to the current wallet balance
+        const newWalletAmount = walletAmount + amount;
+
+        // Update the wallet with the new balance
+        await client.query(`
+            UPDATE payparkwallet SET available_amount = $1 WHERE driver_id = $2`, [newWalletAmount, driver_id]);
+
+        // Add a notification for the top-up
+        const notificationTitle = "Wallet Top-Up Successful";
+        const notificationMessage = `Your wallet has been successfully topped up with ${amount} units.`;
+
+        await client.query(`
+            INSERT INTO notifications (receiver_id, title, message)
+            VALUES ($1, $2, $3)`, [user_id, notificationTitle, notificationMessage]);
+
+        return res.status(200).json({ message: "Wallet top-up successful!" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    } finally {
+        client.release();
+    }
+};
 
