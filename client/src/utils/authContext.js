@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
       pathname !== '/admin/allDrivers' &&
       pathname !== '/admin/allPmcs' &&
       pathname !== '/admin/transactions' &&
-      pathname !== '/admin/sllTransactions' &&
+      pathname !== '/admin/allTransactions' &&
       pathname !== '/select-user' && 
       pathname !== '/register-pmc' &&
       pathname !== '/contact' && 
