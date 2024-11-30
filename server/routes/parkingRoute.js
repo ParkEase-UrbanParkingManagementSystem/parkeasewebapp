@@ -15,6 +15,7 @@ router.post("/pay-pp", authorization, parkingController.payByParkPoints);
 router.post("/pay-cash", authorization, parkingController.payByCash);
 router.get("/get-parking-status", authorization, parkingController.checkDriverStatus);
 router.get("/top-up-wallet", authorization, parkingController.topUpWallet);
+router.get("/get-parking-lots-map", authorization, parkingController.getParkingLotsForMap);
 
 //HEllo
 

@@ -686,7 +686,7 @@ exports.getRecentParkingLotsHome = async (req, res) => {
             return res.status(200).json({ message: "No recent parking lots found", data: [] });
         }
 
-        console.log(recentParkingQuery.rows);
+        // console.log(recentParkingQuery.rows);
 
         return res.status(200).json({
             message: "Success",
@@ -957,4 +957,45 @@ exports.topUpWallet = async (req, res) => {
         client.release();
     }
 };
+
+
+
+
+
+
+
+
+exports.getParkingLotsForMap = async (req, res) => {
+    const client = await pool.connect();
+  
+    console.log("Request Recieved");
+    console.log("Meka thamai badu kaaallllaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+  
+    try {
+        // Query to get all parking lots where latitude and longitude are NOT NULL
+        const result = await client.query(`
+            SELECT lot_id, name, latitude, longitude, addressno, street1, street2, city, district
+            FROM parking_lot
+            WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+        `);
+  
+        // Check if any parking lot records exist
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "No parking lots found with valid latitude and longitude." });
+        }
+  
+        // Return the parking lots as a JSON array
+        console.log(result.rows);
+        return res.status(200).json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    } finally {
+        client.release();
+    }
+  };
+
+
+
+
 
