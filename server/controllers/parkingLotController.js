@@ -245,6 +245,8 @@ exports.getAParkingLotDetails = async (req, res) => {
           review_count: row.review_count,
           car_available: row.car_capacity_available,
           bike_available: row.bike_capacity_available,
+          latitude: row.latitude,
+          longitude: row.longitude,
           sketch: row.sketch,
           images: Array.isArray(row.images)
             ? row.images
