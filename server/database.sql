@@ -432,3 +432,4 @@ INSERT INTO payment_method (method_id, name)
 VALUES (4, 'Released') 
 ON CONFLICT (method_id) DO NOTHING;
 
+ALTER TABLE warden ADD COLUMN created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP;

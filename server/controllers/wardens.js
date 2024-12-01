@@ -319,3 +319,56 @@ exports.assignParkingLot = async (req, res) => {
   }
 };
 
+exports.getWardensCount = async (req, res) => {
+  try {
+    const { timeframe } = req.query; // Expect timeframe as 'Daily', 'Weekly', 'Monthly', 'Yearly'
+    const user_id = req.user;
+
+    // Query to find PMC associated with the user
+    const pmcQuery = await pool.query('SELECT pmc_id FROM pmc WHERE user_id = $1', [user_id]);
+
+    if (pmcQuery.rows.length === 0) {
+      return res.status(404).json({ message: "PMC not found for this user" });
+    }
+
+    const pmc_id = pmcQuery.rows[0].pmc_id;
+
+    // Time filtering logic
+    let dateCondition = '';
+    switch (timeframe) {
+      case 'Daily':
+        dateCondition = `created_time >= CURRENT_DATE`;
+        break;
+      case 'Weekly':
+        dateCondition = `created_time >= CURRENT_DATE - INTERVAL '7 days'`;
+        break;
+      case 'Monthly':
+        dateCondition = `created_time >= CURRENT_DATE - INTERVAL '1 month'`;
+        break;
+      case 'Yearly':
+        dateCondition = `created_time >= CURRENT_DATE - INTERVAL '1 year'`;
+        break;
+      default:
+        return res.status(400).json({ message: "Invalid timeframe" });
+    }
+
+    // Query to get the count of wardens based on the timeframe
+    const result = await pool.query(
+      `SELECT COUNT(*) AS total_wardens 
+       FROM warden 
+       WHERE pmc_id = $1 AND ${dateCondition}`,
+      [pmc_id]
+    );
+
+    console.log(`Wardens count for timeframe (${timeframe}):`, result.rows[0].total_wardens);
+
+    return res.status(200).json({
+      message: "Success",
+      data: { totalWardens: result.rows[0].total_wardens },
+    });
+    // console.log(data);
+  } catch (error) {
+    console.error("Error fetching wardens count:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
