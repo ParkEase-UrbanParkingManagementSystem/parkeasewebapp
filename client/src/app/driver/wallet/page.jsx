@@ -57,17 +57,20 @@ export default function WalletScreen() {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get("session_id");
     if (sessionId) {
+      console.log("go toooooooooooooooooooooo")
       completeTopUp(sessionId);
     }
   }, []);
 
   // Handle top-up completion
   const completeTopUp = async (sessionId) => {
+    console.log("in functionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
     setIsLoading(true);
     const token = localStorage.getItem("token");
     try {
+      console.log("Completing top-up with funcccccccccccccccccccccccccc:", sessionId);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_KEY}/driver/topUpWallet`,
+        `${process.env.NEXT_PUBLIC_API_KEY}/parking/top-up-wallet`,
         {
           method: "POST",
           headers: {
@@ -78,11 +81,15 @@ export default function WalletScreen() {
         }
       );
       const data = await response.json();
+      console.log("fetchedddddddddddddddddddddddddddddd");
+      console.log("response",data);
 
       if (response.ok) {
+        console.log("Top-up completed successfullyyyyyyyyyyyyyy:", data);
         setWalletAmount(data.newBalance);
         toast.success(data.message);
       } else {
+        console.error("Error completing top-up erorrrrrrrrrrrrrrrrrr:", data);
         toast.error(data.message || "An error occurred during top-up");
       }
     } catch (error) {
@@ -91,42 +98,47 @@ export default function WalletScreen() {
     } finally {
       setIsLoading(false);
       // Clear session_id from the URL
-      window.history.replaceState({}, document.title, "/wallet");
+      window.history.replaceState({}, document.title, "/driver/wallet");
     }
   };
 
-  // Handle top-up initiation
-  const handleTopUp = async () => {
-    if (!topUpAmount || parseFloat(topUpAmount) <= 0) {
-      toast.error("Please enter a valid amount");
-      return;
+
+// Handle top-up initiation
+const handleTopUp = async () => {
+  if (!topUpAmount || parseFloat(topUpAmount) <= 0) {
+    toast.error("Please enter a valid amount");
+    return;
+  }
+
+
+  setIsLoading(true);
+  try {
+    const response = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ amount: parseFloat(topUpAmount) }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Redirect to Stripe checkout
+      // setIsLoading(false);
+      window.location.href = data.url;
+      // window.location.href = "/driver/wallet";
+    } else {
+      toast.error(data.message || "An error occurred");
     }
+  } catch (error) {
+    console.error("Error initiating top-up:", error);
+    toast.error("An error occurred during top-up request");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount: parseFloat(topUpAmount) }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Redirect to Stripe checkout
-        window.location.href = data.url;
-      } else {
-        toast.error(data.message || "An error occurred");
-      }
-    } catch (error) {
-      console.error("Error initiating top-up:", error);
-      toast.error("An error occurred during top-up request");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div>
