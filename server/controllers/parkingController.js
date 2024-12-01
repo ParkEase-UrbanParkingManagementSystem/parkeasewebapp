@@ -1,4 +1,5 @@
 const pool = require('../db');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.getParkingDetails = async (req, res) => {
     const client = await pool.connect();
@@ -906,17 +907,25 @@ exports.getParkingInstanceDetails = async (req, res) => {
 
 // --------------------------------------------------------------------------Haven't tested yet---------------------------------------------------------------------------------------------------------
 
-
 exports.topUpWallet = async (req, res) => {
     const client = await pool.connect();
 
     try {
-        const user_id = req.user; // Get the user_id from the request
-        const { amount } = req.body; // Ensure the amount is included in the request body
+        const user_id = req.user;
+        const { session_id } = req.body;
 
-        if (!amount || amount <= 0) {
-            return res.status(400).json({ message: "Valid amount is required" });
+        if (!session_id) {
+            return res.status(400).json({ message: "Stripe session ID is required" });
         }
+
+        // Verify the Stripe session
+        const session = await stripe.checkout.sessions.retrieve(session_id);
+
+        if (session.payment_status !== 'paid') {
+            return res.status(400).json({ message: "Payment not completed" });
+        }
+
+        const amount = session.amount_total / 100; // Convert from cents to whole currency units
 
         // Get the driver_id based on the user_id
         const driverIdQuery = await client.query(`
@@ -936,7 +945,7 @@ exports.topUpWallet = async (req, res) => {
             return res.status(404).json({ message: "No wallet found for this driver" });
         }
 
-        const walletAmount = walletQuery.rows[0].available_amount;
+        const walletAmount = parseFloat(walletQuery.rows[0].available_amount);
 
         // Add the amount to the current wallet balance
         const newWalletAmount = walletAmount + amount;
@@ -953,17 +962,15 @@ exports.topUpWallet = async (req, res) => {
             INSERT INTO notifications (receiver_id, title, message)
             VALUES ($1, $2, $3)`, [user_id, notificationTitle, notificationMessage]);
 
-        return res.status(200).json({ message: "Wallet top-up successful!" });
+        return res.status(200).json({ message: "Wallet top-up successful!", newBalance: newWalletAmount });
 
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error" });
+        console.error("Error in topUpWallet:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
     } finally {
         client.release();
     }
 };
-
-
 
 exports.getParkingLotsForMap = async (req, res) => {
     const client = await pool.connect();
@@ -994,10 +1001,4 @@ exports.getParkingLotsForMap = async (req, res) => {
         client.release();
     }
   };
-
-
-
-
-
-
 
