@@ -976,7 +976,7 @@ exports.getParkingLotsForMap = async (req, res) => {
         const result = await client.query(`
             SELECT lot_id, name, latitude, longitude, addressno, street1, street2, city, district
             FROM parking_lot
-            WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+            WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND status='active'
         `);
   
         // Check if any parking lot records exist
