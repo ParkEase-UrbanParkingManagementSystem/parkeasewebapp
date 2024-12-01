@@ -13,6 +13,8 @@ router.get('/getParkPoints', authorization, authorizeRole([1]), driverController
 router.get('/total-drivers', driverController.getTotalDrivers);
 router.get('/all',driverController.getAllDrivers);
 router.delete('/remove/:driver_id', authorization, authorizeRole([1]), driverController.removeDriver);
+router.get('/analytics', driverController.getDriverAnalytics);
+
 
 
 
