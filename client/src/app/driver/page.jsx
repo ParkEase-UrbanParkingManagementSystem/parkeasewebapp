@@ -110,7 +110,7 @@ const DriverPage = () => {
                                 <Navbar />
                                 <LoadScript
                                     libraries={['places']}
-                                    googleMapsApiKey={"AIzaSyAQzkKKubDkwzdBGhdUWrPoiQEuOzxpH4M"}>
+                                    googleMapsApiKey={"AIzaSyBoxehPHj1ptymdJCDWBbbzFYC-ccf-1uQ"}>
                                     <div className='p-2 grid grid-cols-1 md:grid-cols-4 gap-2 '>
                                         <div className="col-span-1 p-2">
                                             <div className="p-1 mt-2 mb-3 text-2xl font-bold" style={{ color: '#ffb403' }}> 

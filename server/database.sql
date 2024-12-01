@@ -427,3 +427,8 @@ CREATE TABLE notifications (
 ALTER TABLE notifications
 ADD COLUMN target_route TEXT DEFAULT NULL;
 
+
+INSERT INTO payment_method (method_id, name)
+VALUES (4, 'Released') 
+ON CONFLICT (method_id) DO NOTHING;
+

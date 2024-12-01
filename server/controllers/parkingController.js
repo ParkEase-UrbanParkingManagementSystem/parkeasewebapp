@@ -1,4 +1,5 @@
 const pool = require('../db');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.getParkingDetails = async (req, res) => {
     const client = await pool.connect();
@@ -191,6 +192,7 @@ exports.getAfterParkingDetailsMobile = async (req, res) => {
                 p.in_time,
                 p.out_time,
                 p.toll_amount,
+                p.method_id, 
                 w.warden_id,
                 u.city AS warden_city,
                 u.user_id AS warden_userID,
@@ -401,6 +403,7 @@ exports.payByParkPoints = async (req, res) => {
 
 
 exports.payByWallet = async (req, res) => {
+
     const client = await pool.connect();
 
     try {
@@ -447,12 +450,23 @@ exports.payByWallet = async (req, res) => {
                 method_id = $1
             WHERE instance_id = $2
         `, [method, instance_id]);
-        
 
         if (updateQuery.rowCount === 0) {
             return res.status(404).json({ message: "Parking instance not found or already updated" });
         }
 
+        // Add 5 parkpoints to the parkpoints table
+        const parkPointsUpdateQuery = await client.query(`
+            UPDATE parkpoints
+            SET no_of_points = no_of_points + 5
+            WHERE driver_id = $1
+        `, [driver_id]);
+
+        if (parkPointsUpdateQuery.rowCount === 0) {
+            return res.status(404).json({ message: "Failed to update parkpoints for this driver" });
+        }
+
+        // Add a notification for successful payment
         const notificationTitle = "Payment Successful - Parking Completed";
         const notificationMessage = "Your payment was successful. You have paid using PayPark Wallet.";
 
@@ -460,7 +474,7 @@ exports.payByWallet = async (req, res) => {
             INSERT INTO notifications (receiver_id, title, message)
             VALUES ($1, $2, $3)`, [user_id, notificationTitle, notificationMessage]);
 
-        return res.status(200).json({ message: "Payment successful" });
+        return res.status(200).json({ message: "Payment successful and 5 parkpoints added!" });
 
     } catch (error) {
         console.error(error);
@@ -468,20 +482,31 @@ exports.payByWallet = async (req, res) => {
     } finally {
         client.release();
     }
-}
+};
+
 
 //Pay by Cash
 
-exports.payByCash = async(req,res) => {
+exports.payByCash = async (req, res) => {
     const client = await pool.connect();
 
     try {
         const user_id = req.user;
-        const {method, instance_id } = req.body; // Ensure instance_id is included in the request body
+        const { method, instance_id } = req.body; // Ensure instance_id is included in the request body
 
         if (!instance_id) {
             return res.status(400).json({ message: "Instance ID is required" });
         }
+
+        // Get the driver_id based on the user_id
+        const driverIdQuery = await client.query(`
+            SELECT driver_id FROM driver WHERE user_id = $1`, [user_id]);
+
+        if (driverIdQuery.rows.length === 0) {
+            return res.status(404).json({ message: "No driver found for this user" });
+        }
+
+        const driver_id = driverIdQuery.rows[0].driver_id;
 
         // Update parking_instance table
         const updateQuery = await client.query(`
@@ -490,12 +515,23 @@ exports.payByCash = async(req,res) => {
                 method_id = $1
             WHERE instance_id = $2
         `, [method, instance_id]);
-        
 
         if (updateQuery.rowCount === 0) {
             return res.status(404).json({ message: "Parking instance not found or already updated" });
         }
 
+        // Add 5 parkpoints to the parkpoints table
+        const parkPointsUpdateQuery = await client.query(`
+            UPDATE parkpoints
+            SET no_of_points = no_of_points + 5
+            WHERE driver_id = $1
+        `, [driver_id]);
+
+        if (parkPointsUpdateQuery.rowCount === 0) {
+            return res.status(404).json({ message: "Failed to update parkpoints for this driver" });
+        }
+
+        // Add a notification for successful payment
         const notificationTitle = "Payment Successful - Parking Completed";
         const notificationMessage = "Your payment was successful. You have paid using cash.";
 
@@ -503,7 +539,7 @@ exports.payByCash = async(req,res) => {
             INSERT INTO notifications (receiver_id, title, message)
             VALUES ($1, $2, $3)`, [user_id, notificationTitle, notificationMessage]);
 
-        return res.status(200).json({ message: "Payment successful" });
+        return res.status(200).json({ message: "Payment successful and 5 parkpoints added!" });
 
     } catch (error) {
         console.error(error);
@@ -511,7 +547,8 @@ exports.payByCash = async(req,res) => {
     } finally {
         client.release();
     }
-}
+};
+
 
 //Checking Driver status
 
@@ -650,7 +687,7 @@ exports.getRecentParkingLotsHome = async (req, res) => {
             return res.status(200).json({ message: "No recent parking lots found", data: [] });
         }
 
-        console.log(recentParkingQuery.rows);
+        // console.log(recentParkingQuery.rows);
 
         return res.status(200).json({
             message: "Success",
@@ -763,10 +800,13 @@ exports.getParkingInstanceDetails = async (req, res) => {
 
         const driver_id = driverIdQuery.rows[0].driver_id;
 
+        console.log(driver_id);
+
         // Get the parking instance details
         const instanceQuery = await client.query(`
             SELECT
             dv.driver_id,
+                p.instance_id,
                 p.out_time,
                 p.in_time,
                 p.toll_amount AS cost,
@@ -784,6 +824,8 @@ exports.getParkingInstanceDetails = async (req, res) => {
                 pl.sketch,
                 pl.images,
                 v.name AS vehicle_name,
+                v.type_id,
+                v.vehicle_number AS licensePlate,
                 w.warden_id,
                 w.fname AS warden_fname,
                 w.lname AS warden_lname,
@@ -862,4 +904,101 @@ exports.getParkingInstanceDetails = async (req, res) => {
         client.release();
     }
 }
+
+// --------------------------------------------------------------------------Haven't tested yet---------------------------------------------------------------------------------------------------------
+
+exports.topUpWallet = async (req, res) => {
+    const client = await pool.connect();
+
+    try {
+        const user_id = req.user;
+        const { session_id } = req.body;
+
+        if (!session_id) {
+            return res.status(400).json({ message: "Stripe session ID is required" });
+        }
+
+        // Verify the Stripe session
+        const session = await stripe.checkout.sessions.retrieve(session_id);
+
+        if (session.payment_status !== 'paid') {
+            return res.status(400).json({ message: "Payment not completed" });
+        }
+
+        const amount = session.amount_total / 100; // Convert from cents to whole currency units
+
+        // Get the driver_id based on the user_id
+        const driverIdQuery = await client.query(`
+            SELECT driver_id FROM driver WHERE user_id = $1`, [user_id]);
+
+        if (driverIdQuery.rows.length === 0) {
+            return res.status(404).json({ message: "No driver found for this user" });
+        }
+
+        const driver_id = driverIdQuery.rows[0].driver_id;
+
+        // Get the current wallet balance of the driver
+        const walletQuery = await client.query(`
+            SELECT available_amount FROM payparkwallet WHERE driver_id = $1`, [driver_id]);
+
+        if (walletQuery.rows.length === 0) {
+            return res.status(404).json({ message: "No wallet found for this driver" });
+        }
+
+        const walletAmount = parseFloat(walletQuery.rows[0].available_amount);
+
+        // Add the amount to the current wallet balance
+        const newWalletAmount = walletAmount + amount;
+
+        // Update the wallet with the new balance
+        await client.query(`
+            UPDATE payparkwallet SET available_amount = $1 WHERE driver_id = $2`, [newWalletAmount, driver_id]);
+
+        // Add a notification for the top-up
+        const notificationTitle = "Wallet Top-Up Successful";
+        const notificationMessage = `Your wallet has been successfully topped up with ${amount} units.`;
+
+        await client.query(`
+            INSERT INTO notifications (receiver_id, title, message)
+            VALUES ($1, $2, $3)`, [user_id, notificationTitle, notificationMessage]);
+
+        return res.status(200).json({ message: "Wallet top-up successful!", newBalance: newWalletAmount });
+
+    } catch (error) {
+        console.error("Error in topUpWallet:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    } finally {
+        client.release();
+    }
+};
+
+exports.getParkingLotsForMap = async (req, res) => {
+    const client = await pool.connect();
+  
+    console.log("Request Recieved");
+    console.log("Meka thamai badu kaaallllaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+  
+    try {
+        // Query to get all parking lots where latitude and longitude are NOT NULL
+        const result = await client.query(`
+            SELECT lot_id, name, latitude, longitude, addressno, street1, street2, city, district
+            FROM parking_lot
+            WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND status='active'
+        `);
+  
+        // Check if any parking lot records exist
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "No parking lots found with valid latitude and longitude." });
+        }
+  
+        // Return the parking lots as a JSON array
+        console.log(result.rows);
+        return res.status(200).json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    } finally {
+        client.release();
+    }
+  };
 

@@ -610,8 +610,8 @@ router.get('/get-parking-instance/', async (req, res) => {
   }
 });
 
+//fetchPersonalInfo endpoint
 router.get('/fetchPersonalInfo', async (req, res) => {
-  console.log("Meka wadaa");
   const  {user_id}  = req.query;
   try {
     // Get the warden_id from the user_id
@@ -953,5 +953,279 @@ console.log('in exit from qr driver id:',driver_id);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+
+
+
+//updated fetchInsight endpoint
+
+router.get('/fetch_insights', async (req, res) => {
+  const { user_id } = req.query;
+
+  console.log('user_id in fetching data:', user_id);
+  try {
+    // Get the warden_id from the user_id
+    const getWardenId = `
+      SELECT warden_id 
+      FROM warden 
+      WHERE user_id = $1;
+    `;
+    const resultGetWardenId = await pool.query(getWardenId, [user_id]);
+    if (resultGetWardenId.rows.length === 0) {
+      return res.status(404).json({ message: 'Warden not found' });
+    }
+    const warden_id = resultGetWardenId.rows[0].warden_id;
+    console.log('warden_id:', warden_id);
+
+    // Check if the warden is assigned to a parking lot and get the lot_id
+    const getLotIdQuery = `
+      SELECT wpl.lot_id, pl.name AS parking_lot_name, pl.car_capacity, pl.bike_capacity, 
+             pl.car_capacity_available, pl.bike_capacity_available
+      FROM warden_parking_lot wpl
+      JOIN parking_lot pl ON wpl.lot_id = pl.lot_id
+      WHERE wpl.warden_id = $1;
+    `;
+    const resultLotInfo = await pool.query(getLotIdQuery, [warden_id]);
+    
+    if (resultLotInfo.rows.length === 0) {
+      console.log('Warden is not assigned to any parking lot');
+      return res.status(200).json({ message: 'Warden is not assigned to any parking lot', is_assigned: false });
+    }
+
+    const lotInfo = resultLotInfo.rows[0];
+    const lotId = lotInfo.lot_id;
+    console.log('lot_id:', lotId);
+
+    // Get cash revenue
+    const cashRevenueQuery = `
+      SELECT SUM(toll_amount) AS cash_revenue
+      FROM parking_instance 
+      WHERE method_id = 2
+      AND warden_id = $1 
+      AND lot_id = $2 
+      AND DATE(out_time) = CURRENT_DATE 
+      AND out_time IS NOT NULL;
+    `;
+    const resultCashRevenue = await pool.query(cashRevenueQuery, [warden_id, lotId]);
+    const cashRevenue = resultCashRevenue.rows[0].cash_revenue || 0;
+
+// Get wallet revenue
+const walletRevenueQuery = `
+  SELECT SUM(toll_amount) AS wallet_revenue
+  FROM parking_instance 
+  WHERE method_id = 1
+  AND warden_id = $1 
+  AND lot_id = $2 
+  AND DATE(out_time) = CURRENT_DATE 
+  AND out_time IS NOT NULL;
+`;
+
+    const resultWalletRevenue = await pool.query(walletRevenueQuery, [warden_id, lotId]);
+    const walletRevenue = resultWalletRevenue.rows[0].wallet_revenue || 0;
+
+    // Prepare the response
+    const response = {
+      is_assigned: true,
+      lot_name: lotInfo.parking_lot_name,
+      total_slots: {
+        car: lotInfo.car_capacity,
+        bike: lotInfo.bike_capacity
+      },
+      available_slots: {
+        car: lotInfo.car_capacity_available,
+        bike: lotInfo.bike_capacity_available
+      },
+      cash_revenue: cashRevenue,
+      wallet_revenue: walletRevenue
+    };
+
+    console.log(response)
+    res.json(response);
+
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// updated release vehicle
+router.post('/release-vehicle', async (req, res) => {
+  
+  const { instance_id, amount, vehicle_type_id, lot_id } = req.body;
+  const out_time = new Date().toISOString();
+
+  try {
+    const query = `
+      UPDATE parking_instance 
+      SET out_time = NOW(), toll_amount = $2, method_id = 4
+      WHERE instance_id = $1
+      RETURNING *;
+    `;
+    const values = [instance_id, amount];
+
+    const result = await pool.query(query, values);
+
+    if (result.rows.length > 0) {
+      const instance = result.rows[0];
+
+      // Update vehicle and driver tables
+      await pool.query(
+        'UPDATE vehicle SET isparked = false WHERE vehicle_id = (SELECT vehicle_id FROM driver_vehicle WHERE driver_vehicle_id = $1)',
+        [instance.driver_vehicle_id]
+      );
+      await pool.query(
+        'UPDATE driver SET isparked = false WHERE driver_id = (SELECT driver_id FROM driver_vehicle WHERE driver_vehicle_id = $1)',
+        [instance.driver_vehicle_id]
+      );
+
+      // Update parking_lot capacity
+      if (vehicle_type_id === 2) {
+        await pool.query(
+          'UPDATE parking_lot SET bike_capacity_available = bike_capacity_available + 1 WHERE lot_id = $1',
+          [lot_id]
+        );
+      } else {
+        await pool.query(
+          'UPDATE parking_lot SET car_capacity_available = car_capacity_available + 1 WHERE lot_id = $1',
+          [lot_id]
+        );
+      }
+
+      // Fetch driver's user_id
+      const userIdQuery = `
+        SELECT d.user_id 
+        FROM driver d
+        INNER JOIN driver_vehicle dv ON d.driver_id = dv.driver_id
+        WHERE dv.driver_vehicle_id = $1
+      `;
+      const userIdResult = await pool.query(userIdQuery, [instance.driver_vehicle_id]);
+
+      if (userIdResult.rows.length > 0) {
+        const userId = userIdResult.rows[0].user_id;
+        const title = 'Payment Required';
+        const message = `Your vehicle has been released. Please pay the amount of ${amount}.`;
+
+        // Insert notification
+        const notificationQuery = `
+          INSERT INTO notifications (receiver_id, title, message, target_route)
+          VALUES ($1, $2, $3, $4);
+        `;
+        await pool.query(notificationQuery, [
+          userId,
+          title,
+          message,
+          '/payment-screen', // Replace with the actual payment route
+        ]);
+      }
+
+      res.status(200).json({ message: 'Vehicle exited successfully', data: result.rows[0] });
+    } else {
+      res.status(404).json({ error: 'Parking instance not found' });
+    }
+  } catch (error) {
+    console.error('Error exiting vehicle:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+// updated fetch history - list
+router.get('/fetch_history_list', async (req, res) => {
+  const { user_id } = req.query;
+
+  console.log('user_id in fetching data:', user_id);
+  try {
+    // Get the warden_id from the user_id
+    const getWardenId = `
+      SELECT warden_id 
+      FROM warden 
+      WHERE user_id = $1;
+    `;
+    const resultGetWardenId = await pool.query(getWardenId, [user_id]);
+    if (resultGetWardenId.rows.length === 0) {
+      return res.status(404).json({ message: 'Warden not found' });
+    }
+    const warden_id = resultGetWardenId.rows[0].warden_id;
+    console.log('warden_id:', warden_id);
+
+    // Check if the warden is assigned to a parking lot
+    const checkWardenAssignmentQuery = `
+      SELECT EXISTS (
+        SELECT 1 
+        FROM warden_parking_lot 
+        WHERE warden_id = $1
+      ) AS is_assigned;
+    `;
+    const resultCheckWardenAssignment = await pool.query(checkWardenAssignmentQuery, [warden_id]);
+    const is_assigned = resultCheckWardenAssignment.rows[0].is_assigned;
+    console.log('is_assigned:', is_assigned);
+
+    //get the parkinglot id (check the date)
+    const getLotId=`
+      SELECT lot_id
+      FROM warden_parking_lot
+      WHERE warden_id = $1;
+    `
+    const resultGetLotId = await pool.query(getLotId, [warden_id]);
+    const lotId= resultGetLotId.rows[0].lot_id;
+
+
+
+    const parkingHistoryQuery=`
+        SELECT 
+    pi.instance_id,
+    pi.in_time,
+    pi.out_time,
+    pi.toll_amount,
+    pi.method_id,
+    pi.driver_vehicle_id,
+    dv.vehicle_id,
+    dv.driver_id,
+    d.fname AS driver_fname,
+    d.lname AS driver_lname,
+    v.vehicle_number,
+    v.type_id,
+    vt.type_name AS vehicle_type_name,
+    pm.name AS payment_method_name,
+    w.fname AS warden_fname,
+    w.lname AS warden_lname,
+    pl.name
+    From parking_instance pi
+    JOIN driver_vehicle dv ON pi.driver_vehicle_id = dv.driver_vehicle_id
+    JOIN driver d ON dv.driver_id = d.driver_id
+    JOIN vehicle v ON dv.vehicle_id = v.vehicle_id
+    JOIN vehicle_type vt ON v.type_id = vt.vehicle_type_id
+    JOIN payment_method pm ON pi.method_id = pm.method_id
+    JOIN warden w ON pi.warden_id = w.warden_id
+    JOIN parking_lot pl ON pi.lot_id = pl.lot_id
+
+    WHERE pi.lot_id = $1 AND pi.warden_id =$2 AND pi.out_time IS NOT NULL
+    ORDER BY pi.out_time DESC;
+    `
+    const resultParkingHistory = await pool.query(parkingHistoryQuery, [lotId,warden_id]);
+    console.log('resultParkingHistory:', resultParkingHistory.rows);
+
+
+    if (resultParkingHistory.rows.length === 0) {
+      console.log('No parking history found');
+      return res.status(200).json({ message: 'No parking instances found', is_assigned, parked_vehicles: [] });
+    }
+
+    // Map the results to include full driver and warden names
+    const response = resultParkingHistory.rows.map(instance => ({
+      ...instance,
+      driver_name: `${instance.driver_fname} ${instance.driver_lname}`,
+      warden_name: `${instance.warden_fname} ${instance.warden_lname}`
+    }));
+
+    res.json({ is_assigned, parked_vehicles: response });
+    console.log('response',response);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
 
 module.exports = router;
