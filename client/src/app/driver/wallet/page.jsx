@@ -97,7 +97,7 @@ export default function WalletScreen() {
 
   // Handle top-up initiation
   const handleTopUp = async () => {
-    if (!topUpAmount || parseFloat(amount) <= 0) {
+    if (!topUpAmount || parseFloat(topUpAmount) <= 0) {
       toast.error("Please enter a valid amount");
       return;
     }
