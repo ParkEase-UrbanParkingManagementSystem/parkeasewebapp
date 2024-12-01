@@ -185,3 +185,61 @@ exports.removeDriver = async (req, res) => {
     }
 };
 
+exports.getDriverAnalytics = async (req, res) => {
+  try {
+    const totalDrivers = await pool.query(`
+      SELECT COUNT(*) AS total_drivers
+      FROM driver
+    `);
+
+    const genderDistribution = await pool.query(`
+      SELECT gender, COUNT(*) AS count
+      FROM driver
+      GROUP BY gender
+    `);
+
+    const ageDistribution = await pool.query(`
+      SELECT 
+        CASE 
+          WHEN age < 25 THEN '18-24'
+          WHEN age BETWEEN 25 AND 34 THEN '25-34'
+          WHEN age BETWEEN 35 AND 44 THEN '35-44'
+          WHEN age BETWEEN 45 AND 54 THEN '45-54'
+          ELSE '55+'
+        END AS age_group,
+        COUNT(*) AS count
+      FROM driver
+      GROUP BY age_group
+    `);
+
+    const topCities = await pool.query(`
+      SELECT u.city, COUNT(*) AS count
+      FROM driver d
+      JOIN users u ON d.user_id = u.user_id
+      GROUP BY u.city
+      ORDER BY count DESC
+      LIMIT 5
+    `);
+
+    const verificationStatus = await pool.query(`
+      SELECT u.isVerified, COUNT(*) AS count
+      FROM driver d
+      JOIN users u ON d.user_id = u.user_id
+      GROUP BY u.isVerified
+    `);
+
+    res.status(200).json({
+      message: "Success",
+      data: {
+        totalDrivers: totalDrivers.rows[0].total_drivers,
+        genderDistribution: genderDistribution.rows,
+        ageDistribution: ageDistribution.rows,
+        topCities: topCities.rows,
+        verificationStatus: verificationStatus.rows
+      }
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ msg: "Server Error" });
+  }
+};

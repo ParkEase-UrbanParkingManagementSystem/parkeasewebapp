@@ -34,11 +34,6 @@ const menuItems = [
                 icon: <MdPeople />,
             },
             {
-                title: "Parking Space Owners",
-                path: "/dashboard/transactions",
-                icon: <MdSupervisedUserCircle />,
-            },
-            {
                 title: "Parking Spaces",
                 path: "/admin/parkingLocations/tileview",
                 icon: <MdSupervisedUserCircle />,
@@ -52,12 +47,7 @@ const menuItems = [
                 title: "Revenue",
                 path: "/dashboard/transactions",
                 icon: <MdWork />,
-            },
-            {
-                title: "Analytics",
-                path: "/dashboard/transactions",
-                icon: <MdAnalytics />,
-            },
+            }
         ],
     },
 ];
