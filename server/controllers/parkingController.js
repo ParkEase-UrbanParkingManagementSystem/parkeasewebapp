@@ -1046,7 +1046,7 @@ exports.getParkingLotsForMap = async (req, res) => {
     try {
       // SQL query to get parking lots based on search query
       let query = `
-        SELECT lot_id, name, latitude, longitude, addressno, street1, street2, city, district
+        SELECT lot_id, name, latitude, longitude, addressno, street1, street2, city, district, bike_capacity, car_capacity, car_capacity_available, bike_capacity_available,images
         FROM parking_lot
         WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND status='active'
       `;
