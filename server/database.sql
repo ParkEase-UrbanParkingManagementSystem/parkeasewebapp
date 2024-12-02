@@ -419,8 +419,7 @@ CREATE TABLE notifications (
     is_read BOOLEAN DEFAULT FALSE,
     role_id INTEGER DEFAULT NULL,
     CONSTRAINT notifications_receiver_id_fkey FOREIGN KEY (receiver_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    CONSTRAINT notifications_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES users (user_id) ON DELETE SET NULL,
-    CONSTRAINT notifications_role_id_fkey FOREIGN KEY (role_id) REFERENCES user_role (role_id) ON DELETE SET NULL
+    CONSTRAINT notifications_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES users (user_id) ON DELETE SET NULL
 );
 
 
@@ -452,3 +451,16 @@ ALTER TABLE transaction
 ADD COLUMN admin BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE warden ADD COLUMN created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- Remove the 'description' and 'profile_pic' columns
+ALTER TABLE driver
+DROP COLUMN description,
+DROP COLUMN profile_pic;
+
+-- Add 'registered_at' column to store registration date (timestamp with time zone)
+ALTER TABLE driver
+ADD COLUMN registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- Add 'account_status' column with default value 'active'
+ALTER TABLE driver
+ADD COLUMN account_status character varying(20) DEFAULT 'active';
