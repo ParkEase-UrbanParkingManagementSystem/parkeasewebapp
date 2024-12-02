@@ -464,3 +464,13 @@ ADD COLUMN registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 -- Add 'account_status' column with default value 'active'
 ALTER TABLE driver
 ADD COLUMN account_status character varying(20) DEFAULT 'active';
+
+
+ALTER TABLE parking_lot
+ADD COLUMN latitude DECIMAL(10, 6),
+ADD COLUMN longitude DECIMAL(10, 6);
+
+
+ALTER TABLE parking_lot
+ADD COLUMN car_capacity_available INT,
+ADD COLUMN bike_capacity_available INT;

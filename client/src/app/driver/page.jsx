@@ -1,168 +1,221 @@
-'use client';
+"use client";
+
+import React, { useState, useEffect } from "react";
+// import Image from "next/image";
 import Navbar from "@/ui/homenavbar/homenavbar";
-import DriverSearch from "@/ui/driversearch/driversearch";
-import CategoryList from "@/ui/categorylist/categorylist";
-import ParkingList from "@/ui/parkinglist/parkinglist";
-import GoogleMapSection from "@/ui/googlemapsection/googlemapsection";
-import ParkingToast from "@/ui/parkingtoast/parkingtoast";
-import { useState, useEffect } from "react";
-import { SourceContext } from '@/context/SourceContext';
-import { DestinationContext } from '@/context/DestinationContext';
-import { UserLocationContext } from '@/context/UserLocationContext';
-import { ParkingListContext } from '@/context/ParkingListContext';
-import { SelectedParkingContext } from '@/context/SelectedParkingContext';
-import { LoadScript } from "@react-google-maps/api";
-import { useRouter } from "next/navigation";
-import { useAuth } from '@/utils/authContext';
-import QRCode from 'qrcode.react';
-import GlobalApi from "@/services/GlobalApi";
+import { Search, MapPin, Clock, Shield } from "lucide-react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
+export default function HomePage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [parkingLots, setParkingLots] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [userDetails, setUserDetails] = useState(null);
 
-const DriverPage = () => {
-    // States
-    const [userDetails, setUserDetails] = useState(null);
-    const [userLocation, setUserLocation] = useState([]);
-    const [source, setSource] = useState([]);
-    const [destination, setDestination] = useState([]);
-    const [parkingList, setParkingList] = useState([]);
-    const [selectedParking, setSelectedParking] = useState([]);
-    const [loading, setLoading] = useState(true); // Add loading state
-    const router = useRouter();
+  const handleSearch = async () => {
+    if (!searchQuery) return;
 
-    // Fetch user details
-    useEffect(() => {
-        const fetchUserDetails = async () => {
-            const token = localStorage.getItem("token");
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/driver/details`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        token: token
-                    }
-                });
+    setLoading(true);
+    setError(null);
+    setHasSearched(true);
 
-                const parseRes = await response.json();
-                if (response.ok) {
-                    setUserDetails(parseRes.data);
-                } else {
-                    console.error("Can't get the details");
-                }
-            } catch (error) {
-                console.log(error.message);
-            } finally {
-                setLoading(false); // Set loading to false after data is fetched
-            }
-        };
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_KEY}/parking/get-parking-lots-map-web?search=${searchQuery}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        }
+      );
+      const data = await response.json();
 
-        fetchUserDetails();
-    }, [router]);
-
-    // Fetch user location
-    useEffect(() => {
-        getUserLocation();
-    }, []);
-
-    const getUserLocation = () => {
-        navigator.geolocation.getCurrentPosition(function (pos) {
-            setUserLocation({
-                lat: pos.coords.latitude,
-                lng: pos.coords.longitude
-            });
-        });
-    };
-
-    // Fetch nearby places
-    useEffect(() => {
-        if (userLocation)
-            getNearByPlace('parking');
-    }, [userLocation]);
-
-    const getNearByPlace = (category) => {
-        GlobalApi.getNearByPlace(category, userLocation?.lat, userLocation.lng)
-            .then(resp => {
-                setParkingList(resp.data.results);
-            });
-    };
- 
-    // Loading indicator
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <div className="text-center">
-                    <svg className="animate-spin h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full" viewBox="0 0 24 24">
-                        <path fill="none" d="M0 0h24v24H0z" />
-                        <path d="M4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8S4 16.418 4 12zm8-6a6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6 6 6 0 0 0-6-6z" />
-                    </svg>
-                    <p className="mt-4 text-gray-600">Loading...</p>
-                </div>
-            </div>
-        );
+      if (response.ok) {
+        setParkingLots(data);
+      } else {
+        setError("No parking lots found.");
+        setParkingLots([]);
+      }
+    } catch (err) {
+      setError("Error fetching parking lots.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return (
-        <UserLocationContext.Provider value={{ userLocation, setUserLocation }}>
-            <SelectedParkingContext.Provider value={{ selectedParking, setSelectedParking }}>
-                <ParkingListContext.Provider value={{ parkingList, setParkingList }}>
-                    <SourceContext.Provider value={{ source, setSource }}>
-                        <DestinationContext.Provider value={{ destination, setDestination }}>
-                            <div>
-                                <Navbar />
-                                <LoadScript
-                                    libraries={['places']}
-                                    googleMapsApiKey={"AIzaSyBoxehPHj1ptymdJCDWBbbzFYC-ccf-1uQ"}>
-                                    <div className='p-2 grid grid-cols-1 md:grid-cols-4 gap-2 '>
-                                        <div className="col-span-1 p-2">
-                                            <div className="p-1 mt-2 mb-3 text-2xl font-bold" style={{ color: '#ffb403' }}> 
-                                                Hello {userDetails?.fname}!
-                                            </div>
-                                            <CategoryList setSelectedCategory={(category) =>
-                                                getNearByPlace(category)} />
-                                            <ParkingList parkingListData={parkingList} />
-                                        </div>
-                                        <div className="col-span-1 p-2 mt-14">
-                                            {userDetails?.isparked ? (
-                                                
-                                                <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
-                                                <p className="text-xl font-bold text-gray-800 mb-4">
-                                                    You have already parked your vehicle.
-                                                </p>
-                                                <img
-                                                        className="h-full w-full rounded-xl mt- 2 mb-3"
-                                                        src="/images/pickparking.png"
-                                                        alt=""
-                                                    />
-                                                <p className="text-gray-600">
-                                                                Click the button below to see the details.
-                                                            </p>
-                                                            <div className="flex justify-center mt-1">
-                                                            <a
-                                                                href="/driver/parked-details"
-                                                                className="inline-block mt-2 px-8 py-2 bg-[#FFB403] text-white font-semibold rounded-lg shadow-md hover:bg-[#e0a700] transition duration-300"
-                                                            >
-                                                                See Details
-                                                            </a>
-                                                            </div>
-                                            </div>
-                                            ) : (
-                                                <DriverSearch />
-                                            )}
-                                        </div>
-                                        <div className='col-span-2 p-4 bg-white shadow-lg rounded-xl'>
-                                            <div>
-                                                <GoogleMapSection />
-                                            </div>
-                                            <ParkingToast userLocation={userLocation} />
-                                        </div>
-                                    </div>
-                                </LoadScript>
-                            </div>
-                        </DestinationContext.Provider>
-                    </SourceContext.Provider>
-                </ParkingListContext.Provider>
-            </SelectedParkingContext.Provider>
-        </UserLocationContext.Provider>
-    );
-};
+  const fetchUserDetails = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_KEY}/driver/details`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        }
+      );
 
-export default DriverPage;
+      const parseRes = await response.json();
+
+      if (response.ok) {
+        setUserDetails(parseRes.data);
+      } else {
+        console.error("Can't get the details");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserDetails();
+    handleSearch();
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#FFD981] to-[#D1D2D5] font-sans">
+      <Navbar />
+      <div className="container mx-auto px-4 py-8 justify-content items-center">
+        {!hasSearched && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="text-center max-w-2xl mx-auto">
+              <h2 className="text-4xl font-bold text-gray-800 mb-4">
+                Hello{" "}
+                <span className="text-green-700">
+                  {userDetails?.fname || "Guest"}!
+                </span>
+              </h2>
+              <h2 className="text-3xl font-bold text-gray-800 mb-4">
+                Welcome to ParkEase!
+              </h2>
+              <p className="text-2xl text-gray-600">
+                Find the perfect parking spot in seconds.
+              </p>
+              <p className="text-xl text-gray-600 mb-8">
+                Enter your destination below to get started.
+              </p>
+            </div>
+          </motion.div>
+        )}
+
+        <div className="flex justify-center mt-8 mb-12">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <div className="relative w-full max-w-2xl">
+              <input
+                type="text"
+                placeholder="Where to park?"
+                className="w-full px-4 py-3 pr-10 text-base text-gray-700 bg-white border border-gray-300 rounded-full focus:outline-none focus:border-yellow-500"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button
+                onClick={handleSearch}
+                className="absolute right-0 top-0 mt-3 mr-6 text-yellow-500 hover:text-yellow-600"
+              >
+                <Search className="w-6 h-6" />
+              </button>
+            </div>
+          </motion.div>
+        </div>
+
+        {loading && <p className="text-center text-gray-600">Loading...</p>}
+        {error && <p className="text-center text-red-500">{error}</p>}
+
+        {!hasSearched && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="grid grid-cols-3 gap-4">
+              <div className="flex flex-col items-center bg-white py-4 px-2 rounded-lg shadow-lg">
+                <MapPin className="w-12 h-12 text-yellow-500 mb-2" />
+                <h3 className="text-lg font-semibold mb-2">
+                  Convenient Locations
+                </h3>
+                <p className="text-gray-700">
+                  Find parking spots near your destination
+                </p>
+              </div>
+              <div className="flex flex-col items-center bg-white py-4 px-2 rounded-lg shadow-lg">
+                <Clock className="w-12 h-12 text-yellow-500 mb-2" />
+                <h3 className="text-lg font-semibold mb-2">
+                  Real-time Availability
+                </h3>
+                <p className="text-gray-700">
+                  See up-to-date parking space information
+                </p>
+              </div>
+              <div className="flex flex-col items-center bg-white p-4 rounded-lg shadow-lg">
+                <Shield className="w-12 h-12 text-yellow-500 mb-2" />
+                <h3 className="text-lg font-semibold mb-2">Secure Parking</h3>
+                <p className="text-gray-700">
+                  Park with peace of mind in safe locations
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {parkingLots.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {parkingLots.map((lot) => (
+              <Link key={lot.lot_id} href={`/driver/${lot.lot_id}`} passHref>
+                <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 cursor-pointer">
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_API_KEY}/${lot.images[0]}`}
+                    alt={`${lot.name}`}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-4">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                      {lot.name}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {lot.addressno}, {lot.street1}, {lot.street2}, {lot.city},{" "}
+                      {lot.district}
+                    </p>
+                    <div className="flex justify-between text-sm">
+                      <div>
+                        <p className="font-medium text-gray-700">
+                          Bike Capacity
+                        </p>
+                        <p className="text-green-600">
+                          {lot.bike_capacity_available}/{lot.bike_capacity}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-700">
+                          Car Capacity
+                        </p>
+                        <p className="text-green-600">
+                          {lot.car_capacity_available}/{lot.car_capacity}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
