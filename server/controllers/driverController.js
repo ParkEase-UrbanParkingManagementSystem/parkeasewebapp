@@ -243,3 +243,67 @@ exports.getDriverAnalytics = async (req, res) => {
     res.status(500).json({ msg: "Server Error" });
   }
 };
+
+
+
+
+exports.getDriverTransactions = async (req, res) => {
+
+  try {
+      const user_id = req.user; // Ensure req.user contains the user ID
+
+      // Step 1: Fetch the driver_id using the user_id
+      const driverResult = await pool.query(
+          `
+          SELECT 
+              driver_id 
+          FROM 
+              driver 
+          WHERE 
+              user_id = $1
+          `, 
+          [user_id]
+      );
+
+      if (driverResult.rows.length === 0) {
+          return res.status(404).json({ msg: "Driver not found" });
+      }
+
+      const driver_id = driverResult.rows[0].driver_id;
+
+      // Step 2: Fetch all transactions for the driver_id
+      const transactions = await pool.query(`
+        SELECT 
+            * 
+        FROM 
+            transaction 
+        WHERE 
+            driver_id = $1
+      `, 
+      [driver_id]);
+      
+      // Reverse the order in JavaScript (if no timestamp is available in the DB)
+      transactions.rows.reverse();
+      
+
+      if (transactions.rows.length === 0) {
+          return res.status(404).json({ msg: "No transactions found for the driver" });
+      }
+
+      console.log(transactions.rows);
+
+      res.status(200).json({
+          message: "Success",
+          data: transactions.rows
+      });
+
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ msg: "Server Error" });
+  }
+};
+
+
+
+
+

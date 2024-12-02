@@ -1,0 +1,78 @@
+.homePage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, #FFD981, #D1D2D5);
+    font-family: Arial, sans-serif;
+  }
+  
+  .logoWrapper {
+    margin-bottom: 20px;
+  }
+  
+  .logo {
+    max-width: 100%;
+  }
+  
+  .searchWrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .searchInput {
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .searchButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #ffb403; /* Secondary color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .searchButton:hover {
+    background-color: #e09000; /* Slightly darker yellow */
+  }
+  
+  .parkingList {
+    width: 80%;
+    max-width: 600px;
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .parkingLot {
+    background-color: #fff;
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .parkingLot h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .parkingLot p {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .errorMessage {
+    color: red;
+    font-size: 16px;
+  }
+  
