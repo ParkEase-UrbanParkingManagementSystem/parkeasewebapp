@@ -451,3 +451,16 @@ ALTER TABLE transaction
 ADD COLUMN admin BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE warden ADD COLUMN created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- Remove the 'description' and 'profile_pic' columns
+ALTER TABLE driver
+DROP COLUMN description,
+DROP COLUMN profile_pic;
+
+-- Add 'registered_at' column to store registration date (timestamp with time zone)
+ALTER TABLE driver
+ADD COLUMN registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- Add 'account_status' column with default value 'active'
+ALTER TABLE driver
+ADD COLUMN account_status character varying(20) DEFAULT 'active';
