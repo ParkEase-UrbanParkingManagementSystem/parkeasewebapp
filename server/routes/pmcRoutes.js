@@ -10,6 +10,7 @@ router.get("/total-pmcs", PMCController.getTotalPMCs);
 router.get('/all-pmcs', PMCController.getAllPMCDetails);
 router.get('/total-collections', PMCController.getTotalCollectionsByPMC);
 router.get("/pmctype", authorization, authorizeRole([2]), PMCController.getPmcType);
+router.get('/analytics', PMCController.getPMCAnalytics);
 
 module.exports = router;
     

@@ -173,11 +173,39 @@ const getTotalCollectionsByPMC = async (req, res) => {
     }
 };
 
+const getPMCAnalytics = async (req, res) => {
+    try {
+        const analytics = await pool.query(`
+            SELECT 
+                COUNT(DISTINCT p.pmc_id) as total_pmcs,
+                COUNT(DISTINCT w.warden_id) as total_wardens,
+                COUNT(DISTINCT pl.lot_id) as total_parking_lots,
+                COALESCE(SUM(pl.full_capacity), 0) as total_parking_capacity,
+                COUNT(DISTINCT pi.instance_id) as total_parking_instances,
+                COALESCE(SUM(pi.toll_amount), 0) as total_revenue
+            FROM 
+                pmc p
+                LEFT JOIN warden w ON p.pmc_id = w.pmc_id
+                LEFT JOIN parking_lot pl ON p.pmc_id = pl.pmc_id
+                LEFT JOIN parking_instance pi ON pl.lot_id = pi.lot_id
+        `);
+
+        res.status(200).json({
+            message: "Success",
+            data: analytics.rows[0]
+        });
+    } catch (error) {
+        console.error('Error in getPMCAnalytics:', error);
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
+
 module.exports = {
     getPMCDetails,
     getAllWardens,
     getTotalPMCs,
     getAllPMCDetails,
     getTotalCollectionsByPMC,
-    getPmcType
+    getPmcType,
+    getPMCAnalytics
 };

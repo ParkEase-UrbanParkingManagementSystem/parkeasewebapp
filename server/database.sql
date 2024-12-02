@@ -431,5 +431,24 @@ ADD COLUMN target_route TEXT DEFAULT NULL;
 INSERT INTO payment_method (method_id, name)
 VALUES (4, 'Released') 
 ON CONFLICT (method_id) DO NOTHING;
+-------------------------------------------- payment
+-- remove method_id from transaction table
+ALTER TABLE transaction
+DROP COLUMN method_id;
+
+
+ALTER TABLE transaction
+ADD COLUMN pmc_id UUID,
+ADD CONSTRAINT fk_pmc_id
+FOREIGN KEY (pmc_id) REFERENCES pmc(pmc_id);
+
+-- Add driver_id column (references driver table's primary key)
+ALTER TABLE transaction
+ADD COLUMN driver_id UUID,
+ADD CONSTRAINT fk_driver_id
+FOREIGN KEY (driver_id) REFERENCES driver(driver_id);
+
+ALTER TABLE transaction
+ADD COLUMN admin BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE warden ADD COLUMN created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
