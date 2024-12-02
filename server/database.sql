@@ -419,8 +419,7 @@ CREATE TABLE notifications (
     is_read BOOLEAN DEFAULT FALSE,
     role_id INTEGER DEFAULT NULL,
     CONSTRAINT notifications_receiver_id_fkey FOREIGN KEY (receiver_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    CONSTRAINT notifications_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES users (user_id) ON DELETE SET NULL,
-    CONSTRAINT notifications_role_id_fkey FOREIGN KEY (role_id) REFERENCES user_role (role_id) ON DELETE SET NULL
+    CONSTRAINT notifications_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES users (user_id) ON DELETE SET NULL
 );
 
 
