@@ -437,27 +437,27 @@ exports.getParkingLotCount = async (req, res) => {
 
 exports.getParkingCapacity = async (req, res) => {
   try {
-      const user_id = req.user;
+    const user_id = req.user;
 
-      if (!user_id) {
-          console.error("User ID is undefined");
-          return res.status(400).json({ message: "Valid User ID is required" });
-      }
+    if (!user_id) {
+      console.error("User ID is undefined");
+      return res.status(400).json({ message: "Valid User ID is required" });
+    }
 
-      // Get PMC ID for the user
-      const pmcQuery = await pool.query(
-          "SELECT pmc_id FROM pmc WHERE user_id = $1",
-          [user_id]
-      );
+    // Get PMC ID for the user
+    const pmcQuery = await pool.query(
+      "SELECT pmc_id FROM pmc WHERE user_id = $1",
+      [user_id]
+    );
 
-      if (pmcQuery.rows.length === 0) {
-          return res.status(404).json({ message: "PMC not found for this user" });
-      }
+    if (pmcQuery.rows.length === 0) {
+      return res.status(404).json({ message: "PMC not found for this user" });
+    }
 
-      const pmc_id = pmcQuery.rows[0].pmc_id;
+    const pmc_id = pmcQuery.rows[0].pmc_id;
 
-      // Query to get the total car and bike capacity separately
-      const queryText = `
+    // Query to get the total car and bike capacity separately
+    const queryText = `
           SELECT 
               SUM(car_capacity) AS total_car_capacity,
               SUM(bike_capacity) AS total_bike_capacity
@@ -465,19 +465,25 @@ exports.getParkingCapacity = async (req, res) => {
           WHERE pmc_id = $1
       `;
 
-      // Fetch the total capacities
-      const result = await pool.query(queryText, [pmc_id]);
+    // Fetch the total capacities
+    const result = await pool.query(queryText, [pmc_id]);
 
-      const totalCarCapacity = parseInt(result.rows[0]?.total_car_capacity || "0", 10);
-      const totalBikeCapacity = parseInt(result.rows[0]?.total_bike_capacity || "0", 10);
+    const totalCarCapacity = parseInt(
+      result.rows[0]?.total_car_capacity || "0",
+      10
+    );
+    const totalBikeCapacity = parseInt(
+      result.rows[0]?.total_bike_capacity || "0",
+      10
+    );
 
-      return res.status(200).json({
-          message: "Success",
-          data: { totalCarCapacity, totalBikeCapacity },
-      });
+    return res.status(200).json({
+      message: "Success",
+      data: { totalCarCapacity, totalBikeCapacity },
+    });
   } catch (error) {
-      console.error("Error fetching parking capacities:", error);
-      return res.status(500).json({ message: "Server error" });
+    console.error("Error fetching parking capacities:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -611,4 +617,3 @@ exports.getTotalRevenue = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
-

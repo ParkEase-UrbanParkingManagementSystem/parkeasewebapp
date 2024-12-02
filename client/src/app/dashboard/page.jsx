@@ -22,7 +22,7 @@ const Dashboard = ({ setAuth }) => {
     totalCarCapacity: 0,
     totalBikeCapacity: 0,
     avgParkingDuration: "0 hours",
-    totalRevenue: "0",
+    totalRevenue: 0,
   });
 
   const token = localStorage.getItem("token");
@@ -135,7 +135,7 @@ const Dashboard = ({ setAuth }) => {
     },
     cardItemsrevenue: {
       title: "Total Revenue",
-      content: `$${parseFloat(cardData.totalRevenue).toLocaleString()}`,
+      content: `${parseFloat(cardData.totalRevenue).toLocaleString()}`,
     },
     chart1: <BarChart />,
     chart2: <LineChart />,

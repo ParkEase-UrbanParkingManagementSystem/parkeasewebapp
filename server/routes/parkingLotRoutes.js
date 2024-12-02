@@ -5,11 +5,11 @@ const authorization = require("../middleware/authorization");
 
 router.post("/add", authorization, parkingLotController.parkingLotAdd);
 router.get("/", authorization, parkingLotController.getParkingLot);
+router.get("/revenue", authorization, parkingLotController.getRevenueByParkingLot);
 router.get("/parking-lot-count", authorization, parkingLotController.getParkingLotCount);
 router.get("/parking-capacity", authorization, parkingLotController.getParkingCapacity);
-router.get("/revenue", authorization, parkingLotController.getRevenueByParkingLot);
 router.get("/peak-hours", authorization, parkingLotController.getPeakParkingHours);
-router.get("/", authorization, parkingLotController.getTotalRevenue);
+router.get("/total-revenue", authorization, parkingLotController.getTotalRevenue);
 router.get("/:id", authorization, parkingLotController.getAParkingLotDetails);
 
 router.post(
