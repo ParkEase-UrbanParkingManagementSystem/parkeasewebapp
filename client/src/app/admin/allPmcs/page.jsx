@@ -157,19 +157,19 @@ const AllPmcs = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{pmc.email}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{`${pmc.city}, ${pmc.province}`}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        {pmc.status === 'active' ? (
+                                        {pmc.status === 'inactive' ? (
                                             <button
-                                                onClick={() => handleInactivePMC(pmc.pmc_id)}
-                                                className="text-slate-100 hover:text-yellow-900 bg-red-500 hover:bg-red-300 px-2 py-1 rounded-md"
+                                                onClick={() => handleActivatePMC(pmc.pmc_id)}
+                                                className="text-slate-100 hover:text-yellow-900 bg-green-500 hover:bg-red-300 px-2 py-1 rounded-md"
                                             >
-                                                Inactivate
+                                                Activate
                                             </button>
                                         ) : (
                                             <button
-                                                onClick={() => handleActivatePMC(pmc.pmc_id)}
-                                                className="text-slate-100 hover:text-yellow-900 bg-green-500 hover:bg-green-300 px-2 py-1 rounded-md"
+                                                onClick={() => handleInactivePMC(pmc.pmc_id)}
+                                                className="text-slate-100 hover:text-yellow-900 bg-red-500 hover:bg-green-300 px-2 py-1 rounded-md"
                                             >
-                                                Activate
+                                                Inactivate
                                             </button>
                                         )}
                                     </td>

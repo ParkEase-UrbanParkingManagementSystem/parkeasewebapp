@@ -264,7 +264,7 @@ const styles = {
   sectionTitle: {
     fontSize: "24px",
     marginBottom: "10px",
-    color: "#007bff",
+    color: "#a88f03",
   },
   cardContainer: {
     display: "flex",
@@ -317,8 +317,8 @@ const styles = {
     padding: "10px 20px",
     fontSize: "16px",
     fontWeight: "bold",
-    color: "#fff",
-    backgroundColor: "#28a745",
+    color: "white",
+    backgroundColor: "#575756",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
