@@ -165,7 +165,7 @@ exports.getWardenDetails = async (req, res) => {
 
     res.status(200).json(response);
   } catch (error) {
-    if (error.code === '22P02') {
+    if (error.code === "22P02") {
       return res.status(400).json({ message: "Invalid Warden ID format" });
     }
     console.error("Error fetching warden details and reviews:", error);
@@ -335,70 +335,43 @@ exports.assignParkingLot = async (req, res) => {
 
 exports.getWardensCount = async (req, res) => {
   try {
-      // const { timeframe } = req.query;
-      console.log("Timeframe received:", req.query.timeframe);
+    const user_id = req.user;
 
-      const user_id = req.user;
-      console.log("User ID:", user_id); 
-      if (!user_id) {
-        console.error("User ID is undefined");
-        return res.status(400).json({ message: "Valid User ID is required" });
-      }
+    if (!user_id) {
+      console.error("User ID is undefined");
+      return res.status(400).json({ message: "Valid User ID is required" });
+    }
 
-      // Get PMC ID for the user
-      const pmcQuery = await pool.query(
-          "SELECT pmc_id FROM pmc WHERE user_id = $1",
-          [user_id]
-      );
+    // Get PMC ID for the user
+    const pmcQuery = await pool.query(
+      "SELECT pmc_id FROM pmc WHERE user_id = $1",
+      [user_id]
+    );
 
-      if (pmcQuery.rows.length === 0) {
-          return res.status(404).json({ message: "PMC not found for this user" });
-      }
+    if (pmcQuery.rows.length === 0) {
+      return res.status(404).json({ message: "PMC not found for this user" });
+    }
 
-      const pmc_id = pmcQuery.rows[0].pmc_id;
-      console.log("PMC ID:", pmc_id); 
+    const pmc_id = pmcQuery.rows[0].pmc_id;
 
-      // Determine the date condition
-      let dateCondition = "";
-      switch (timeframe) {
-          case "Daily":
-              dateCondition = `created_time >= CURRENT_DATE`;
-              break;
-          case "Weekly":
-              dateCondition = `created_time >= date_trunc('week', CURRENT_DATE) AND created_time < date_trunc('week', CURRENT_DATE) + INTERVAL '7 days'`;
-              break;
-          case "Monthly":
-              dateCondition = `created_time >= date_trunc('month', CURRENT_DATE)`;
-              break;
-          case "Yearly":
-              dateCondition = `created_time >= date_trunc('year', CURRENT_DATE)`;
-              break;
-          default:
-              return res.status(400).json({ message: "Invalid timeframe" });
-      }
+    // Query to get the total wardens without date filter
+    const queryText = `
+          SELECT COUNT(*) AS total_wardens 
+          FROM warden 
+          WHERE pmc_id = $1
+      `;
 
-      console.log("Date condition:", dateCondition); 
+    // Fetch the count of wardens
+    const result = await pool.query(queryText, [pmc_id]);
 
-      // Fetch the count of wardens
-      const result = await pool.query(
-          `SELECT COUNT(*) AS total_wardens 
-           FROM warden 
-           WHERE pmc_id = $1 AND ${dateCondition}`,
-          [pmc_id]
-      );
+    const totalWardens = parseInt(result.rows[0]?.total_wardens || "0", 10);
 
-      console.log("Executed Query:", result.query);
-
-      const totalWardens = parseInt(result.rows[0]?.total_wardens || "0", 10);
-
-      return res.status(200).json({
-          message: "Success",
-          data: { totalWardens },
-      });
+    return res.status(200).json({
+      message: "Success",
+      data: { totalWardens },
+    });
   } catch (error) {
-      console.error("Error fetching wardens count:", error);
-      return res.status(500).json({ message: "Server error" });
+    console.error("Error fetching wardens count:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
-
-

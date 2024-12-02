@@ -1,32 +1,26 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from "react";
 import Card from "../../ui/dashboard/card/card";
 import BarChart from "../../ui/dashboard/chartPmcRevenue/barchart";
 import LineChart from "../../ui/dashboard/chartPmcRevenue/linechart";
-import Dropdown from "../../ui/dashboard/dropdown/dropdown";
-import {
-  faSquareParking,
-  faPerson,
-  faCar,
-  faPercent,
-  faHandHoldingDollar,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSquareParking, faPerson, faCar, faPercent, faHandHoldingDollar, faBicycle } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import styles from "./dashboard.module.css";
 
 library.add(faSquareParking);
 library.add(faPerson);
 library.add(faCar);
+library.add(faBicycle);
 library.add(faPercent);
 library.add(faHandHoldingDollar);
 
 const Dashboard = ({ setAuth }) => {
-  const [timeFrame, setTimeFrame] = useState("Daily");
   const [cardData, setCardData] = useState({
     wardensCount: 0,
     parkingAreas: 0,
-    slotsAvailable: 0,
+    totalCarCapacity: 0,
+    totalBikeCapacity: 0,
     avgParkingDuration: "0 hours",
     totalRevenue: "0",
   });
@@ -38,186 +32,150 @@ const Dashboard = ({ setAuth }) => {
     const fetchData = async () => {
       if (!token) {
         console.error("Token is missing from localStorage");
+        return;
       }
+  
       setLoading(true);
+  
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_KEY}/wardens/warden-count?timeframe=${timeFrame}`,
+        // Fetch wardens count without timeframe
+        const wardenResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_KEY}/wardens/warden-count`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json", token },
           }
         );
+        const wardenData = wardenResponse.ok ? await wardenResponse.json() : {};
+  
+        // Fetch parking lot count
+        const parkingLotResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/parking-lot-count`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json", token },
+          }
+        );
+        const parkingLotData = await parkingLotResponse.json();
 
-        const parseRes = await response.json();
-        console.log("Timeframe selected:", timeFrame);
+        // Fetch total car and bike capacities
+        const capacityResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/parking-capacity`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json", token },
+          }
+        );
+        const capacityData = capacityResponse.ok ? await capacityResponse.json() : {};
 
-        if (response.ok) {
-          setCardData((prevData) => ({
-            ...prevData,
-            wardensCount: parseRes.data.totalWardens || 0,
-          }));
-        } else {
-          console.error("Failed to fetch wardens count:", parseRes.message);
-        }
+        // Fetch average duration
+        const fetchAverageDuration = await fetch(
+          `${process.env.NEXT_PUBLIC_API_KEY}/parking/average-parking`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json", token },
+          }
+        );
+        const averageduration = fetchAverageDuration.ok ? await fetchAverageDuration.json() : {};
+        // console.log(averageduration);
+
+        const revenueResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/total-revenue`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json", token },
+          }
+        );
+        const revenueData = revenueResponse.ok ? await revenueResponse.json() : {};
+  
+        // Update card data state
+        setCardData((prevData) => ({
+          ...prevData,
+          wardensCount: wardenData.data.totalWardens || 0,
+          parkingAreas: parkingLotData.data.totalParkingLots || 0,
+          totalCarCapacity: capacityData.data.totalCarCapacity || 0,
+          totalBikeCapacity: capacityData.data.totalBikeCapacity || 0,
+          avgParkingDuration: averageduration.data.avgParkingDuration || 0,
+          totalRevenue: revenueData.data.totalRevenue || 0,
+        }));
       } catch (error) {
-        console.error("Error fetching wardens count:", error.message);
+        console.error("Error fetching dashboard data:", error.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
-  }, [timeFrame]);
+  }, []); 
 
   if (loading) {
-    return <div>Loading...</div>; // Replace with a spinner if desired
+    return <div>Loading...</div>;
   }
 
   const data = {
-    Daily: {
-      cardItemswarden: {
-        title: "Total Registered Wardens",
-        content: cardData.wardensCount,
-      },
-      cardItemsparking: {
-        title: "Total Parking Areas",
-        content: cardData.parkingAreas,
-      },
-      cardItemsslot: {
-        title: "Total Slots Available",
-        content: cardData.slotsAvailable,
-      },
-      cardItemsrate: {
-        title: "Average Parking Duration",
-        content: cardData.avgParkingDuration,
-      },
-      cardItemsrevenue: {
-        title: "Total Revenue",
-        content: cardData.totalRevenue,
-      },
-      chart1: <BarChart />,
-      chart2: <LineChart />,
+    cardItemswarden: {
+      title: "Total Registered Wardens",
+      content: cardData.wardensCount,
     },
-    Weekly: {
-      cardItemswarden: {
-        title: "Total Registered Wardens",
-        content: cardData.wardensCount,
-      },
-      cardItemsparking: {
-        title: "Total Parking Areas",
-        content: cardData.parkingAreas,
-      },
-      cardItemsslot: {
-        title: "Total Slots Available",
-        content: cardData.slotsAvailable,
-      },
-      cardItemsrate: {
-        title: "Average Parking Duration",
-        content: cardData.avgParkingDuration,
-      },
-      cardItemsrevenue: {
-        title: "Total Revenue",
-        content: cardData.totalRevenue,
-      },
-      chart1: <BarChart />,
-      chart2: <LineChart />,
+    cardItemsparking: {
+      title: "Total Parking Areas",
+      content: cardData.parkingAreas,
     },
-    Monthly: {
-      cardItemswarden: {
-        title: "Total Registered Wardens",
-        content: cardData.wardensCount,
-      },
-      cardItemsparking: {
-        title: "Total Parking Areas",
-        content: cardData.parkingAreas,
-      },
-      cardItemsslot: {
-        title: "Total Slots Available",
-        content: cardData.slotsAvailable,
-      },
-      cardItemsrate: {
-        title: "Average Parking Duration",
-        content: cardData.avgParkingDuration,
-      },
-      cardItemsrevenue: {
-        title: "Total Revenue",
-        content: cardData.totalRevenue,
-      },
-      chart1: <BarChart />,
-      chart2: <LineChart />,
+    cardItemsCarCapacity: {
+      title: "Total Car Slots Available",
+      content: cardData.totalCarCapacity,
     },
-    Yearly: {
-      cardItemswarden: {
-        title: "Total Registered Wardens",
-        content: cardData.wardensCount,
-      },
-      cardItemsparking: {
-        title: "Total Parking Areas",
-        content: cardData.parkingAreas,
-      },
-      cardItemsslot: {
-        title: "Total Slots Available",
-        content: cardData.slotsAvailable,
-      },
-      cardItemsrate: {
-        title: "Average Parking Duration",
-        content: cardData.avgParkingDuration,
-      },
-      cardItemsrevenue: {
-        title: "Total Revenue",
-        content: cardData.totalRevenue,
-      },
-      chart1: <BarChart />,
-      chart2: <LineChart />,
+    cardItemsBikeCapacity: {
+      title: "Total Bike Slots Available",
+      content: cardData.totalBikeCapacity,
     },
-  };
-
-  const handleTimeFrameChange = (selectedTimeFrame) => {
-    setTimeFrame(selectedTimeFrame);
+    cardItemsrate: {
+      title: "Average Parking Duration",
+      content: cardData.avgParkingDuration,
+    },
+    cardItemsrevenue: {
+      title: "Total Revenue",
+      content: `$${parseFloat(cardData.totalRevenue).toLocaleString()}`,
+    },
+    chart1: <BarChart />,
+    chart2: <LineChart />,
   };
 
   return (
     <div>
-      <div>
-        <Dropdown
-          options={["Daily", "Weekly", "Monthly", "Yearly"]}
-          selectedOption={timeFrame}
-          onChange={handleTimeFrameChange}
-        />
-      </div>
-
       <div className={styles.card}>
-        <div className="w-1/5">
-          <Card item={data[timeFrame].cardItemsslot} icon={faCar} />
+        {/* <div className="w-1/5">
+          <Card item={data.cardItemsslot} icon={faCar} />
+        </div> */}
+
+        <div className="w-1/6">
+          <Card item={data.cardItemsCarCapacity} icon={faCar} />
         </div>
 
-        <div className="w-1/5">
-          <Card
-            item={data[timeFrame].cardItemsparking}
-            icon={faSquareParking}
-          />
+        <div className="w-1/6">
+          <Card item={data.cardItemsBikeCapacity} icon={faBicycle} />
         </div>
 
-        <div className="w-1/5">
-          <Card item={data[timeFrame].cardItemswarden} icon={faPerson} />
+        <div className="w-1/6">
+          <Card item={data.cardItemsparking} icon={faSquareParking} />
         </div>
 
-        <div className="w-1/5">
-          <Card item={data[timeFrame].cardItemsrate} icon={faPercent} />
+        <div className="w-1/6">
+          <Card item={data.cardItemswarden} icon={faPerson} />
         </div>
 
-        <div className="w-1/5">
-          <Card
-            item={data[timeFrame].cardItemsrevenue}
-            icon={faHandHoldingDollar}
-          />
+        <div className="w-1/6">
+          <Card item={data.cardItemsrate} icon={faPercent} />
+        </div>
+
+        <div className="w-1/6">
+          <Card item={data.cardItemsrevenue} icon={faHandHoldingDollar} />
         </div>
       </div>
 
       <div className={styles.chart}>
-        <div>{data[timeFrame].chart1}</div>
-        <div>{data[timeFrame].chart2}</div>
+        <div>{data.chart1}</div>
+        <div>{data.chart2}</div>
       </div>
     </div>
   );
