@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import Navbar from '@/ui/homenavbar/homenavbar';
 
 export default function ParkingLotDetails() {
   const router = useRouter();
@@ -58,6 +59,8 @@ export default function ParkingLotDetails() {
     );
 
   return (
+    <div> 
+    <Navbar />
     <div className="min-h-screen bg-gradient-to-b from-[#FFD981] to-[#D1D2D5] font-sans p-8">
       <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
         <div className="flex flex-col md:flex-row">
@@ -161,6 +164,7 @@ export default function ParkingLotDetails() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

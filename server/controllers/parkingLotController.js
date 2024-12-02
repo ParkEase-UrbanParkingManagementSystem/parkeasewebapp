@@ -260,6 +260,8 @@ exports.getAParkingLotDetails = async (req, res) => {
           district: row.district,
           bike_capacity: row.bike_capacity,
           car_capacity: row.car_capacity,
+          car_capacity_available: row.car_capacity_available,
+          bike_capacity_available: row.bike_capacity_available,
           full_capacity: row.full_capacity,
           description: row.description,
           status: row.status,
