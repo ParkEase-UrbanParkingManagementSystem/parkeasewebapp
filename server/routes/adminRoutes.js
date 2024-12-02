@@ -7,5 +7,7 @@ router.get('/get-parking-pending', adminController.getPendingParking);
 router.post('/submit-parking-location', adminController.submitParking);
 router.get('/get-pmc-details', adminController.getPMC);
 router.get('/count', adminController.getCount);
+router.post('/inactive-pmc', adminController.inactivePMC);
+router.post('/active-pmc', adminController.activePMC);
 
 module.exports = router;

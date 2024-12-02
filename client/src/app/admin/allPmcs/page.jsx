@@ -24,15 +24,7 @@ const AllPmcs = () => {
     const [pmcs, setPMCS] = useState([]);
     const [loading, setLoading] = useState(true);
     const [analytics, setAnalytics] = useState(null);
-    // const [analytics, setAnalytics] = useState({
-    //     total_pmcs: 0,
-    //     total_wardens: 0,
-    //     total_parking_lots: 0,
-    //     total_parking_capacity: 0,
-    //     total_parking_instances: 0,
-    //     total_revenue: 0,
-    // });
-    
+
     const fetchPMCS = async () => {
         const token = localStorage.getItem("token");
 
@@ -63,7 +55,7 @@ const AllPmcs = () => {
 
     const fetchAnalytics = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/admin/analytics`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/pmc/analytics`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -91,6 +83,52 @@ const AllPmcs = () => {
                 setPMCS(pmcs.filter(pmc => pmc.pmc_id !== pmcId));
             } else {
                 console.error('Failed to remove PMC');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const handleInactivePMC = async (pmcId) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/admin/inactive-pmc`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ pmc_id: pmcId }),
+            });
+
+            if (response.ok) {
+                // Optionally, update the PMC status locally
+                setPMCS(pmcs.map(pmc => 
+                    pmc.pmc_id === pmcId ? { ...pmc, status: 'inactive' } : pmc
+                ));
+            } else {
+                console.error('Failed to mark PMC as inactive');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const handleActivatePMC = async (pmcId) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/admin/active-pmc`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ pmc_id: pmcId }),
+            });
+
+            if (response.ok) {
+                // Optionally, update the PMC status locally
+                setPMCS(pmcs.map(pmc => 
+                    pmc.pmc_id === pmcId ? { ...pmc, status: 'active' } : pmc
+                ));
+            } else {
+                console.error('Failed to mark PMC as active');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -129,7 +167,12 @@ const AllPmcs = () => {
                         </div>
                         <div>
                             <p className="text-gray-600">Total Revenue</p>
-                            <p className="text-2xl font-bold">${analytics.total_revenue ? analytics.total_revenue.toFixed(2) : 'N/A'}</p>
+                            <p className="text-2xl font-bold">
+  {typeof analytics.total_revenue === 'number' && !isNaN(analytics.total_revenue) 
+    ? analytics.total_revenue.toFixed(2) 
+    : 'N/A'}
+</p>
+
                         </div>
                     </div>
                 </div>
@@ -148,7 +191,8 @@ const AllPmcs = () => {
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Business Registration No.</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Company Email</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Location</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Action</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Status</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -158,13 +202,25 @@ const AllPmcs = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{pmc.regno}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{pmc.email}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{`${pmc.city}, ${pmc.province}`}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {pmc.status}
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button
-                                            onClick={() => handleRemovePMC(pmc.pmc_id)}
-                                            className="text-red-600 hover:text-red-900"
-                                        >
-                                            Remove
-                                        </button>
+                                        {pmc.status === 'active' ? (
+                                            <button
+                                                onClick={() => handleInactivePMC(pmc.pmc_id)}
+                                                className="text-slate-100 hover:text-yellow-900 bg-red-500 hover:bg-red-300 px-2 py-1 rounded-md"
+                                            >
+                                                Inactivate
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => handleActivatePMC(pmc.pmc_id)}
+                                                className="text-slate-100 hover:text-yellow-900 bg-green-500 hover:bg-green-300 px-2 py-1 rounded-md"
+                                            >
+                                                Activate
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -177,4 +233,3 @@ const AllPmcs = () => {
 }
 
 export default AllPmcs;
-
