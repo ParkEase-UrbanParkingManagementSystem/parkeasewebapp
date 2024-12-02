@@ -908,24 +908,33 @@ exports.getParkingInstanceDetails = async (req, res) => {
 // --------------------------------------------------------------------------Haven't tested yet---------------------------------------------------------------------------------------------------------
 
 exports.topUpWallet = async (req, res) => {
+    console.log("Top up walletttttttttttttttt");
     const client = await pool.connect();
 
     try {
+        console.log("111111111111111111111");
         const user_id = req.user;
         const { session_id } = req.body;
 
         if (!session_id) {
+            console.log('22222222222222222222222222222222222');
             return res.status(400).json({ message: "Stripe session ID is required" });
         }
 
         // Verify the Stripe session
         const session = await stripe.checkout.sessions.retrieve(session_id);
+        console.log("333333333333333");
+        console.log(session_id);
 
         if (session.payment_status !== 'paid') {
+            console.log("44444444444444");
             return res.status(400).json({ message: "Payment not completed" });
         }
 
         const amount = session.amount_total / 100; // Convert from cents to whole currency units
+        console.log("555555555555555");
+        console.log(amount);
+        console.log(user_id);
 
         // Get the driver_id based on the user_id
         const driverIdQuery = await client.query(`
@@ -936,6 +945,8 @@ exports.topUpWallet = async (req, res) => {
         }
 
         const driver_id = driverIdQuery.rows[0].driver_id;
+        console.log("driver foundddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
+        console.log(driver_id);
 
         // Get the current wallet balance of the driver
         const walletQuery = await client.query(`
@@ -953,6 +964,29 @@ exports.topUpWallet = async (req, res) => {
         // Update the wallet with the new balance
         await client.query(`
             UPDATE payparkwallet SET available_amount = $1 WHERE driver_id = $2`, [newWalletAmount, driver_id]);
+
+            
+        // Extract date and time from the session (Stripe sessions include `created` timestamp in UNIX format)
+        // const transactionDate = new Date(session.created * 1000).toISOString().split("T")[0]; // Format as YYYY-MM-DD
+        // const transactionTime = new Date(session.created * 1000).toISOString().split("T")[1]; // Format as HH:MM:SS
+        const sessionCreated = session.created; // Example UNIX timestamp from Stripe
+        const sriLankaOffset = 5.5 * 60 * 60 * 1000; // Offset for UTC+5:30 in milliseconds
+        
+        // Convert to Sri Lanka time
+        const sriLankaTime = new Date(sessionCreated * 1000 + sriLankaOffset);
+        
+        // Format the output
+        const transactionDate = sriLankaTime.toISOString().split("T")[0]; // YYYY-MM-DD
+        const transactionTime = sriLankaTime.toISOString().split("T")[1].split(".")[0]; // HH:MM:SS
+        
+        console.log(`Sri Lanka Date: ${transactionDate}`); // e.g., 2024-12-01
+        console.log(`Sri Lanka Time: ${transactionTime}`); // e.g., 16:39:32
+
+        // Insert into the transaction table
+        await client.query(`
+            INSERT INTO transaction (date, time, amount, pmc_id, driver_id)
+            VALUES ($1, $2, $3, $4, $5)
+        `, [transactionDate, transactionTime, amount, null, driver_id]);
 
         // Add a notification for the top-up
         const notificationTitle = "Wallet Top-Up Successful";
@@ -1002,3 +1036,70 @@ exports.getParkingLotsForMap = async (req, res) => {
     }
   };
 
+
+
+
+  exports.subscriptionPayment = async (req, res) => {
+    console.log("In subscriptionPaymentttttttt");
+    const client = await pool.connect();
+
+    try {
+        console.log("1111111111111111111111111111111111111111111111");
+        const user_id = req.user;
+        const { session_id } = req.body;
+
+        if (!session_id) {
+            return res.status(400).json({ message: "Stripe session ID is required" });
+        }
+
+        // Verify the Stripe session
+        const session = await stripe.checkout.sessions.retrieve(session_id);
+        console.log(session_id);
+
+        if (session.payment_status !== 'paid') {
+            return res.status(400).json({ message: "Payment not completed" });
+        }
+
+        const amount = session.amount_total / 100; // Convert from cents to whole currency units
+        console.log(amount);
+        console.log(user_id);
+
+        // Get the driver_id based on the user_id
+        const pmcIdQuery = await client.query(`
+            SELECT pmc_id FROM pmc WHERE user_id = $1`, [user_id]);
+
+        if (pmcIdQuery.rows.length === 0) {
+            return res.status(404).json({ message: "No driver found for this user" });
+        }
+
+        const pmc_id = pmcIdQuery.rows[0].pmc_id;
+        console.log(pmc_id);
+
+        const sessionCreated = session.created; // Example UNIX timestamp from Stripe
+        const sriLankaOffset = 5.5 * 60 * 60 * 1000; // Offset for UTC+5:30 in milliseconds
+        
+        // Convert to Sri Lanka time
+        const sriLankaTime = new Date(sessionCreated * 1000 + sriLankaOffset);
+        
+        // Format the output
+        const transactionDate = sriLankaTime.toISOString().split("T")[0]; // YYYY-MM-DD
+        const transactionTime = sriLankaTime.toISOString().split("T")[1].split(".")[0]; // HH:MM:SS
+        
+        console.log(`Sri Lanka Date: ${transactionDate}`); // e.g., 2024-12-01
+        console.log(`Sri Lanka Time: ${transactionTime}`); // e.g., 16:39:32
+
+        // Insert into the transaction table
+        await client.query(`
+            INSERT INTO transaction (date, time, amount, pmc_id, driver_id)
+            VALUES ($1, $2, $3, $4, $5)
+        `, [transactionDate, transactionTime, amount, pmc_id, null]);
+
+        return res.status(200).json({ message: "Wallet top-up successful!"});
+
+    } catch (error) {
+        console.error("Error in topUpWallet:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    } finally {
+        client.release();
+    }
+};
