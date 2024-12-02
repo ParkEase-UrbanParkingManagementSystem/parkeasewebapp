@@ -27,7 +27,7 @@ const getPMCDetails = async (req, res) => {
             pmc,
             user: userDetails.rows[0],
         };
-        console.log(combinedDetails);
+        // console.log(combinedDetails);
 
         res.status(200).json({
             message: "success",
@@ -128,7 +128,7 @@ const getPmcType = async (req, res) => {
             [userID]
         );
 
-        console.log(result);
+        // console.log(result);
 
         if (result.rows.length > 0) {
             res.json({ sector: result.rows[0].sector });
