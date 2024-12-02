@@ -294,7 +294,7 @@ exports.getAParkingLotDetails = async (req, res) => {
           created_at: row.review_created_at,
           driver_fname: row.driver_fname,
           driver_lname: row.driver_lname,
-          profile_pic: row.driver_profile_pic,
+          
         });
       }
       // Add slot prices to the map

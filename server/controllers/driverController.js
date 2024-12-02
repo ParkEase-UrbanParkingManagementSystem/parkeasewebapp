@@ -144,7 +144,7 @@ exports.getAllDrivers = async (req, res) => {
                 driver.NIC, 
                 driver.age, 
                 driver.gender, 
-                driver.profile_pic,
+                
                 users.email, 
                 users.addressNo, 
                 users.street_1, 
