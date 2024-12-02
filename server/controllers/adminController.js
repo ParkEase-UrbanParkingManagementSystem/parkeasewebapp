@@ -333,6 +333,59 @@ exports.activePMC = async (req, res) => {
     }
 };
 
+exports.getPMCAts = async (req, res) => {
+    const { slug } = req.query; // Retrieve the slug (pmc_id) from the query parameters
+
+    if (!slug) {
+        return res.status(400).json({ msg: "PMC ID (slug) is required" });
+    }
+
+    try {
+        const pmcDetails = await pool.query(`
+            SELECT 
+                pmc.pmc_id,
+                pmc.name,
+                pmc.regno,
+                users.email,
+                users.addressno,
+                users.street_1,
+                users.street_2,
+                users.city,
+                users.province,
+                COUNT(parking_lot.lot_id) AS parking_lot_count,
+                COALESCE(SUM(CASE WHEN pi.method_id = 1 THEN pi.toll_amount ELSE 0 END), 0) AS wallet_revenue,
+                COALESCE(SUM(CASE WHEN pi.method_id = 2 THEN pi.toll_amount ELSE 0 END), 0) AS cash_revenue,
+                COALESCE(SUM(CASE WHEN pi.method_id = 3 THEN pi.toll_amount ELSE 0 END), 0) AS parkpoints_revenue
+            FROM 
+                pmc
+            LEFT JOIN 
+                users ON pmc.user_id = users.user_id
+            LEFT JOIN 
+                parking_lot ON pmc.pmc_id = parking_lot.pmc_id
+            LEFT JOIN 
+                parking_instance pi ON parking_lot.lot_id = pi.lot_id
+            WHERE 
+                pmc.pmc_id = $1
+            GROUP BY 
+                pmc.pmc_id, users.user_id
+        `, [slug]);
+
+        if (pmcDetails.rows.length === 0) {
+            return res.status(404).json({ msg: "PMC details not found" });
+        }
+
+        res.status(200).json({
+            message: "Success",
+            data: pmcDetails.rows[0], // Return the specific PMC details
+        });
+    } catch (error) {
+        console.error("Error fetching PMC details:", error.message);
+        res.status(500).json({ msg: "Server Error" });
+    }
+};
+
+
+
 
 
 
