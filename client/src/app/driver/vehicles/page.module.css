@@ -2,6 +2,7 @@
   display: grid;
   grid-template-rows: 10% 90%;
   height: 100vh;
+  background: linear-gradient(to bottom, #FFD981, #D1D2D5);
 }
 
 .content {

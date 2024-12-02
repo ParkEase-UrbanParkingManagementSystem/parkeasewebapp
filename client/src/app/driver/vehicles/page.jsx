@@ -103,7 +103,9 @@ const Vehicles = () => {
         <div className={styles.left}>
           <div className="mt-4 bg-white rounded-xl shadow-lg p-16">
             <div className="mb-3">
-              <label className="block mb-2 text-md font-semibold	">Vehicle Name:</label>
+              <label className="block mb-2 text-md font-semibold	">
+                Vehicle Name:
+              </label>
               <input
                 type="text"
                 className="border p-2 w-full rounded-xl"
@@ -114,7 +116,9 @@ const Vehicles = () => {
               />
             </div>
             <div className="mb-3">
-              <label className="block mb-2 text-md font-semibold	">Vehicle Type:</label>
+              <label className="block mb-2 text-md font-semibold	">
+                Vehicle Type:
+              </label>
               <select
                 className="border p-2 w-full rounded-xl"
                 value={newVehicle.type}
@@ -131,7 +135,9 @@ const Vehicles = () => {
             </div>
 
             <div className="mb-3">
-              <label className="block mb-2 text-md font-semibold	">Vehicle Number:</label>
+              <label className="block mb-2 text-md font-semibold	">
+                Vehicle Number:
+              </label>
               <input
                 type="text"
                 className="border p-2 w-full rounded-xl"
@@ -163,28 +169,30 @@ const Vehicles = () => {
         <div className={styles.right}>
           <div className="mt-4">
             <h2 className="text-[20px] font-bold mb-3">Vehicle List</h2>
-            {vehicleDetails.length === 0 ? (
-              <p>No vehicles added yet.</p>
-            ) : (
-              <ul className="grid grid-cols-2 gap-4">
-                {vehicleDetails.map((vehicle, index) => (
-                  <li
-                    key={index}
-                    className="p-4 border rounded-lg flex items-center space-x-4"
-                  >
-                    <img
-                      src={getImageUrl(vehicle.type_id)}
-                      alt={vehicle.name}
-                      className="w-16 h-16 object-cover rounded-lg"
-                    />
-                    <div>
-                      <p className="text-lg font-bold">{vehicle.name}</p>
-                      <p>Vehicle Number: {vehicle.vehicle_number}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <div className="max-h-[400px] overflow-y-auto">
+              {vehicleDetails.length === 0 ? (
+                <p>No vehicles added yet.</p>
+              ) : (
+                <ul className="grid grid-cols-2 gap-4">
+                  {vehicleDetails.map((vehicle, index) => (
+                    <li
+                      key={index}
+                      className="p-4 border-[2px] border-black-500 rounded-lg flex items-center space-x-4"
+                    >
+                      <img
+                        src={getImageUrl(vehicle.type_id)}
+                        alt={vehicle.name}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                      <div>
+                        <p className="text-lg font-bold">{vehicle.name}</p>
+                        <p>Vehicle Number: {vehicle.vehicle_number}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
       </div>
