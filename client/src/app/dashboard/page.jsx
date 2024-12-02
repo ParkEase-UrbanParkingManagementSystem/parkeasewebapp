@@ -91,12 +91,12 @@ const Dashboard = ({ setAuth }) => {
         // Update card data state
         setCardData((prevData) => ({
           ...prevData,
-          wardensCount: wardenData.data.totalWardens || 0,
-          parkingAreas: parkingLotData.data.totalParkingLots || 0,
-          totalCarCapacity: capacityData.data.totalCarCapacity || 0,
-          totalBikeCapacity: capacityData.data.totalBikeCapacity || 0,
-          avgParkingDuration: averageduration.data.avgParkingDuration || 0,
-          totalRevenue: revenueData.data.totalRevenue || 0,
+          wardensCount: wardenData?.data?.totalWardens || 0,
+          parkingAreas: parkingLotData?.data?.totalParkingLots || 0,
+          totalCarCapacity: capacityData?.data?.totalCarCapacity || 0,
+          totalBikeCapacity: capacityData?.data?.totalBikeCapacity || 0,
+          avgParkingDuration: averageduration?.data?.avgParkingDuration || 0,
+          totalRevenue: revenueData?.data?.totalRevenue || 0,
         }));
       } catch (error) {
         console.error("Error fetching dashboard data:", error.message);

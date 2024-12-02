@@ -231,7 +231,8 @@ const ParkingSlotDetail = () => {
                     }
                   >
                     {parkingLotDetails.lot.status === "active"
-                      ? "Active"
+                      ? "Active" :
+                      parkingLotDetails.lot.status === "banned"? "Banned"
                       : "Inactive"}
                   </span>
                 </p>
