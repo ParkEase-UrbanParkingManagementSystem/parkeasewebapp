@@ -12,5 +12,6 @@ router.get("/:id", authorization, authorizeRole([2]),  WardenController.getWarde
 router.post("/registerWarden", authorization, authorizeRole([2]), WardenController.registerWarden);
 router.post("/assign/:id", authorization, authorizeRole([2]),WardenController.assignParkingLot)
 router.post('/unassign/:id', authorization, authorizeRole([2]),WardenController.unassignParkingLot);
+router.get('/warden-count', authorization, authorizeRole([2]),WardenController.getWardensCount);
 
 module.exports = router;
