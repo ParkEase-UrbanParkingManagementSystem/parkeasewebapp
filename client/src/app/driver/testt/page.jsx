@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Navbar from '@/ui/homenavbar/homenavbar';
 import { Search, MapPin, Clock, Shield } from 'lucide-react';
+import Link from "next/link";
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -106,35 +107,37 @@ export default function HomePage() {
           </div>
         )}
 
-        {parkingLots.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {parkingLots.map((lot) => (
-              <div key={lot.lot_id} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_API_KEY}/${lot.images[0]}`}
-                  alt={`${lot.name}`}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">{lot.name}</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    {lot.addressno}, {lot.street1}, {lot.street2}, {lot.city}, {lot.district}
-                  </p>
-                  <div className="flex justify-between text-sm">
-                    <div>
-                      <p className="font-medium text-gray-700">Bike Capacity</p>
-                      <p className="text-green-600">{lot.bike_capacity_available}/{lot.bike_capacity}</p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-700">Car Capacity</p>
-                      <p className="text-green-600">{lot.car_capacity_available}/{lot.car_capacity}</p>
-                    </div>
-                  </div>
-                </div>
+{parkingLots.length > 0 && (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {parkingLots.map((lot) => (
+      <Link key={lot.lot_id} href={`/driver/testt/${lot.lot_id}`} passHref>
+        <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 cursor-pointer">
+          <img
+            src={`${process.env.NEXT_PUBLIC_API_KEY}/${lot.images[0]}`}
+            alt={`${lot.name}`}
+            className="w-full h-48 object-cover"
+          />
+          <div className="p-4">
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">{lot.name}</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              {lot.addressno}, {lot.street1}, {lot.street2}, {lot.city}, {lot.district}
+            </p>
+            <div className="flex justify-between text-sm">
+              <div>
+                <p className="font-medium text-gray-700">Bike Capacity</p>
+                <p className="text-green-600">{lot.bike_capacity_available}/{lot.bike_capacity}</p>
               </div>
-            ))}
+              <div>
+                <p className="font-medium text-gray-700">Car Capacity</p>
+                <p className="text-green-600">{lot.car_capacity_available}/{lot.car_capacity}</p>
+              </div>
+            </div>
           </div>
-        )}
+        </div>
+      </Link>
+    ))}
+  </div>
+)}
       </div>
     </div>
   );
