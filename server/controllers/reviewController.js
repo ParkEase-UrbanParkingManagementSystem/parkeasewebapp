@@ -65,7 +65,6 @@ const postParkingReview = async (req, res) => {
             `SELECT pr.*, 
                     d.fname AS driver_fname, 
                     d.lname AS driver_lname, 
-                    d.profile_pic 
              FROM parkinglotreviews pr 
              JOIN driver d ON pr.driver_id = d.driver_id
              WHERE pr.lot_id = $1 
@@ -95,7 +94,6 @@ const getWardenReviews = async (req, res) => {
       `SELECT wr.*, 
               d.fname AS driver_fname, 
               d.lname AS driver_lname, 
-              d.profile_pic 
        FROM wardenreviews wr 
        JOIN driver d ON wr.driver_id = d.driver_id
        WHERE wr.warden_id = $1 

@@ -1061,6 +1061,7 @@ exports.getParkingLotsForMap = async (req, res) => {
       // Check if any parking lot records exist
 
       console.log(result.rows);
+      
       if (result.rows.length === 0) {
         return res.status(404).json({ message: "No parking lots found with valid latitude and longitude." });
       }

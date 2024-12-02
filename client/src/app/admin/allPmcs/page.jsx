@@ -12,8 +12,11 @@ const AllPmcs = () => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_KEY}/admin/get-pmc-details`, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
-                },
+
+                    "Content-Type": "application/json",
+                    
+                }
+
             });
             const parseRes = await response.json();
             if (response.ok) {
