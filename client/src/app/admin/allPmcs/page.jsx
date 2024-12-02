@@ -41,6 +41,7 @@ const AllPmcs = () => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    
                 }
             });
 
