@@ -31,41 +31,48 @@ const Dashboard = ({ setAuth }) => {
     totalRevenue: "0",
   });
 
+  const token = localStorage.getItem("token");
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
+      if (!token) {
+        console.error("Token is missing from localStorage");
+      }
+      setLoading(true);
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_KEY}/wardens/warden-count?timeframe=${timeFrame}`,
           {
             method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Replace with your token logic
-            },
+            headers: { "Content-Type": "application/json", token },
           }
         );
 
         const parseRes = await response.json();
+        console.log("Timeframe selected:", timeFrame);
 
         if (response.ok) {
           setCardData((prevData) => ({
             ...prevData,
-            wardensCount: parseRes.data.totalWardens,
+            wardensCount: parseRes.data.totalWardens || 0,
           }));
-          console.log("Wardens Count Data:", parseRes.data);
         } else {
-          console.error(
-            "Failed to fetch wardens count:",
-            parseRes.message || "Unknown error"
-          );
+          console.error("Failed to fetch wardens count:", parseRes.message);
         }
       } catch (error) {
         console.error("Error fetching wardens count:", error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, [timeFrame]);
+
+  if (loading) {
+    return <div>Loading...</div>; // Replace with a spinner if desired
+  }
 
   const data = {
     Daily: {
