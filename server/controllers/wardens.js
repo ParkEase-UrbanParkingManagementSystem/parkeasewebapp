@@ -135,7 +135,6 @@ exports.getWardenDetails = async (req, res) => {
         wr.*, 
         d.fname AS driver_fname, 
         d.lname AS driver_lname, 
-        d.profile_pic 
       FROM 
         wardenreviews wr
       JOIN 

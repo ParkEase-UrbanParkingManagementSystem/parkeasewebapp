@@ -216,7 +216,6 @@ exports.getAParkingLotDetails = async (req, res) => {
         r.created_at AS review_created_at,
         d.fname AS driver_fname, 
         d.lname AS driver_lname,
-        d.profile_pic AS driver_profile_pic,
         l.sketch,
         l.images,
         (SELECT COUNT(*) FROM parkinglotreviews WHERE lot_id = l.lot_id) AS review_count,
