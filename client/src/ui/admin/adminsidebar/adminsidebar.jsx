@@ -45,7 +45,7 @@ const menuItems = [
             },
             {
                 title: "Revenue",
-                path: "/dashboard/transactions",
+                path: "/admin/revenue",
                 icon: <MdWork />,
             }
         ],
@@ -56,10 +56,10 @@ const AdminSidebar = () => {
     return (
         <div className={styles.container}>
             <div className={styles.user}>
-                <Image src="/images/admin.jpeg" alt="" width="50" height="50" />
+                <Image src="/images/noavatar.png" alt="" width="50" height="50" />
                 <div className={styles.userDetail}>
-                    <span className={styles.username}>Kishan Perera</span>
-                    <span className={styles.userTitle}>Admin</span>
+                    <span className={styles.username}>Admin</span>
+                    
 
                 </div>
             </div>

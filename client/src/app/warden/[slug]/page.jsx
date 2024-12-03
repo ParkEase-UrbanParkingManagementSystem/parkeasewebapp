@@ -61,7 +61,7 @@ const WardenDetailsPage = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots`,
+        `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/assigning/topark`,
         {
           method: "GET",
           headers: {
