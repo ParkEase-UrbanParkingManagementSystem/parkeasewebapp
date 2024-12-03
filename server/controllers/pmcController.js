@@ -200,6 +200,36 @@ const getPMCAnalytics = async (req, res) => {
     }
 };
 
+const getNotificationsPmc = async (req, res) => {
+    try {
+        const userID = req.user;
+
+        if (!userID) {
+            return res.status(400).json({ message: "User ID is missing" });
+        }
+
+        const result = await pool.query(
+            `
+            SELECT id, sender_id, title, message, created_at, is_read, role_id, target_route 
+            FROM notifications 
+            WHERE receiver_id = $1
+            ORDER BY created_at DESC
+            `,
+            [userID]
+        );
+
+        if (result.rows.length > 0) {
+            res.json({ notifications: result.rows });
+        } else {
+            res.status(404).json({ message: "No notifications found" });
+        }
+    } catch (error) {
+        console.error("Error fetching notifications:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
 module.exports = {
     getPMCDetails,
     getAllWardens,
@@ -207,5 +237,6 @@ module.exports = {
     getAllPMCDetails,
     getTotalCollectionsByPMC,
     getPmcType,
-    getPMCAnalytics
+    getPMCAnalytics,
+    getNotificationsPmc
 };

@@ -315,14 +315,7 @@ const WardenDetailsPage = () => {
               <label>Daily Earning: </label>
               <p>900 Rupees</p>
             </div>
-            <div className={styles.row}>
-              <label>Monthly salary: </label>
-              <p>8000 Rupees</p>
-            </div>
-            <div className={styles.row}>
-              <label>Monthly Total Wage: </label>
-              <p>26,000 Rupees</p>
-            </div>
+           
           </div>
 
           <div className={styles.logcard}>

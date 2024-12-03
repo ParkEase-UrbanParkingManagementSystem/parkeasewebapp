@@ -11,6 +11,7 @@ router.get('/all-pmcs', PMCController.getAllPMCDetails);
 router.get('/total-collections', PMCController.getTotalCollectionsByPMC);
 router.get("/pmctype", authorization, authorizeRole([2]), PMCController.getPmcType);
 router.get('/analytics', PMCController.getPMCAnalytics);
+router.get('/notifications', authorization, PMCController.getNotificationsPmc);
 
 module.exports = router;
     
