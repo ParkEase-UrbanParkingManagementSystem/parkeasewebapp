@@ -32,6 +32,13 @@ const ParkingSlotDetail = () => {
   };
 
   const [parkingLotDetails, setParkingLotDetails] = useState(null);
+  const [parkingLotRevenue, setParkingLotRevenue] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [selectedPeriod, setSelectedPeriod] = useState("daily"); // Default period
+ 
+
+
   const router = useRouter();
   const { slug } = useParams();
 
@@ -40,11 +47,6 @@ const ParkingSlotDetail = () => {
 
     const fetchParkingLotDetails = async () => {
       const token = localStorage.getItem("token");
-
-      if (!token) {
-        router.push("/login");
-        return;
-      }
 
       try {
         const response = await fetch(
@@ -70,6 +72,49 @@ const ParkingSlotDetail = () => {
       }
     };
 
+
+
+    const fetchParkingLotRevenue = async () => {
+      setLoading(true);
+      setError("");
+    
+      const token = localStorage.getItem("token");
+    
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_KEY}/parkinglots/revenue/${slug}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              token: token,
+            },
+          }
+        );
+    
+        const parseRes = await response.json();
+    
+        if (response.ok) {
+          setParkingLotRevenue(parseRes.data);
+        } else {
+          setError("Can't fetch the revenue details.");
+          console.error("Error:", parseRes.message || "Unknown error");
+        }
+      } catch (err) {
+        setError("Failed to fetch revenue. Please try again.");
+        console.error("Error:", err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+
+
+
+
+
+
+    fetchParkingLotRevenue();
     fetchParkingLotDetails();
   }, [slug, router]);
 
@@ -275,13 +320,14 @@ const ParkingSlotDetail = () => {
                     {parkingLotDetails.lot.bike_capacity}
                   </p>
                 </div>
-                <div className={styles.detail}>
-                  <label>Active Time</label>
-                  <p>
-                    <FontAwesomeIcon icon={faClock} /> 8.00AM to 8.00PM
-                  </p>
-                </div>
               </div>
+
+
+             
+
+
+
+
               <div className={styles.detailColumn}>
                 <div className={styles.detail}>
                   <label>Prices per Hour</label>
@@ -336,7 +382,7 @@ const ParkingSlotDetail = () => {
               <div className={styles.card}>
                 <FontAwesomeIcon icon={faMotorcycle} className={styles.icon} />
                 {/* change the slot availablity */}
-                &nbsp; <strong>6</strong>:
+                &nbsp; <strong>{parkingLotDetails.lot.bike_capacity_available}</strong>/
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.bike_capacity}
                 </span>
@@ -344,7 +390,7 @@ const ParkingSlotDetail = () => {
               <div className={styles.card}>
                 <FontAwesomeIcon icon={faCar} className={styles.icon} />
                 {/* change the slot availablity */}
-                &nbsp; <strong>5</strong>:
+                &nbsp; <strong>{parkingLotDetails.lot.car_capacity_available}</strong> / 
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.car_capacity}
                 </span>
@@ -416,6 +462,47 @@ const ParkingSlotDetail = () => {
               </div>
             )}
         </div>
+
+<div className="flex flex-col self-center justify-center text-center gap-5 border-2 border-slate-300 rounded-xl py-6">
+        <div className="revenue-section flex flex-col custom-box">
+  <h2 className={styles.titleh2}>Revenue Overview</h2>
+  <div className="revenue-buttons flex flex-row text-center justify-center gap-3">
+    <button
+      onClick={() => setSelectedPeriod("daily")}
+      disabled={loading}
+      className={styles.button}
+    >
+      Daily
+    </button>
+    <button
+      onClick={() => setSelectedPeriod("monthly")}
+      disabled={loading}
+      className={styles.button}
+    >
+      Monthly
+    </button>
+    <button
+      onClick={() => setSelectedPeriod("yearly")}
+      disabled={loading}
+      className={styles.button}
+    >
+      Yearly
+    </button>
+  </div>
+  </div>
+
+  <div className="revenue-display">
+    {loading && <p>Loading...</p>}
+    {error && <p className="error-message">{error}</p>}
+    {parkingLotRevenue && (
+      <p className="revenue-value text-2xl">
+        Revenue: <strong>Rs. {parkingLotRevenue[`${selectedPeriod}_revenue`]?.toLocaleString()}/=</strong>
+      </p>
+    )}
+  </div>
+</div>
+
+
       </div>
     </div>
   );

@@ -134,7 +134,7 @@ exports.getWardenDetails = async (req, res) => {
       SELECT 
         wr.*, 
         d.fname AS driver_fname, 
-        d.lname AS driver_lname, 
+        d.lname AS driver_lname
       FROM 
         wardenreviews wr
       JOIN 

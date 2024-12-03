@@ -20,6 +20,7 @@ router.get("/get-parking-lots-map", authorization, parkingController.getParkingL
 router.get("/get-parking-lots-map-web", authorization, parkingController.getParkingLotsForMapWeb);
 router.post("/subscription" , authorization, parkingController.subscriptionPayment);
 
+
 //HEllo
 
 
