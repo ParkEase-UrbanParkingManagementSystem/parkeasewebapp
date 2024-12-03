@@ -374,3 +374,53 @@ exports.getWardensCount = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+exports.getWardenRevenueDetails = async (req, res) => {
+  const { month, year } = req.query;
+
+  // Validate inputs
+  if (!month || !year || isNaN(month) || isNaN(year)) {
+    return res.status(400).json({ message: "Valid month and year are required" });
+  }
+
+  try {
+    const query = `
+      SELECT 
+        w.warden_id, 
+        CONCAT(u.fname, ' ', u.lname) AS warden_name,
+        COUNT(pi.instance_id) AS vehicles_scanned,
+        COALESCE(SUM(pi.toll_amount), 0) AS total_revenue,
+        COUNT(DISTINCT pi.in_time::DATE) AS working_days,
+        ROUND(COALESCE(SUM(pi.toll_amount), 0) * 0.07, 2) AS total_wage
+      FROM 
+        warden w
+      JOIN 
+        warden_parking_lot wpl ON w.warden_id = wpl.warden_id
+      JOIN 
+        parking_instance pi ON wpl.lot_id = pi.lot_id
+      JOIN 
+        users u ON w.user_id = u.user_id
+      WHERE 
+        EXTRACT(MONTH FROM pi.in_time) = $1 
+        AND EXTRACT(YEAR FROM pi.in_time) = $2
+        AND pi.iscompleted = true
+      GROUP BY 
+        w.warden_id, u.fname, u.lname
+      ORDER BY 
+        warden_name ASC;
+    `;
+
+    const result = await pool.query(query, [month, year]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "No warden metrics found for the specified month and year." });
+    }
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error fetching warden metrics:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
