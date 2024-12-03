@@ -1037,6 +1037,51 @@ exports.getParkingLotsForMap = async (req, res) => {
   };
 
 
+  exports.getParkingLotsForMapWeb = async (req, res) => {
+    const client = await pool.connect();
+    const { search } = req.query; // Extract search query parameter
+  
+    
+  
+    try {
+      // SQL query to get parking lots based on search query
+      let query = `
+        SELECT lot_id, name, latitude, longitude, addressno, street1, street2, city, district, bike_capacity, car_capacity, car_capacity_available, bike_capacity_available,images
+        FROM parking_lot
+        WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND status='active'
+      `;
+      
+      // If search query is provided, filter parking lots by name or address
+      if (search) {
+        query += ` AND (name ILIKE $1 OR city ILIKE $1 OR district ILIKE $1)`;
+      }
+  
+      const result = await client.query(query, search ? [`%${search}%`] : []);
+  
+      // Check if any parking lot records exist
+
+      console.log(result.rows);
+      
+      if (result.rows.length === 0) {
+        return res.status(404).json({ message: "No parking lots found with valid latitude and longitude." });
+      }
+  
+      // Return the parking lots as a JSON array
+      return res.status(200).json(result.rows);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server error" });
+    } finally {
+      client.release();
+    }
+  };
+  
+
+
+
+
+
+
 
 
   exports.subscriptionPayment = async (req, res) => {
@@ -1103,3 +1148,54 @@ exports.getParkingLotsForMap = async (req, res) => {
         client.release();
     }
 };
+
+
+exports.getAverageParkingDuration = async (req, res) => {
+  try {
+    // Get the user ID from the authenticated request
+    const user_id = req.user;
+    if (!user_id) {
+      console.error("User ID is undefined");
+      return res.status(400).json({ message: "Valid User ID is required" });
+    }
+
+    // Retrieve the PMC ID for the authenticated user
+    const pmcQuery = await pool.query(
+      "SELECT pmc_id FROM pmc WHERE user_id = $1",
+      [user_id]
+    );
+
+    if (pmcQuery.rows.length === 0) {
+      return res.status(404).json({ message: "PMC not found for this user" });
+    }
+
+    const pmc_id = pmcQuery.rows[0].pmc_id;
+
+    // SQL Query to calculate the average parking duration
+    const query = `
+      SELECT 
+        AVG(EXTRACT(EPOCH FROM (out_time - in_time))) AS avg_parking_duration 
+      FROM parking_instance
+      WHERE lot_id IN (
+        SELECT lot_id 
+        FROM parking_lot 
+        WHERE pmc_id = $1
+      ) AND out_time IS NOT NULL;
+    `;
+
+    const result = await pool.query(query, [pmc_id]);
+
+    const avgParkingDuration = result.rows[0]?.avg_parking_duration || 0;
+
+    return res.status(200).json({
+      message: "Success",
+      data: { avgParkingDuration },
+    });
+  } catch (error) {
+    console.error("Error fetching average parking duration:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+

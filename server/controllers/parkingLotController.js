@@ -3,7 +3,7 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -14,8 +14,8 @@ const upload = multer({ storage: storage });
 
 exports.parkingLotAdd = [
   upload.fields([
-    { name: 'sketch', maxCount: 1 },
-    { name: 'images', maxCount: 10 },
+    { name: "sketch", maxCount: 1 },
+    { name: "images", maxCount: 10 },
   ]), // Up to 10 images
   async (req, res) => {
     const client = await pool.connect();
@@ -23,16 +23,18 @@ exports.parkingLotAdd = [
       const pmc_pmc_user_id = req.user;
 
       if (!pmc_pmc_user_id) {
-        return res.status(400).json({ error: 'User ID is missing from request' });
+        return res
+          .status(400)
+          .json({ error: "User ID is missing from request" });
       }
 
       const pmcQuery = await client.query(
-        'SELECT pmc_id FROM pmc WHERE user_id = $1',
+        "SELECT pmc_id FROM pmc WHERE user_id = $1",
         [pmc_pmc_user_id]
       );
 
       if (pmcQuery.rows.length === 0) {
-        return res.status(404).json({ error: 'PMC ID not found' });
+        return res.status(404).json({ error: "PMC ID not found" });
       }
 
       const pmc_id = pmcQuery.rows[0].pmc_id;
@@ -59,9 +61,14 @@ exports.parkingLotAdd = [
 
       const fullCapacity = Number(bikeCapacity) + Number(carCapacity);
 
-      const formatImagePaths = (paths) => paths.map((path) => path.replace(/\\/g, '/'));
-      const imagePaths = formatImagePaths(req.files['images'] ? req.files['images'].map((file) => file.path) : []);
-      const sketchPath = req.files['sketch'] ? req.files['sketch'][0].path.replace(/\\/g, '/') : null;
+      const formatImagePaths = (paths) =>
+        paths.map((path) => path.replace(/\\/g, "/"));
+      const imagePaths = formatImagePaths(
+        req.files["images"] ? req.files["images"].map((file) => file.path) : []
+      );
+      const sketchPath = req.files["sketch"]
+        ? req.files["sketch"][0].path.replace(/\\/g, "/")
+        : null;
 
       console.log(imagePaths);
       console.log(sketchPath);
@@ -69,7 +76,7 @@ exports.parkingLotAdd = [
       const insertParkingLotQuery = `
         INSERT INTO parking_lot (
           pmc_id, name, bike_capacity, car_capacity, full_capacity,
-          addressno, street1, street2, city, district,link, description, sketch, images, bike_capacity_available, car_capacity_available
+          addressno, street1, street2, city, district, link, description, sketch, images, bike_capacity_available, car_capacity_available
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
         RETURNING lot_id;
@@ -94,7 +101,10 @@ exports.parkingLotAdd = [
         car_capacity_available,
       ];
 
-      const parkingLotResult = await client.query(insertParkingLotQuery, parkingLotValues);
+      const parkingLotResult = await client.query(
+        insertParkingLotQuery,
+        parkingLotValues
+      );
       const lot_id = parkingLotResult.rows[0].lot_id;
 
       const insertTollAmountQuery = `
@@ -107,14 +117,30 @@ exports.parkingLotAdd = [
         RETURNING *;
       `;
 
-      const tollAmountValues = [lot_id, carPrice, bikePrice , threeWheelerPrice, lorryPrice];
+      const tollAmountValues = [
+        lot_id,
+        carPrice,
+        bikePrice,
+        threeWheelerPrice,
+        lorryPrice,
+      ];
 
       await client.query(insertTollAmountQuery, tollAmountValues);
 
-      res.status(201).json({ message: 'Parking lot and prices added successfully' });
+      // Insert a notification for the added parking lot awaiting admin approval
+      const insertNotificationQuery = `
+        INSERT INTO notifications (receiver_id, sender_id, title, message, target_route)
+        VALUES ($1, NULL, 'Parking Lot - Added', 'The parking location has been added, but it is awaiting approval from the admin.', '/pmc-dashboard')
+        RETURNING *;
+      `;
+      await client.query(insertNotificationQuery, [pmc_pmc_user_id]);
+
+      res
+        .status(201)
+        .json({ message: "Parking lot and prices added successfully" });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(500).json({ error: "Internal Server Error" });
     } finally {
       client.release();
     }
@@ -199,7 +225,6 @@ exports.getAParkingLotDetails = async (req, res) => {
         r.created_at AS review_created_at,
         d.fname AS driver_fname, 
         d.lname AS driver_lname,
-        d.profile_pic AS driver_profile_pic,
         l.sketch,
         l.images,
         (SELECT COUNT(*) FROM parkinglotreviews WHERE lot_id = l.lot_id) AS review_count,
@@ -244,6 +269,8 @@ exports.getAParkingLotDetails = async (req, res) => {
           district: row.district,
           bike_capacity: row.bike_capacity,
           car_capacity: row.car_capacity,
+          car_capacity_available: row.car_capacity_available,
+          bike_capacity_available: row.bike_capacity_available,
           full_capacity: row.full_capacity,
           description: row.description,
           status: row.status,
@@ -276,7 +303,7 @@ exports.getAParkingLotDetails = async (req, res) => {
           created_at: row.review_created_at,
           driver_fname: row.driver_fname,
           driver_lname: row.driver_lname,
-          profile_pic: row.driver_profile_pic,
+          
         });
       }
       // Add slot prices to the map
@@ -286,10 +313,12 @@ exports.getAParkingLotDetails = async (req, res) => {
     });
 
     // Convert map to array for slotPrices
-    parkingLotDetails.slotPrices = Array.from(slotPricesMap.entries()).map(([type_name, amount_per_vehicle]) => ({
-      type_name,
-      amount_per_vehicle,
-    }));
+    parkingLotDetails.slotPrices = Array.from(slotPricesMap.entries()).map(
+      ([type_name, amount_per_vehicle]) => ({
+        type_name,
+        amount_per_vehicle,
+      })
+    );
 
     // Convert reviews set to array
     parkingLotDetails.reviews = Array.from(reviewsSet.values());
@@ -375,6 +404,280 @@ exports.activateParkingLot = async (req, res) => {
     res.status(500).json({ message: "Failed to update parking lot status" });
   }
 };
+
+exports.getParkingLotCount = async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    const user_id = req.user;
+
+    if (!user_id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    // Query to fetch the PMC ID associated with the user
+    const queryPMC = "SELECT pmc_id FROM pmc WHERE user_id = $1";
+    const resultPMC = await client.query(queryPMC, [user_id]);
+
+    if (resultPMC.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const pmc_id = resultPMC.rows[0].pmc_id;
+
+    // Query to fetch the total count of parking lots for this PMC
+    const queryCount = `
+      SELECT COUNT(*) AS total_parking_lots
+      FROM parking_lot
+      WHERE pmc_id = $1 AND status = 'active';
+    `;
+
+    const resultCount = await client.query(queryCount, [pmc_id]);
+
+    const totalParkingLots = resultCount.rows[0]?.total_parking_lots || 0;
+
+    res.status(200).json({ data: { totalParkingLots } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    client.release();
+  }
+};
+
+exports.getParkingCapacity = async (req, res) => {
+  try {
+    const user_id = req.user;
+
+    if (!user_id) {
+      console.error("User ID is undefined");
+      return res.status(400).json({ message: "Valid User ID is required" });
+    }
+
+    // Get PMC ID for the user
+    const pmcQuery = await pool.query(
+      "SELECT pmc_id FROM pmc WHERE user_id = $1",
+      [user_id]
+    );
+
+    if (pmcQuery.rows.length === 0) {
+      return res.status(404).json({ message: "PMC not found for this user" });
+    }
+
+    const pmc_id = pmcQuery.rows[0].pmc_id;
+
+    // Query to get the total car and bike capacity separately
+    const queryText = `
+          SELECT 
+              SUM(car_capacity) AS total_car_capacity,
+              SUM(bike_capacity) AS total_bike_capacity
+          FROM parking_lot
+          WHERE pmc_id = $1
+      `;
+
+    // Fetch the total capacities
+    const result = await pool.query(queryText, [pmc_id]);
+
+    const totalCarCapacity = parseInt(
+      result.rows[0]?.total_car_capacity || "0",
+      10
+    );
+    const totalBikeCapacity = parseInt(
+      result.rows[0]?.total_bike_capacity || "0",
+      10
+    );
+
+    return res.status(200).json({
+      message: "Success",
+      data: { totalCarCapacity, totalBikeCapacity },
+    });
+  } catch (error) {
+    console.error("Error fetching parking capacities:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.getRevenueByParkingLot = async (req, res) => {
+  try {
+    // Get the user ID from the authenticated request
+    const user_id = req.user;
+    if (!user_id) {
+      return res.status(400).json({ message: "Valid User ID is required" });
+    }
+
+    // Retrieve the PMC ID for the authenticated user
+    const pmcQuery = await pool.query(
+      "SELECT pmc_id FROM pmc WHERE user_id = $1",
+      [user_id]
+    );
+
+    if (pmcQuery.rows.length === 0) {
+      return res.status(404).json({ message: "PMC not found for this user" });
+    }
+
+    const pmc_id = pmcQuery.rows[0].pmc_id;
+
+    // Query to get revenue data
+    const query = `
+      SELECT 
+        p_l.name AS parking_lot_name,
+        SUM(p_i.toll_amount) AS total_revenue
+      FROM parking_instance p_i
+      JOIN parking_lot p_l ON p_i.lot_id = p_l.lot_id
+      WHERE p_l.pmc_id = $1
+      GROUP BY p_l.name
+      ORDER BY total_revenue DESC;
+    `;
+
+    const result = await pool.query(query, [pmc_id]);
+
+    return res.status(200).json({
+      message: "Success",
+      data: result.rows,
+    });
+  } catch (error) {
+    console.error("Error fetching revenue data:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.getPeakParkingHours = async (req, res) => {
+  try {
+    const user_id = req.user;
+
+    if (!user_id) {
+      return res.status(400).json({ message: "Valid User ID is required" });
+    }
+
+    // Get PMC ID for the user
+    const pmcQuery = await pool.query(
+      "SELECT pmc_id FROM pmc WHERE user_id = $1",
+      [user_id]
+    );
+
+    if (pmcQuery.rows.length === 0) {
+      return res.status(404).json({ message: "PMC not found for this user" });
+    }
+
+    const pmc_id = pmcQuery.rows[0].pmc_id;
+
+    // Query to count vehicles by hour
+    const query = `
+      SELECT 
+        EXTRACT(HOUR FROM in_time) AS hour,
+        COUNT(*) AS vehicle_count
+      FROM parking_instance
+      WHERE lot_id IN (
+          SELECT lot_id FROM parking_lot WHERE pmc_id = $1
+      )
+      GROUP BY hour
+      ORDER BY hour;
+    `;
+
+    const result = await pool.query(query, [pmc_id]);
+
+    return res.status(200).json({
+      message: "Success",
+      data: result.rows,
+    });
+  } catch (error) {
+    console.error("Error fetching peak parking hours:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.getTotalRevenue = async (req, res) => {
+  try {
+    const user_id = req.user;
+
+    if (!user_id) {
+      return res.status(400).json({ message: "Valid User ID is required" });
+    }
+
+    // Get PMC ID for the user
+    const pmcQuery = await pool.query(
+      "SELECT pmc_id FROM pmc WHERE user_id = $1",
+      [user_id]
+    );
+
+    if (pmcQuery.rows.length === 0) {
+      return res.status(404).json({ message: "PMC not found for this user" });
+    }
+
+    const pmc_id = pmcQuery.rows[0].pmc_id;
+
+    // Query to calculate the total revenue
+    const revenueQuery = await pool.query(
+      `SELECT COALESCE(SUM(toll_amount), 0) AS total_revenue
+       FROM parking_instance
+       WHERE lot_id IN (
+         SELECT lot_id FROM parking_lot WHERE pmc_id = $1
+       );`,
+      [pmc_id]
+    );
+
+    const totalRevenue = parseFloat(revenueQuery.rows[0]?.total_revenue || 0);
+
+    return res.status(200).json({
+      message: "Success",
+      data: { totalRevenue },
+    });
+  } catch (error) {
+    console.error("Error fetching total revenue:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+exports.getParkingLotRevenue = async (req, res) => {
+
+console.log("Badu awa mcahannacnannnnnnnnnnnnnnnnnnnnn")
+
+  const { id } = req.params; // lot_id from the route parameter
+
+  console.log("Parking Lot ID:", id);
+
+  if (!id) {
+    return res.status(400).json({ message: "Parking Lot ID is required or invalid" });
+  }
+
+  try {
+    // Query to calculate daily, monthly, and yearly revenue
+    const revenueQuery = `
+      SELECT 
+        COALESCE(SUM(CASE WHEN DATE(in_time) = CURRENT_DATE THEN toll_amount ELSE 0 END), 0) AS daily_revenue,
+        COALESCE(SUM(CASE WHEN DATE_TRUNC('month', in_time) = DATE_TRUNC('month', CURRENT_DATE) THEN toll_amount ELSE 0 END), 0) AS monthly_revenue,
+        COALESCE(SUM(CASE WHEN DATE_TRUNC('year', in_time) = DATE_TRUNC('year', CURRENT_DATE) THEN toll_amount ELSE 0 END), 0) AS yearly_revenue
+      FROM parking_instance
+      WHERE lot_id = $1 AND iscompleted = true;
+    `;
+
+    const revenueResult = await pool.query(revenueQuery, [id]);
+
+    if (revenueResult.rows.length === 0) {
+      return res.status(404).json({ message: "No revenue data found for this parking lot" });
+    }
+
+    // Extract revenue details
+    const { daily_revenue, monthly_revenue, yearly_revenue } =
+      revenueResult.rows[0];
+
+    const revenueDetails = {
+      parking_lot_id: id,
+      daily_revenue: parseFloat(daily_revenue),
+      monthly_revenue: parseFloat(monthly_revenue),
+      yearly_revenue: parseFloat(yearly_revenue),
+    };
+
+    console.log("Revenue Details:", revenueDetails);
+
+    res.json({ data: revenueDetails });
+  } catch (error) {
+    console.error("Error fetching revenue details:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 
 
 

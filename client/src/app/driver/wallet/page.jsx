@@ -20,8 +20,23 @@ export default function WalletScreen() {
   const [isTopUpDialogOpen, setIsTopUpDialogOpen] = useState(false);
   const [topUpAmount, setTopUpAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
+  const [topUpHistory, setTopUpHistory] = useState([]);
+  
   const router = useRouter();
+
+  const formatDate = (dateString) => {
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      // hour: "numeric",
+      // minute: "numeric",
+      // hour12: true,
+    };
+    return new Intl.DateTimeFormat("en-US", options).format(new Date(dateString));
+  };
+  
 
   // Fetch wallet balance
   const fetchWalletBalance = async () => {
@@ -50,25 +65,53 @@ export default function WalletScreen() {
     }
   };
 
+  // Fetch top-up history
+  const fetchTopUpHistory = async () => {
+    const token = localStorage.getItem("token");
+    setIsLoading(true);
+    try {
+      const response = await fetch(`http://localhost:5000/driver/topup-history`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+      });
+
+
+      const data = await response.json();
+      if (response.ok) {
+        setTopUpHistory(data.data || []);
+      } else {
+        toast.error(data.message || "Failed to fetch top-up history");
+      }
+    } catch (error) {
+      console.error("Error fetching top-up history:", error);
+      toast.error("Failed to fetch top-up history");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  console.log(topUpHistory);
+
   useEffect(() => {
     fetchWalletBalance();
+    fetchTopUpHistory();
 
     // Check for successful payment
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get("session_id");
     if (sessionId) {
-      console.log("go toooooooooooooooooooooo")
       completeTopUp(sessionId);
     }
   }, []);
 
   // Handle top-up completion
   const completeTopUp = async (sessionId) => {
-    console.log("in functionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
     setIsLoading(true);
     const token = localStorage.getItem("token");
     try {
-      console.log("Completing top-up with funcccccccccccccccccccccccccc:", sessionId);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_KEY}/parking/top-up-wallet`,
         {
@@ -81,15 +124,11 @@ export default function WalletScreen() {
         }
       );
       const data = await response.json();
-      console.log("fetchedddddddddddddddddddddddddddddd");
-      console.log("response",data);
 
       if (response.ok) {
-        console.log("Top-up completed successfullyyyyyyyyyyyyyy:", data);
         setWalletAmount(data.newBalance);
         toast.success(data.message);
       } else {
-        console.error("Error completing top-up erorrrrrrrrrrrrrrrrrr:", data);
         toast.error(data.message || "An error occurred during top-up");
       }
     } catch (error) {
@@ -97,48 +136,41 @@ export default function WalletScreen() {
       toast.error("An error occurred during top-up");
     } finally {
       setIsLoading(false);
-      // Clear session_id from the URL
       window.history.replaceState({}, document.title, "/driver/wallet");
     }
   };
 
-
-// Handle top-up initiation
-const handleTopUp = async () => {
-  if (!topUpAmount || parseFloat(topUpAmount) <= 0) {
-    toast.error("Please enter a valid amount");
-    return;
-  }
-
-
-  setIsLoading(true);
-  try {
-    const response = await fetch("/api/create-checkout-session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ amount: parseFloat(topUpAmount) }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      // Redirect to Stripe checkout
-      // setIsLoading(false);
-      window.location.href = data.url;
-      // window.location.href = "/driver/wallet";
-    } else {
-      toast.error(data.message || "An error occurred");
+  // Handle top-up initiation
+  const handleTopUp = async () => {
+    if (!topUpAmount || parseFloat(topUpAmount) <= 0) {
+      toast.error("Please enter a valid amount");
+      return;
     }
-  } catch (error) {
-    console.error("Error initiating top-up:", error);
-    toast.error("An error occurred during top-up request");
-  } finally {
-    setIsLoading(false);
-  }
-};
 
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: parseFloat(topUpAmount) }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        window.location.href = data.url;
+      } else {
+        toast.error(data.message || "An error occurred");
+      }
+    } catch (error) {
+      console.error("Error initiating top-up:", error);
+      toast.error("An error occurred during top-up request");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -172,7 +204,10 @@ const handleTopUp = async () => {
             </button>
             <button
               className={styles.topUpButton2}
-              onClick={() => router.push("/top-up-history")}
+              onClick={() => {
+                setIsHistoryDialogOpen(true);
+                fetchTopUpHistory();
+              }}
               disabled={isLoading}
             >
               View Top-Up History
@@ -223,6 +258,67 @@ const handleTopUp = async () => {
           <Button onClick={handleTopUp} disabled={isLoading}>
             {isLoading ? "Processing..." : "Proceed to Payment"}
           </Button>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isHistoryDialogOpen} onOpenChange={setIsHistoryDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Top-Up History</DialogTitle>
+          </DialogHeader>
+          <div style={{ padding: "1rem", maxWidth: "600px", margin: "0 auto" }}>
+  {topUpHistory.length > 0 ? (
+    <ul style={{ listStyle: "none", padding: 0 }}>
+      {topUpHistory.map((item, index) => (
+        <li
+          key={index}
+          style={{
+            backgroundColor: "#f9f9f9",
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            marginBottom: "1rem",
+            padding: "1rem",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "1rem",
+              color: "#333",
+              margin: "0 0 0.5rem",
+            }}
+          >
+            <strong>Date:</strong> {formatDate(item.date)} at {item.time}
+          </p>
+          <p
+            style={{
+              fontSize: "1rem",
+              color: "#555",
+              margin: 0,
+            }}
+          >
+            <strong>Amount:</strong> Rs. {Number(item.amount).toFixed(2)}
+          </p>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p
+      style={{
+        fontSize: "1rem",
+        textAlign: "center",
+        color: "#888",
+        padding: "1rem",
+        border: "1px solid #ddd",
+        borderRadius: "8px",
+        backgroundColor: "#f9f9f9",
+      }}
+    >
+      No top-up history found.
+    </p>
+  )}
+</div>
+
+
         </DialogContent>
       </Dialog>
     </div>

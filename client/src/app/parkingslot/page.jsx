@@ -205,7 +205,10 @@ const ParkingLot = () => {
                         : styles.statusInactive
                     }
                   >
-                    {lot.status === "active" ? "Active" : "Inactive"}
+                    {lot.status === "active"
+                      ? "Active" :
+                      lot.status === "banned"? "Banned"
+                      : "Inactive"}
                   </td>
                 </tr>
               ))

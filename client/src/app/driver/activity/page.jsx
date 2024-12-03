@@ -73,7 +73,7 @@ const Activity = () => {
             : defaultImage;
 
     return (
-        <div>
+        <div className='min-h-screen bg-gradient-to-b from-[#FFD981] to-[#D1D2D5]'>
             <Navbar />
             <div className='p-6 grid grid-cols-1 md:grid-cols-2 gap-3'>
                 {/* Most Recent Activity Card */}

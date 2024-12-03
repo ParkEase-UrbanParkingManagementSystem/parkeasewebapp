@@ -6,6 +6,7 @@ const authorization = require("../middleware/authorization");
 
 router.get("/parking-details", authorization, parkingController.getParkingDetails);
 router.get("/parked-details", authorization, parkingController.getAfterParkingDetails);
+router.get("/average-parking", authorization, parkingController.getAverageParkingDuration);
 router.get("/parked-detailsMob", authorization, parkingController.getAfterParkingDetailsMobile);
 router.get("/get-recent-parking-instances", authorization, parkingController.getRecentParkingInstances);
 router.get("/get-recent-parking-lots-home", authorization, parkingController.getRecentParkingLotsHome);
@@ -16,7 +17,9 @@ router.post("/pay-cash", authorization, parkingController.payByCash);
 router.get("/get-parking-status", authorization, parkingController.checkDriverStatus);
 router.post("/top-up-wallet", authorization, parkingController.topUpWallet);
 router.get("/get-parking-lots-map", authorization, parkingController.getParkingLotsForMap);
+router.get("/get-parking-lots-map-web", authorization, parkingController.getParkingLotsForMapWeb);
 router.post("/subscription" , authorization, parkingController.subscriptionPayment);
+
 
 //HEllo
 

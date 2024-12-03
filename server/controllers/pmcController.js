@@ -27,7 +27,7 @@ const getPMCDetails = async (req, res) => {
             pmc,
             user: userDetails.rows[0],
         };
-        console.log(combinedDetails);
+        // console.log(combinedDetails);
 
         res.status(200).json({
             message: "success",
@@ -128,7 +128,7 @@ const getPmcType = async (req, res) => {
             [userID]
         );
 
-        console.log(result);
+        // console.log(result);
 
         if (result.rows.length > 0) {
             res.json({ sector: result.rows[0].sector });
@@ -200,6 +200,85 @@ const getPMCAnalytics = async (req, res) => {
     }
 };
 
+const getNotificationsPmc = async (req, res) => {
+    try {
+        const userID = req.user;
+
+        if (!userID) {
+            return res.status(400).json({ message: "User ID is missing" });
+        }
+
+        const result = await pool.query(
+            `
+            SELECT id, sender_id, title, message, created_at, is_read, role_id, target_route 
+            FROM notifications 
+            WHERE receiver_id = $1
+            ORDER BY created_at DESC
+            `,
+            [userID]
+        );
+
+        if (result.rows.length > 0) {
+            res.json({ notifications: result.rows });
+        } else {
+            res.status(404).json({ message: "No notifications found" });
+        }
+    } catch (error) {
+        console.error("Error fetching notifications:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+const getWardenDailyEarnings = async (req, res) => {
+    
+    try {
+      const wardenId = req.params.id;  // Assuming wardenId is passed as a parameter in the URL
+  
+      if (!wardenId) {
+        return res.status(400).json({ message: "Warden ID is missing" });
+      }
+  
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0); // Get start of today
+  
+      const todayEnd = new Date();
+      todayEnd.setHours(23, 59, 59, 999); // Get end of today
+  
+      const query = `
+        SELECT
+          SUM(toll_amount) AS total_earnings,
+          SUM(CASE WHEN method_id = 2 THEN toll_amount ELSE 0 END) AS cash_earnings,
+          COUNT(DISTINCT driver_vehicle_id) AS vehicles_assisted
+        FROM parking_instance
+        WHERE warden_id = $1
+          AND in_time >= $2
+          AND in_time <= $3
+          AND iscompleted = true
+      `;
+  
+      const values = [wardenId, todayStart, todayEnd];
+  
+      const result = await pool.query(query, values);
+  
+      if (result.rows.length > 0) {
+        const { total_earnings, cash_earnings, vehicles_assisted } = result.rows[0];
+        res.json({
+          total_earnings: total_earnings || 0,
+          cash_earnings: cash_earnings || 0,
+          vehicles_assisted: vehicles_assisted || 0
+        });
+      } else {
+        res.status(404).json({ message: "No earnings found for this warden today" });
+      }
+    } catch (error) {
+      console.error("Error fetching warden's daily earnings:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+  
+
+
 module.exports = {
     getPMCDetails,
     getAllWardens,
@@ -207,5 +286,7 @@ module.exports = {
     getAllPMCDetails,
     getTotalCollectionsByPMC,
     getPmcType,
-    getPMCAnalytics
+    getPMCAnalytics,
+    getNotificationsPmc,
+    getWardenDailyEarnings    
 };
