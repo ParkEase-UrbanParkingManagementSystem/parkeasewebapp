@@ -76,7 +76,7 @@ exports.parkingLotAdd = [
       const insertParkingLotQuery = `
         INSERT INTO parking_lot (
           pmc_id, name, bike_capacity, car_capacity, full_capacity,
-          addressno, street1, street2, city, district,link, description, sketch, images, bike_capacity_available, car_capacity_available
+          addressno, street1, street2, city, district, link, description, sketch, images, bike_capacity_available, car_capacity_available
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
         RETURNING lot_id;
@@ -127,6 +127,14 @@ exports.parkingLotAdd = [
 
       await client.query(insertTollAmountQuery, tollAmountValues);
 
+      // Insert a notification for the added parking lot awaiting admin approval
+      const insertNotificationQuery = `
+        INSERT INTO notifications (receiver_id, sender_id, title, message, target_route)
+        VALUES ($1, NULL, 'Parking Lot - Added', 'The parking location has been added, but it is awaiting approval from the admin.', '/pmc-dashboard')
+        RETURNING *;
+      `;
+      await client.query(insertNotificationQuery, [pmc_pmc_user_id]);
+
       res
         .status(201)
         .json({ message: "Parking lot and prices added successfully" });
@@ -138,6 +146,7 @@ exports.parkingLotAdd = [
     }
   },
 ];
+
 
 exports.getParkingLot = async (req, res) => {
   const client = await pool.connect();

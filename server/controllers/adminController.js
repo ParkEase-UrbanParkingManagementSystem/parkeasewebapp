@@ -143,10 +143,25 @@ exports.submitParking = async (req, res) => {
 
         const receiverId = pmcResult.rows[0].user_id;
 
-        // Create a notification for the PMC
+        // Fetch the parking lot name
+        const parkingLotNameQuery = `
+            SELECT name 
+            FROM parking_lot 
+            WHERE lot_id = $1
+        `;
+        const parkingLotNameResult = await client.query(parkingLotNameQuery, [id]);
+
+        if (parkingLotNameResult.rowCount === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ message: "Parking lot name not found." });
+        }
+
+        const parkingLotName = parkingLotNameResult.rows[0].name;
+
+        // Create a notification for the PMC, including the parking lot name
         const insertNotificationQuery = `
             INSERT INTO notifications (receiver_id, sender_id, title, message, target_route)
-            VALUES ($1, NULL, 'Parking Lot - Approved', 'The parking location has been approved from ourside. You can now activate the parking.', '/pmc-dashboard')
+            VALUES ($1, NULL, 'Parking Lot - Approved', 'The parking location "${parkingLotName}" has been approved from our side. You can now activate the parking.', '/pmc-dashboard')
             RETURNING *;
         `;
         const notificationResult = await client.query(insertNotificationQuery, [receiverId]);
@@ -168,6 +183,7 @@ exports.submitParking = async (req, res) => {
         client.release();
     }
 };
+
 
 
 
