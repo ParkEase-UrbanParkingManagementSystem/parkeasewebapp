@@ -470,6 +470,49 @@ exports.adminToPMC = async (req, res) => {
 };
 
 
+exports.getRevenueByPMC = async (req, res) => {
+    const client = await pool.connect();
+
+    console.log("Request Received for PMC Revenue");
+
+    try {
+        const query = `
+            SELECT 
+                pmc.name AS pmc_name, 
+                transaction.date, 
+                transaction.amount
+            FROM 
+                transaction
+            INNER JOIN 
+                pmc 
+            ON 
+                transaction.pmc_id = pmc.pmc_id
+            WHERE 
+                transaction.pmc_id IS NOT NULL
+            ORDER BY 
+                transaction.date DESC, pmc.name ASC;
+        `;
+
+        const result = await client.query(query);
+
+        // Check if any records are found
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "No revenue records found for PMCs." });
+        }
+
+        // Return the PMC revenue details as JSON
+        console.log(result.rows);
+        return res.status(200).json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    } finally {
+        client.release();
+    }
+};
+
+
+
 
 
 

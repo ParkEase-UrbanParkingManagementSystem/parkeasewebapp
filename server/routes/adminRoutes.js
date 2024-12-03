@@ -11,5 +11,6 @@ router.post('/inactive-pmc', adminController.inactivePMC);
 router.post('/active-pmc', adminController.activePMC);
 router.get('/get-pmc-ats', adminController.getPMCAts);
 router.post('/admin-to-pmc', adminController.adminToPMC);
+router.get('/get-admin-revenue', adminController.getRevenueByPMC);
 
 module.exports = router;

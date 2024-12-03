@@ -202,6 +202,63 @@ exports.getParkingLot = async (req, res) => {
   }
 };
 
+
+exports.getParkingLotAssign = async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    const user_id = req.user;
+
+    if (!user_id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const queryPMC = "SELECT pmc_id FROM pmc WHERE user_id = $1";
+
+    const resultPMC = await client.query(queryPMC, [user_id]);
+
+    if (resultPMC.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const pmc_id = resultPMC.rows[0].pmc_id;
+
+    // Query to get parking lots controlled by the PMC user and the assigned warden name
+    const query = `
+     SELECT 
+          pl.lot_id,
+          pl.name, 
+          pl.bike_capacity, 
+          pl.car_capacity, 
+          pl.description,
+          pl.status,
+          STRING_AGG(CONCAT(w.fname, ' ', w.lname), ' , ') AS wardens
+        FROM parking_lot pl
+        LEFT JOIN warden_parking_lot wpl ON pl.lot_id = wpl.lot_id
+        LEFT JOIN warden w ON wpl.warden_id = w.warden_id
+        WHERE pl.pmc_id = $1 AND pl.status = 'active'
+        GROUP BY pl.lot_id;
+    `;
+
+    const result = await client.query(query, [pmc_id]);
+
+    if (result.rows.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "No parking lots found for this PMC" });
+    }
+
+    console.log(result.rows);
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    client.release();
+  }
+};
+
 exports.getAParkingLotDetails = async (req, res) => {
   const { id } = req.params;
 
