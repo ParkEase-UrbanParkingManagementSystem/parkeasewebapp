@@ -1,105 +1,222 @@
-.gradientBackground {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height:100vh;
-    background: linear-gradient(to bottom, #ffd981, #d1d2d5);
-  }
-  
-  .container {
-    text-align: center;
-    padding: 5px;
-  }
-  
-  .titleText {
-    font-size: 1.8rem;
-    color: #1a2131;
-    margin-bottom: 5px;
-    font-weight: 600;
-  }
-  
-  .infoText {
-    font-size: 1rem;
-    color: #6b6b6b;
-    margin-bottom: 5px;
-    line-height: 1.5;
-  }
-  
-  
-  
-  .walletWrapper {
-    background: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    margin-bottom: 5px;
-    width:60%
-  }
+.titleText {
+  font-size: 1.8rem;
+  color: #1a2131;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
 
-  .buttons_container{
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 5px;
-  }
-  
-  .walletAmount {
-    font-size: 1.8rem;
-    color: #1e2952;
-    margin-bottom: 5px;
-  }
-  
-  .walletLabel {
-    font-size: 1.2rem;
-    color: #6b6b6b;
-  }
-  
-  .topUpButton,
-  .topUpButton2 {
-    background: #1a2131;
-    color: #fff;
-    border: none;
-    padding: 15px 20px;
-    border-radius: 30px;
-    margin: 10px 0;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 30%;
-  }
-  
-  .topUpButton2 {
-    background: #ffb403;
-  }
-  
-  .topUpButton:hover,
-  .topUpButton2:hover {
-    opacity: 0.9;
-  }
-  
-  .footer {
-    margin-top: 5px;
-  }
-  
-  .footerText {
-    font-size: 1rem;
-    color: #6b6b6b;
-  }
-  
-  .paymentIcons {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-  }
-  
-  .icon {
-    margin: 0 10px;
-  }
+.infoText {
+  font-size: 1rem;
+  color: #6b6b6b;
+  margin-bottom: 5px;
+  line-height: 1.5;
+}
 
-  .wallet_and_balance{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
+.walletWrapper {
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 5px;
+  width: 60%;
+}
+
+.buttons_container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 5px;
+}
+
+.walletAmount {
+  font-size: 1.8rem;
+  color: #1e2952;
+  margin-bottom: 5px;
+}
+
+.walletLabel {
+  font-size: 1.2rem;
+  color: #6b6b6b;
+}
+
+.topUpButton,
+.topUpButton2 {
+  background: #1a2131;
+  color: #fff;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 30px;
+  margin: 10px 0;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 30%;
+}
+
+.topUpButton2 {
+  background: #ffb403;
+}
+
+.topUpButton:hover,
+.topUpButton2:hover {
+  opacity: 0.9;
+}
+
+.footer {
+  margin-top: 5px;
+}
+
+.footerText {
+  font-size: 1rem;
+  color: #6b6b6b;
+}
+
+.paymentIcons {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.icon {
+  margin: 0 10px;
+}
+
+.wallet_and_balance {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.container {
+  display: grid;
+  grid-template-rows: 5% 95%;
+  height: 100vh;
+  padding: 20px;
+  gap: 20px;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #000000;
+}
+
+.tablecontent {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+  margin-top: 10px;
+  overflow-y: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+  background: #000000;
+  color: white;
+  z-index: 1;
+}
+
+.table thead th {
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.table tbody tr:nth-child(even) {
+  background: #ffffff;
+}
+
+.table tbody tr:hover {
+  background: rgba(255, 180, 3, 0.1);
+}
+
+.table td {
+  padding: 12px;
+  text-align: center;
+  color: #000000;
+}
+
+.empnamehead,
+.empgenderhead,
+.empagehead,
+.empcontacthead,
+.empslothead {
+  width: 20%;
+}
+
+.empnamedata,
+.empgenderdata,
+.empagedata,
+.empcontactdata,
+.empslotdata {
+  font-size: 1rem;
+}
+
+.link {
+  text-decoration: none;
+  color: #333;
+}
+
+.link:hover {
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.statusActive {
+  color: black !important;
+}
+
+.statusInactive {
+  color: rgb(236, 38, 38) !important;
+  font-weight: 500;
+}
+
+.noData {
+  text-align: center;
+  color: #999; /* Or any color you prefer for the no-data message */
+  font-style: italic;
+}
+
+/* cards */
+
+.cardcontainer {
+  display: flex;
+  flex-direction: row;
+}
+
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffb403;
+  color: black;
+  padding: 18px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  height: 2.8rem;
+}
+
+.button:hover {
+  background-color: #000000;
+  color: white;
+}

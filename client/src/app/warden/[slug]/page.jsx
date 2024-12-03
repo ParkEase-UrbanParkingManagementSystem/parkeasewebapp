@@ -342,16 +342,16 @@ const WardenDetailsPage = () => {
           <div className={styles.salarycard}>
             <div className={styles.row}>
               <label>Daily Covered Target: </label>
-              <p>{earningsData?.vehicles_assisted} Vehicle(s)</p>
+              <p>{earningsData?.vehicles_assisted || 0} Vehicle(s)</p>
             </div>
             <div className={styles.row}>
               <label>Daily Total Earnings: </label>
-              <p>Rs. {earningsData?.total_earnings.toLocaleString()} /=</p>
+              <p>Rs. {earningsData?.total_earnings.toLocaleString() || 0} /=</p>
             </div>
 
             <div className={styles.row}>
               <label>Daily Cash Earnings: </label>
-              <p>Rs. {earningsData?.cash_earnings.toLocaleString()} /=</p>
+              <p>Rs. {earningsData?.cash_earnings.toLocaleString() || 0} /=</p>
             </div>
 
             

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";  
+import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
 
 export default function ParkPoints() {
@@ -19,18 +19,18 @@ export default function ParkPoints() {
   const [topUpAmount, setTopUpAmount] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("");
   const [monthlyValues, setMonthlyValues] = useState({
-    January: 5000,
-    February: 4500,
-    March: 6000,
-    April: 3000,
-    May: 4000,
-    June: 3500,
-    July: 5500,
-    August: 7000,
-    September: 6500,
-    October: 7500,
-    November: 5000,
-    December: 8000,
+    January: 10000,
+    February: 10000,
+    March: 10000,
+    April: 10000,
+    May: 10000,
+    June: 10000,
+    July: 10000,
+    August: 10000,
+    September: 10000,
+    October: 10000,
+    November: 10000,
+    December: 10000,
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,7 +41,7 @@ export default function ParkPoints() {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get("session_id");
     if (sessionId) {
-      console.log("go toooooooooooooooooooooo")
+      console.log("go toooooooooooooooooooooo");
       completeTopUp(sessionId);
     }
   }, []);
@@ -72,16 +72,15 @@ export default function ParkPoints() {
   //   }
   // };
 
-
-
-
   const completeTopUp = async (sessionId) => {
     console.log("in functionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
     setIsLoading(true);
     const token = localStorage.getItem("token");
     try {
-      
-      console.log("Completing top-up with funcccccccccccccccccccccccccc:", sessionId);
+      console.log(
+        "Completing top-up with funcccccccccccccccccccccccccc:",
+        sessionId
+      );
 
       const response = await fetch(
         // `${process.env.NEXT_PUBLIC_API_KEY}/pmctype/subscription`,
@@ -98,7 +97,7 @@ export default function ParkPoints() {
       );
       const data = await response.json();
       console.log("fetchedddddddddddddddddddddddddddddd");
-      console.log("response",data);
+      console.log("response", data);
 
       if (response.ok) {
         console.log("Top-up completed successfullyyyyyyyyyyyyyy:", data);
@@ -113,7 +112,11 @@ export default function ParkPoints() {
     } finally {
       setIsLoading(false);
       // Clear session_id from the URL
-      window.history.replaceState({}, document.title, "/handle-parkeasepayment");
+      window.history.replaceState(
+        {},
+        document.title,
+        "/handle-parkeasepayment"
+      );
     }
   };
 
@@ -155,38 +158,38 @@ export default function ParkPoints() {
   };
 
   return (
-    <div>
-      <div className={styles.gradientBackground}>
-        <div className={styles.container}>
-          <h1 className={styles.titleText}>------</h1>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Value</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(monthlyValues).map(([month, value]) => (
-                <tr key={month}>
-                  <td>{month}</td>
-                  <td>{value}</td>
-                  <td>
-                    <button
-                      className={styles.popupButton}
-                      onClick={() => handlePopup(month)}
-                    >
-                      Pay Now
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+    <div className={styles.container}>
+      <div className={styles.title}>
+        <p>ParkEase Monthly Payment Management</p>
       </div>
 
+      <div className={styles.tablecontent}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th className={styles.empnamehead}>Month</th>
+              <th className={styles.empgenderhead}>Value</th>
+              <th className={styles.empagehead}>Pay</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(monthlyValues).map(([month, value]) => (
+              <tr key={month}>
+                <td>{month}</td>
+                <td>{value}</td>
+                <td>
+                  <button
+                    className={styles.button}
+                    onClick={() => handlePopup(month)}
+                  >
+                    Pay Now
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <Dialog open={isTopUpDialogOpen} onOpenChange={setIsTopUpDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -209,5 +212,3 @@ export default function ParkPoints() {
     </div>
   );
 }
-
-// export default ParkPoints;

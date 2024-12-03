@@ -382,7 +382,7 @@ const ParkingSlotDetail = () => {
               <div className={styles.card}>
                 <FontAwesomeIcon icon={faMotorcycle} className={styles.icon} />
                 {/* change the slot availablity */}
-                &nbsp; <strong>{parkingLotDetails.lot.bike_capacity_available}</strong>/
+                &nbsp; <strong>{parkingLotDetails.lot.bike_capacity_available || 0}</strong>/
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.bike_capacity}
                 </span>
@@ -390,7 +390,7 @@ const ParkingSlotDetail = () => {
               <div className={styles.card}>
                 <FontAwesomeIcon icon={faCar} className={styles.icon} />
                 {/* change the slot availablity */}
-                &nbsp; <strong>{parkingLotDetails.lot.car_capacity_available}</strong> / 
+                &nbsp; <strong>{parkingLotDetails.lot.car_capacity_available || 0}</strong> / 
                 <span className={styles.totalSlots}>
                   {parkingLotDetails.lot.car_capacity}
                 </span>
