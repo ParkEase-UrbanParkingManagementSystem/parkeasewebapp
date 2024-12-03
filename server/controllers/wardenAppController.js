@@ -875,84 +875,90 @@ router.get('/get-warden-name/:user_id', async (req, res) => {
 
 
 router.get('/exit-from-qr', async (req, res) => {
-  const { vehicle_id, driver_id , user_id } = req.query;
-console.log('in exit from qr vehicle id:',vehicle_id);
-console.log('in exit from qr driver id:',driver_id);
-// console.log('in exit from qr warden_user_id:',warden_user_id);
+  const { vehicle_id, driver_id, user_id } = req.query;
+  console.log('in exit from qr vehicle id:', vehicle_id);
+  console.log('in exit from qr driver id:', driver_id);
 
   try {
     console.log('in exit from qrrrrr');
 
+    // Step 1: Get driver_vehicle_id
     const driverVehicleQuery = `
-    SELECT driver_vehicle_id 
-    FROM driver_vehicle 
-    WHERE vehicle_id = $1 AND driver_id = $2;
-  `;
+      SELECT driver_vehicle_id 
+      FROM driver_vehicle 
+      WHERE vehicle_id = $1 AND driver_id = $2;
+    `;
 
-    // Execute the query to get driver_vehicle_id
     const result1 = await pool.query(driverVehicleQuery, [vehicle_id, driver_id]);
     console.log('Query Result:', result1.rows);
-    const driver_vehicle_id = result1.rows[0].driver_vehicle_id;
-    console.log("driver_vehicle_iddddd",driver_vehicle_id); //done
 
-    //get warden id
+    if (result1.rows.length === 0) {
+      return res.status(404).json({ message: 'Driver Vehicle not found' });
+    }
+
+    const driver_vehicle_id = result1.rows[0].driver_vehicle_id;
+    console.log("driver_vehicle_id:", driver_vehicle_id);
+
+    // Step 2: Get warden_id
     const getWardenId = `
       SELECT warden_id 
       FROM warden 
       WHERE user_id = $1;
     `;
+
     const resultGetWardenId = await pool.query(getWardenId, [user_id]);
     if (resultGetWardenId.rows.length === 0) {
       return res.status(404).json({ message: 'Warden not found' });
     }
+
     const warden_id = resultGetWardenId.rows[0].warden_id;
-    console.log('warden_id:', warden_id); //done
+    console.log('warden_id:', warden_id);
 
-    // Query to fetch details
+    // Step 3: Fetch parking instance details with toll_amount
     const query = `
-    SELECT 
-      pi.instance_id,
-      pi.in_time,
-      pi.out_time,
-      pi.toll_amount,
-      pi.method_id,
-      pi.driver_vehicle_id,
-      
-      pi.lot_id,
-      pi.warden_id,
-      vt.type_name AS vehicle_type_name,
-      v.vehicle_number,
-      pl.name AS parking_lot_name,
-      CONCAT(d.fname, ' ', d.lname) AS driver_name, -- Concatenate driver first and last name
-      CONCAT(w.fname, ' ', w.lname) AS warden_name  -- Concatenate warden first and last name
-    FROM parking_instance pi
-    JOIN driver_vehicle dv ON pi.driver_vehicle_id = dv.driver_vehicle_id
-    JOIN vehicle v ON dv.vehicle_id = v.vehicle_id
-    JOIN vehicle_type vt ON v.type_id = vt.vehicle_type_id
-    JOIN parking_lot pl ON pi.lot_id = pl.lot_id
-    JOIN driver d ON dv.driver_id = d.driver_id
-    JOIN warden w ON pi.warden_id = w.warden_id
-    WHERE pi.warden_id = $1 
-      AND pi.out_time IS NULL
-      AND pi.driver_vehicle_id = $2;
-  `;
-  
-  const result = await pool.query(query, [warden_id, driver_vehicle_id]);
+      SELECT 
+        pi.instance_id,
+        pi.in_time,
+        pi.out_time,
+        pi.method_id,
+        pi.driver_vehicle_id,
+        pi.lot_id,
+        pi.warden_id,
+        vt.type_name AS vehicle_type_name,
+        v.vehicle_number,
+        v.name AS name,
+        pl.name AS parking_lot_name,
+        CONCAT(d.fname, ' ', d.lname) AS driver_name, -- Concatenate driver first and last name
+        CONCAT(w.fname, ' ', w.lname) AS warden_name, -- Concatenate warden first and last name
+        ta.amount_per_vehicle AS toll_amount -- Fetch the toll amount
+      FROM parking_instance pi
+      JOIN driver_vehicle dv ON pi.driver_vehicle_id = dv.driver_vehicle_id
+      JOIN vehicle v ON dv.vehicle_id = v.vehicle_id
+      JOIN vehicle_type vt ON v.type_id = vt.vehicle_type_id
+      JOIN parking_lot pl ON pi.lot_id = pl.lot_id
+      JOIN driver d ON dv.driver_id = d.driver_id
+      JOIN warden w ON pi.warden_id = w.warden_id
+      JOIN toll_amount ta ON pi.lot_id = ta.lot_id AND v.type_id = ta.type_id -- Join toll_amount
+      WHERE pi.warden_id = $1 
+        AND pi.out_time IS NULL
+        AND pi.driver_vehicle_id = $2;
+    `;
 
-  console.log("magulaaaaa",result.rows)
-  
-  if (result.rows.length === 0) {
-    return res.status(404).json({ message: 'No details found for the given driver_vehicle_id' });
-  }
-  
-  console.log('Query Result:', result.rows[0]);
-  res.json(result.rows[0]);
-  
+    const result = await pool.query(query, [warden_id, driver_vehicle_id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'No details found for the given driver_vehicle_id' });
+    }
+
+    console.log('Query Result:', result.rows[0]);
+    res.json(result.rows[0]);
+
   } catch (error) {
     console.error('Error fetching vehicle details:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
 
 
 
@@ -1225,6 +1231,154 @@ router.get('/fetch_history_list', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+
+
+router.get('/fetch_parking_details', async (req, res) => {
+  console.log('Request received for parking details');
+  const { user_id } = req.query;
+
+  try {
+    // Step 1: Get the warden_id for the given user_id
+    const getWardenId = `
+      SELECT warden_id
+      FROM warden
+      WHERE user_id = $1;
+    `;
+    const resultGetWardenId = await pool.query(getWardenId, [user_id]);
+    if (resultGetWardenId.rows.length === 0) {
+      return res.status(404).json({ message: 'Warden not found' });
+    }
+    const warden_id = resultGetWardenId.rows[0].warden_id;
+
+    // Step 2: Get the lot_id assigned to the warden
+    const getLotId = `
+      SELECT lot_id
+      FROM warden_parking_lot
+      WHERE warden_id = $1;
+    `;
+    const resultGetLotId = await pool.query(getLotId, [warden_id]);
+    if (resultGetLotId.rows.length === 0) {
+      return res.status(404).json({ message: 'Lot not found' });
+    }
+    const lot_id = resultGetLotId.rows[0].lot_id;
+
+    // Step 3: Get the parking lot details including capacity and available slots
+    const getParkingLotDetails = `
+      SELECT
+      pl.name,
+        pl.car_capacity,
+        pl.bike_capacity,
+        pl.car_capacity_available,
+        pl.bike_capacity_available
+      FROM
+        parking_lot pl
+      WHERE
+        pl.lot_id = $1;
+    `;
+    const resultGetParkingLotDetails = await pool.query(getParkingLotDetails, [lot_id]);
+
+    if (resultGetParkingLotDetails.rows.length === 0) {
+      return res.status(404).json({ message: 'Parking lot details not found' });
+    }
+
+    const parkingDetails = resultGetParkingLotDetails.rows[0];
+
+    // Step 4: Calculate the total income for the warden for today
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0); // Start of today
+
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999); // End of today
+
+    // Query to get total income based on toll_amount and payment methods
+    const getWardenIncome = `
+      SELECT
+        SUM(pi.toll_amount) AS total_income,
+        SUM(CASE WHEN pi.method_id = 1 THEN pi.toll_amount ELSE 0 END) AS wallet_income,
+        SUM(CASE WHEN pi.method_id = 2 THEN pi.toll_amount ELSE 0 END) AS cash_income,
+        SUM(CASE WHEN pi.method_id = 3 THEN pi.toll_amount ELSE 0 END) AS parkpoints_income
+      FROM
+        parking_instance pi
+      WHERE
+        pi.warden_id = $1
+        AND pi.in_time >= $2
+        AND pi.in_time <= $3
+        AND pi.iscompleted = true;
+    `;
+
+    const valuesForIncome = [warden_id, todayStart, todayEnd];
+
+    const resultGetIncome = await pool.query(getWardenIncome, valuesForIncome);
+
+    let total_income = 0;
+    let wallet_income = 0;
+    let cash_income = 0;
+    let parkpoints_income = 0;
+
+    if (resultGetIncome.rows.length > 0) {
+      total_income = resultGetIncome.rows[0].total_income || 0;
+      wallet_income = resultGetIncome.rows[0].wallet_income || 0;
+      cash_income = resultGetIncome.rows[0].cash_income || 0;
+      parkpoints_income = resultGetIncome.rows[0].parkpoints_income || 0;
+    }
+
+    // Step 5: Get rates per hour from toll_amount table (for car and bike)
+    const getRatesPerHour = `
+      SELECT
+        type_id,
+        amount_per_vehicle
+      FROM
+        toll_amount
+      WHERE
+        lot_id = $1;
+    `;
+    const resultGetRatesPerHour = await pool.query(getRatesPerHour, [lot_id]);
+
+    let car_rate = 0;
+    let bike_rate = 0;
+
+    // Loop through the result and assign rates based on type_id
+    resultGetRatesPerHour.rows.forEach(rate => {
+      if (rate.type_id === 1) {
+        car_rate = rate.amount_per_vehicle;
+      } else if (rate.type_id === 2) {
+        bike_rate = rate.amount_per_vehicle;
+      }
+    });
+
+    // Step 6: Return the relevant details including income and rates
+    console.log('Parking details:', parkingDetails);
+    res.json({
+      lot_name: parkingDetails.name,
+      total_slots: {
+        car: parkingDetails.car_capacity,
+        bike: parkingDetails.bike_capacity,
+      },
+      available_slots: {
+        car: parkingDetails.car_capacity_available,
+        bike: parkingDetails.bike_capacity_available,
+      },
+      rates_per_hour: {
+        car: car_rate,
+        bike: bike_rate
+      },
+      total_income: total_income,
+      payment_methods_income: {
+        wallet: wallet_income,
+        cash: cash_income,
+        parkpoints: parkpoints_income
+      }
+    });
+
+  } catch (error) {
+    console.error('Error fetching parking details:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+
 
 
 

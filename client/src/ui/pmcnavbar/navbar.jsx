@@ -168,8 +168,8 @@ const Navbar = () => {
                       notification.is_read ? styles.read : styles.unread
                     }`}
                   >
-                    <h4>{notification.title}</h4>
-                    <p>{notification.message}</p>
+                    <h4 className="text-lg font-semibold pb-2">{notification.title}</h4>
+                    <p className="text-sm pb-2">{notification.message}</p>
                     {!notification.is_read && (
                       <button
                         className={styles.markAsReadButton}

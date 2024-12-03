@@ -220,8 +220,8 @@ const WardenDetailsPage = () => {
             <div className={styles.profilePic}>
               {warden?.fname && warden?.lname ? (
                 <span className={styles.initials}>
-                  {warden.fname[0].toUpperCase()}
-                  {warden.lname[0].toUpperCase()}
+                  {warden?.fname[0].toUpperCase()}
+                  {warden?.lname[0].toUpperCase()}
                 </span>
               ) : (
                 <span>No Name</span>
@@ -240,17 +240,17 @@ const WardenDetailsPage = () => {
                 <span>Status:</span>
                 <span
                   className={
-                    warden.parking_lot_name === null
+                    warden?.parking_lot_name === null
                       ? styles.statusInactive
                       : styles.statusActive
                   }
                 >
-                  {warden.parking_lot_name === null
+                  {warden?.parking_lot_name === null
                     ? "Not Assigned"
                     : "Assigned"}
                 </span>
               </p>
-              {warden.parking_lot_name !== null && (
+              {warden?.parking_lot_name !== null && (
                 <ActionButton label="Unassign" onClick={handleUnassign} />
               )}
             </div>
@@ -260,41 +260,41 @@ const WardenDetailsPage = () => {
               <div className={styles.detailColumn}>
                 <div className={styles.detail}>
                   <label>NIC:</label>
-                  <p>{warden.nic}</p>
+                  <p>{warden?.nic}</p>
                 </div>
                 <div className={styles.detail}>
                   <label>Gender:</label>
-                  <p>{warden.gender}</p>
+                  <p>{warden?.gender}</p>
                 </div>
                 <div className={styles.detail}>
                   <label>Hometown:</label>
-                  <p>{warden.province}</p>
+                  <p>{warden?.province}</p>
                 </div>
                 <div className={styles.detail}>
                   <label>Age:</label>
-                  <p>{warden.age}</p>
+                  <p>{warden?.age}</p>
                 </div>
               </div>
               <div className={styles.detailColumn}>
                 <div className={styles.detail}>
                   <label>Contact:</label>
-                  <p>{warden.contact}</p>
+                  <p>{warden?.contact}</p>
                 </div>
                 <div className={styles.detail}>
                   <label>Email:</label>
-                  <p>{warden.email}</p>
+                  <p>{warden?.email}</p>
                 </div>
                 <div className={styles.detail}>
                   <label>Assigned Parking Lot:</label>
                   <p>
-                    {warden.parking_lot_name === null
+                    {warden?.parking_lot_name === null
                       ? "Not Assigned"
-                      : warden.parking_lot_name}
+                      : warden?.parking_lot_name}
                   </p>
                 </div>
                 <div className={styles.detail}>
                   <label>Address:</label>
-                  <p>{`${warden.addressno}, ${warden.street_1}, ${warden.street_2}, ${warden.city}.`}</p>
+                  <p>{`${warden?.addressno}, ${warden?.street_1}, ${warden?.street_2}, ${warden?.city}.`}</p>
                 </div>
               </div>
             </div>
@@ -302,7 +302,7 @@ const WardenDetailsPage = () => {
         </div>
         <div className={styles.assign}>
           <div className={styles.assigncard}>
-            {warden.parking_lot_name === null ? (
+            {warden?.parking_lot_name === null ? (
               <div className={styles.assignoption}>
                 <p>Assign to a parking slot:</p>
                 {parkingLots && parkingLots.length > 0 ? (
@@ -374,9 +374,9 @@ const WardenDetailsPage = () => {
         </h1>
 
         <div className={styles.reviewsOuterCont}>
-          {warden.reviews && warden.reviews.length > 0 ? (
+          {warden?.reviews && warden?.reviews.length > 0 ? (
             <div className={styles.reviewsContainer}>
-              {warden.reviews.map((review) => (
+              {warden?.reviews.map((review) => (
                 <div key={review.id} className={styles.reviewCard}>
                   <h4 className={styles.reviewRating}>
                     Rating: {renderStars(review.rating)}

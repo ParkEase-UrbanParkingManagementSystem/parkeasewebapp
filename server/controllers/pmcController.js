@@ -231,7 +231,7 @@ const getNotificationsPmc = async (req, res) => {
 
 
 const getWardenDailyEarnings = async (req, res) => {
-    console.log("Badu awa yakoooooooooo supiiriiii")
+    
     try {
       const wardenId = req.params.id;  // Assuming wardenId is passed as a parameter in the URL
   
