@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./payment.module.css";
 import Dropdown from "@/ui/dashboard/dropdown/dropdown";
-import axios from "axios"; // Axios for API requests
 
 const WardenPage = () => {
   const allMonths = [
@@ -37,9 +36,20 @@ const WardenPage = () => {
     try {
       setLoading(true);
       setError("");
+      const monthIndex = allMonths.indexOf(month) + 1;
+
+      if (monthIndex === 0) {
+        throw new Error("Invalid month selected");
+      }
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        Router.push("/login");
+        return;
+      }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_KEY}/warden/revenue`,
+        `${process.env.NEXT_PUBLIC_API_KEY}/wardens/revenue?month=${monthIndex}&year=${year}`,
         {
           method: "GET",
           headers: {
@@ -49,7 +59,12 @@ const WardenPage = () => {
         }
       );
 
-      setWardens(response.data);
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setWardens(data);
     } catch (err) {
       console.error("Error fetching warden details:", err);
       setError("Failed to fetch data. Please try again.");
@@ -99,7 +114,7 @@ const WardenPage = () => {
           <p>Loading...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
-        ) : wardens.length > 0 ? (
+        ) : (
           <table className={styles.table}>
             <thead>
               <tr>
@@ -109,39 +124,37 @@ const WardenPage = () => {
                 <th className={styles.empagehead}>No. of Vehicles Scanned</th>
                 <th className={styles.empcontacthead}>Revenue Gained</th>
                 <th className={styles.empslothead}>Total Wage</th>
-                <th className={styles.empslothead}>Status</th>
               </tr>
             </thead>
             <tbody>
-              {wardens.map((warden) => (
-                <tr key={warden.warden_id}>
-                  <td className={styles.empnamedata}>{warden.warden_id}</td>
-                  <td className={styles.empgenderdata}>{warden.name}</td>
-                  <td className={styles.empagedata}>{warden.workingDays}</td>
-                  <td className={styles.empcontactdata}>
-                    {warden.vehiclesScanned}
-                  </td>
-                  <td className={styles.empcontactdata}>
-                    {warden.revenueGained}
-                  </td>
-                  <td className={styles.empcontactdata}>
-                    {warden.totalWage}
-                  </td>
-                  <td
-                    className={
-                      warden.status === "Paid"
-                        ? styles.statusActive
-                        : styles.statusInactive
-                    }
-                  >
-                    {warden.status}
+              {wardens.length > 1 ? (
+                wardens.map((warden) => (
+                  <tr key={warden.warden_id}>
+                    <td className={styles.empnamedata}>{warden.warden_id}</td>
+                    <td className={styles.empgenderdata}>
+                      {warden.warden_name}
+                    </td>
+                    <td className={styles.empagedata}>{warden.working_days}</td>
+                    <td className={styles.empcontactdata}>
+                      {warden.vehicles_scanned}
+                    </td>
+                    <td className={styles.empcontactdata}>
+                      {warden.total_revenue}
+                    </td>
+                    <td className={styles.empcontactdata}>
+                      {warden.total_wage}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center text-gray-500 italic">
+                    No data available for the selected month and year.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
-        ) : (
-          <p>No data available for the selected month and year.</p>
         )}
       </div>
     </div>
