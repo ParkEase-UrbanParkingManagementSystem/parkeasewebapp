@@ -97,7 +97,7 @@ const Admin = () => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
             <StatCards
-                imgSrc="https://img.freepik.com/free-photo/back-view-male-driver-holding-wheel_23-2148321792.jpg?t=st=1725592054~exp=1725595654~hmac=a959dede8f151c59c19845f1e32466c074072ef75b777a142cf96f5c72e7a566&w=996"
+                imgSrc="https://img.freepik.com/free-photo/young-man-driving-his-car-night-time_1303-17089.jpg?t=st=1733229082~exp=1733232682~hmac=a267a37dc5d5ac30381f1515de8e09e788d121bb63a95c9c020ec49f013507b5&w=360"
                 title="Drivers"
                 number={count.driverCount}
                 registeredInDb="5"
