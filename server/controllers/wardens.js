@@ -387,7 +387,7 @@ exports.getWardenRevenueDetails = async (req, res) => {
     const query = `
       SELECT 
         w.warden_id, 
-        CONCAT(u.fname, ' ', u.lname) AS warden_name,
+        CONCAT(w.fname, ' ', w.lname) AS warden_name,
         COUNT(pi.instance_id) AS vehicles_scanned,
         COALESCE(SUM(pi.toll_amount), 0) AS total_revenue,
         COUNT(DISTINCT pi.in_time::DATE) AS working_days,
@@ -398,22 +398,30 @@ exports.getWardenRevenueDetails = async (req, res) => {
         warden_parking_lot wpl ON w.warden_id = wpl.warden_id
       JOIN 
         parking_instance pi ON wpl.lot_id = pi.lot_id
-      JOIN 
-        users u ON w.user_id = u.user_id
       WHERE 
         EXTRACT(MONTH FROM pi.in_time) = $1 
         AND EXTRACT(YEAR FROM pi.in_time) = $2
         AND pi.iscompleted = true
       GROUP BY 
-        w.warden_id, u.fname, u.lname
+        w.warden_id, w.fname, w.lname
       ORDER BY 
         warden_name ASC;
     `;
 
     const result = await pool.query(query, [month, year]);
 
+    // If no data is found, return default values
     if (result.rows.length === 0) {
-      return res.status(404).json({ message: "No warden metrics found for the specified month and year." });
+      return res.status(200).json([
+        {
+          warden_id: null,
+          warden_name: "No data",
+          vehicles_scanned: 0,
+          total_revenue: 0,
+          working_days: 0,
+          total_wage: 0,
+        },
+      ]);
     }
 
     res.status(200).json(result.rows);
