@@ -400,6 +400,77 @@ exports.getPMCAts = async (req, res) => {
     }
 };
 
+exports.adminToPMC = async (req, res) => {
+    
+    console.log("In subscriptionPaymentttttttt");
+    const client = await pool.connect();
+
+    try {
+        console.log("1111111111111111111111111111111111111111111111");
+        // const user_id = req.user;
+        // const { session_id , pmc_id} = req.body;
+        // const { amount, pmc_id } = req.body;
+        const session_id = req.body.session_id;
+        const pmc_id = req.body.pmc_id;
+        console.log("NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+        console.log(session_id);
+        console.log("pmc id id",pmc_id);
+
+
+
+        if (!session_id) {
+            return res.status(400).json({ message: "Stripe session ID is required" });
+        }
+
+        // Verify the Stripe session
+        const session = await stripe.checkout.sessions.retrieve(session_id);
+        console.log(session_id);
+
+        if (session.payment_status !== 'paid') {
+            return res.status(400).json({ message: "Payment not completed" });
+        }
+
+        const amount = session.amount_total / 100; // Convert from cents to whole currency units
+        console.log(amount);
+        // console.log(user_id);
+
+        const sessionCreated = session.created; // Example UNIX timestamp from Stripe
+        const sriLankaOffset = 5.5 * 60 * 60 * 1000; // Offset for UTC+5:30 in milliseconds
+        
+        // Convert to Sri Lanka time
+        const sriLankaTime = new Date(sessionCreated * 1000 + sriLankaOffset);
+        
+        // Format the output
+        const transactionDate = sriLankaTime.toISOString().split("T")[0]; // YYYY-MM-DD
+        const transactionTime = sriLankaTime.toISOString().split("T")[1].split(".")[0]; // HH:MM:SS
+        
+        console.log(`Sri Lanka Date: ${transactionDate}`); // e.g., 2024-12-01
+        console.log(`Sri Lanka Time: ${transactionTime}`); // e.g., 16:39:32
+
+        // Insert into the transaction table
+        await client.query(`
+            INSERT INTO transaction (date, time, amount, pmc_id, admin)
+            VALUES ($1, $2, $3, $4, $5)
+        `, [transactionDate, transactionTime, amount, pmc_id, 1]);
+
+
+
+        return res.status(200).json({ message: "Wallet top-up successful!"});
+
+
+
+        // return res.status(200).json({ message: "Wallet top-up successful!" });
+
+    } catch (error) {
+        console.error("Error in topUpWallet:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    } finally {
+        client.release();
+    }
+};
+
+
+
 
 
 
