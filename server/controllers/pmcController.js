@@ -278,6 +278,69 @@ const getWardenDailyEarnings = async (req, res) => {
   };
   
 
+// Function to fetch getTotalToll
+const getTotalToll = async (req, res) => {
+    console.log('getTotalToll calledddddddddddddddddddddddddddddddddddddddddddddddd'); 
+    const { date } = req.query; // Expecting `date` in the format YYYY-MM-DD
+    console.log('date:', date);
+
+    try {
+        const query = `SELECT 
+            pmc.name AS pmc_name,
+            pmc.pmc_id,
+            COALESCE(SUM(lot_totals.total_toll), 0) AS full_toll_amount
+
+        FROM 
+            pmc
+        LEFT JOIN (
+            SELECT 
+                pl.pmc_id,
+                SUM(pi.toll_amount) AS total_toll
+            FROM 
+                parking_instance pi
+            JOIN 
+                parking_lot pl ON pi.lot_id = pl.lot_id
+            WHERE 
+                pi.method_id IN (1, 3)
+                AND DATE(pi.in_time) = $1
+            GROUP BY 
+                pl.pmc_id
+        ) lot_totals ON pmc.pmc_id = lot_totals.pmc_id
+        GROUP BY 
+            pmc.pmc_id
+        ORDER BY 
+            pmc.name;
+        `
+        const pmcResults = await pool.query(query, [date]);
+        const pmcData = pmcResults.rows;
+
+        // Fetch transaction data to check payment status
+        const transactionQuery = `
+        SELECT pmc_id
+        FROM transaction
+        WHERE DATE(date) = $1 AND admin = true
+        `;
+        const transactionResults = await pool.query(transactionQuery, [date]);
+        const paidPmcs = new Set(transactionResults.rows.map(row => row.pmc_id));
+
+        // Add `paid` field to each PMC
+        const response = pmcData.map(pmc => ({
+        ...pmc,
+        paid: paidPmcs.has(pmc.pmc_id) // Check if the PMC has a corresponding payment
+        }));
+        console.log('response:', response);
+        res.status(200).json({
+            message: "Success",
+            data: response
+        });
+    } catch (error) {
+        console.error('Error in getTotalToll:', error);
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
+
+
+
 
 module.exports = {
     getPMCDetails,
@@ -288,5 +351,6 @@ module.exports = {
     getPmcType,
     getPMCAnalytics,
     getNotificationsPmc,
-    getWardenDailyEarnings    
+    getWardenDailyEarnings,
+    getTotalToll    
 };
