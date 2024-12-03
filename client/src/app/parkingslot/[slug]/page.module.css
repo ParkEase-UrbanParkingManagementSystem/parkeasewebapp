@@ -290,3 +290,76 @@
   background-color: #ccc;
 }
 
+.revenue-section {
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.titleh2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.revenue-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  
+}
+
+.button {
+  background-color: #FFEB3B; /* Yellow color */
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  text-transform: uppercase;
+  width: 140px;
+}
+
+.button:disabled {
+  background-color: #E0E0E0; /* Light gray for disabled */
+  cursor: not-allowed;
+}
+
+.button:hover {
+  background-color: #FBC02D; /* Slightly darker yellow for hover */
+  transform: translateY(-2px);
+}
+
+.revenue-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: #333;
+}
+
+.revenue-value {
+  font-size: 36px;
+  font-weight: bold;
+  color: #4CAF50; /* Green color for revenue value */
+}
+
+.error-message {
+  color: red;
+  font-size: 16px;
+  text-align: center;
+}
+
+.custom-box {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Small box shadow */
+  border-radius: 8px; /* Optional, for rounded corners */
+}
+
+

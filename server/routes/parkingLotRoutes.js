@@ -11,6 +11,7 @@ router.get("/parking-capacity", authorization, parkingLotController.getParkingCa
 router.get("/peak-hours", authorization, parkingLotController.getPeakParkingHours);
 router.get("/total-revenue", authorization, parkingLotController.getTotalRevenue);
 router.get("/:id", authorization, parkingLotController.getAParkingLotDetails);
+router.get("/revenue/:id", parkingLotController.getParkingLotRevenue);
 
 router.post(
   "/inactive/:id",

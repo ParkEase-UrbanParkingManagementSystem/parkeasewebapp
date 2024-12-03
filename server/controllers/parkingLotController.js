@@ -294,7 +294,7 @@ exports.getAParkingLotDetails = async (req, res) => {
           created_at: row.review_created_at,
           driver_fname: row.driver_fname,
           driver_lname: row.driver_lname,
-          profile_pic: row.driver_profile_pic,
+          
         });
       }
       // Add slot prices to the map
@@ -618,3 +618,57 @@ exports.getTotalRevenue = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+
+exports.getParkingLotRevenue = async (req, res) => {
+
+console.log("Badu awa mcahannacnannnnnnnnnnnnnnnnnnnnn")
+
+  const { id } = req.params; // lot_id from the route parameter
+
+  console.log("Parking Lot ID:", id);
+
+  if (!id) {
+    return res.status(400).json({ message: "Parking Lot ID is required or invalid" });
+  }
+
+  try {
+    // Query to calculate daily, monthly, and yearly revenue
+    const revenueQuery = `
+      SELECT 
+        COALESCE(SUM(CASE WHEN DATE(in_time) = CURRENT_DATE THEN toll_amount ELSE 0 END), 0) AS daily_revenue,
+        COALESCE(SUM(CASE WHEN DATE_TRUNC('month', in_time) = DATE_TRUNC('month', CURRENT_DATE) THEN toll_amount ELSE 0 END), 0) AS monthly_revenue,
+        COALESCE(SUM(CASE WHEN DATE_TRUNC('year', in_time) = DATE_TRUNC('year', CURRENT_DATE) THEN toll_amount ELSE 0 END), 0) AS yearly_revenue
+      FROM parking_instance
+      WHERE lot_id = $1 AND iscompleted = true;
+    `;
+
+    const revenueResult = await pool.query(revenueQuery, [id]);
+
+    if (revenueResult.rows.length === 0) {
+      return res.status(404).json({ message: "No revenue data found for this parking lot" });
+    }
+
+    // Extract revenue details
+    const { daily_revenue, monthly_revenue, yearly_revenue } =
+      revenueResult.rows[0];
+
+    const revenueDetails = {
+      parking_lot_id: id,
+      daily_revenue: parseFloat(daily_revenue),
+      monthly_revenue: parseFloat(monthly_revenue),
+      yearly_revenue: parseFloat(yearly_revenue),
+    };
+
+    console.log("Revenue Details:", revenueDetails);
+
+    res.json({ data: revenueDetails });
+  } catch (error) {
+    console.error("Error fetching revenue details:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+
+
