@@ -41,7 +41,7 @@ const Links = () => {
       icon: faMoneyCheckDollar,
       subLinks: [
         { title: "ParkEase Payment", path: "/handle-parkeasepayment" },
-        { title: "Warden Earning", path: "/handle-earning" },
+        
       ],
     },
   ];

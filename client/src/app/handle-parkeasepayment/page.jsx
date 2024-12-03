@@ -161,7 +161,11 @@ export default function ParkPoints() {
     <div className={styles.container}>
       <div className={styles.title}>
         <p>ParkEase Monthly Payment Management</p>
+       
+        
       </div>
+
+      
 
       <div className={styles.tablecontent}>
         <table className={styles.table}>
@@ -189,6 +193,7 @@ export default function ParkPoints() {
             ))}
           </tbody>
         </table>
+        <p className="m-8 text-lg font-semibold text-red-500">You have to pay the monthly subscription on or before the 20th of each month. Otherwise ParkEase will Inactivate your parking lots</p>
       </div>
       <Dialog open={isTopUpDialogOpen} onOpenChange={setIsTopUpDialogOpen}>
         <DialogContent>
