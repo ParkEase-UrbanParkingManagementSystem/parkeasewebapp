@@ -12,6 +12,7 @@ router.get('/total-collections', PMCController.getTotalCollectionsByPMC);
 router.get("/pmctype", authorization, authorizeRole([2]), PMCController.getPmcType);
 router.get('/analytics', PMCController.getPMCAnalytics);
 router.get('/notifications', authorization, PMCController.getNotificationsPmc);
+router.get('/warden/earnings/:id', authorization ,PMCController.getWardenDailyEarnings);
 
 module.exports = router;
     
