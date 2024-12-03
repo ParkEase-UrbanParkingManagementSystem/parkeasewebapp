@@ -76,9 +76,9 @@ exports.parkingLotAdd = [
       const insertParkingLotQuery = `
         INSERT INTO parking_lot (
           pmc_id, name, bike_capacity, car_capacity, full_capacity,
-          addressno, street1, street2, city, district, link, description, sketch, images, bike_capacity_available, car_capacity_available
+          addressno, street1, street2, city, district, link, description, sketch, images, bike_capacity_available, car_capacity_available, status
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, 'not_approved')
         RETURNING lot_id;
       `;
 

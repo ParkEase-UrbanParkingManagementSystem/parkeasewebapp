@@ -85,11 +85,11 @@ const Vehicles = () => {
       case 2:
         return "/images/motorcycle.png";
       case 3:
-        return "/images/threewheel.jpg";
+        return "/images/tw.png";
       case 4:
-        return "/images/large_vehicle.jpg";
+        return "/images/lorry.png";
       default:
-        return "/images/default_vehicle.jpg";
+        return "/images/car.png";
     }
   };
 
@@ -177,7 +177,7 @@ const Vehicles = () => {
                   {vehicleDetails.map((vehicle, index) => (
                     <li
                       key={index}
-                      className="p-4 border-[2px] border-black-500 rounded-lg flex items-center space-x-4"
+                      className="p-4 border-[2px] border-black-500 rounded-lg flex items-center space-x-4 bg-slate-200"
                     >
                       <img
                         src={getImageUrl(vehicle.type_id)}
@@ -186,7 +186,7 @@ const Vehicles = () => {
                       />
                       <div>
                         <p className="text-lg font-bold">{vehicle.name}</p>
-                        <p>Vehicle Number: {vehicle.vehicle_number}</p>
+                        <p>Vehicle Number:  {vehicle.vehicle_number}</p>
                       </div>
                     </li>
                   ))}

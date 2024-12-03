@@ -232,10 +232,12 @@ const Profile = () => {
                     <span>Rs. {parkingAnalytics.total_cost_for_parking}/=</span>
                   </div>
                   <div className="flex items-center py-3">
-                    <span>Average Cost for:&nbsp; </span>
+                    <span>Average Cost for:      &nbsp;   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;   </span>
                     <span>
-                      Rs. {parkingAnalytics.average_cost_for_parking}/=
-                    </span>
+                      Rs. {Number(parkingAnalytics.average_cost_for_parking).toFixed(2)}/=
+                          </span>
+
+
                   </div>
                 </div>
                 {/* </div> */}
