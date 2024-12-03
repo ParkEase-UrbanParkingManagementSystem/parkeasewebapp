@@ -207,7 +207,9 @@ const ParkingLot = () => {
                   >
                     {lot.status === "active"
                       ? "Active" :
-                      lot.status === "banned"? "Banned"
+                      lot.status === "banned"? "Banned" 
+                      : 
+                      lot.status === "not_approved"? "Not Approved"
                       : "Inactive"}
                   </td>
                 </tr>

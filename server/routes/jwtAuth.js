@@ -95,9 +95,23 @@ router.post("/registerDriver", async (req, res) => {
             const userId = newUser.rows[0].user_id;
 
             // Insert driver details into the driver table
-            await pool.query(
-                "INSERT INTO driver (fname, lname, nic, age, gender, user_id) VALUES ($1, $2, $3, $4, $5, $6)",
+            const newDriver = await pool.query(
+                "INSERT INTO driver (fname, lname, nic, age, gender, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING driver_id",
                 [fname, lname, nic, age, gender, userId]
+            );
+
+            const driverId = newDriver.rows[0].driver_id;
+
+            // Insert a record into the payparkwallet table for the driver
+            await pool.query(
+                "INSERT INTO payparkwallet (available_amount, driver_id) VALUES ($1, $2)",
+                [0, driverId] // Initialize wallet with 0 balance
+            );
+
+            // Insert a record into the parkpoints table for the driver
+            await pool.query(
+                "INSERT INTO parkpoints (no_of_points, driver_id) VALUES ($1, $2)",
+                [0, driverId] // Initialize park points with 0 points
             );
 
             // Commit the transaction
@@ -115,6 +129,7 @@ router.post("/registerDriver", async (req, res) => {
         res.status(500).send("Server Error");
     }
 });
+
 
 
 //Login

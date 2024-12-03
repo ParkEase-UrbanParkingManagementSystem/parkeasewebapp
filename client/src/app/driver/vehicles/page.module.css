@@ -2,12 +2,13 @@
   display: grid;
   grid-template-rows: 10% 90%;
   height: 100vh;
-  background: linear-gradient(to bottom, #FFD981, #D1D2D5);
+  background: linear-gradient(to bottom, #FFD981, #a8a8aa);
 }
 
 .content {
   display: grid;
   grid-template-columns: 30% 70%;
+  margin-top: 50px;
 }
 
 .left {
