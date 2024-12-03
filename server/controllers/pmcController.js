@@ -230,6 +230,55 @@ const getNotificationsPmc = async (req, res) => {
 };
 
 
+const getWardenDailyEarnings = async (req, res) => {
+    console.log("Badu awa yakoooooooooo supiiriiii")
+    try {
+      const wardenId = req.params.id;  // Assuming wardenId is passed as a parameter in the URL
+  
+      if (!wardenId) {
+        return res.status(400).json({ message: "Warden ID is missing" });
+      }
+  
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0); // Get start of today
+  
+      const todayEnd = new Date();
+      todayEnd.setHours(23, 59, 59, 999); // Get end of today
+  
+      const query = `
+        SELECT
+          SUM(toll_amount) AS total_earnings,
+          SUM(CASE WHEN method_id = 2 THEN toll_amount ELSE 0 END) AS cash_earnings,
+          COUNT(DISTINCT driver_vehicle_id) AS vehicles_assisted
+        FROM parking_instance
+        WHERE warden_id = $1
+          AND in_time >= $2
+          AND in_time <= $3
+          AND iscompleted = true
+      `;
+  
+      const values = [wardenId, todayStart, todayEnd];
+  
+      const result = await pool.query(query, values);
+  
+      if (result.rows.length > 0) {
+        const { total_earnings, cash_earnings, vehicles_assisted } = result.rows[0];
+        res.json({
+          total_earnings: total_earnings || 0,
+          cash_earnings: cash_earnings || 0,
+          vehicles_assisted: vehicles_assisted || 0
+        });
+      } else {
+        res.status(404).json({ message: "No earnings found for this warden today" });
+      }
+    } catch (error) {
+      console.error("Error fetching warden's daily earnings:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+  
+
+
 module.exports = {
     getPMCDetails,
     getAllWardens,
@@ -238,5 +287,6 @@ module.exports = {
     getTotalCollectionsByPMC,
     getPmcType,
     getPMCAnalytics,
-    getNotificationsPmc
+    getNotificationsPmc,
+    getWardenDailyEarnings    
 };

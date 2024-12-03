@@ -13,6 +13,7 @@ const WardenDetailsPage = () => {
   const [error, setError] = useState(null);
   const [parkingLots, setParkingLots] = useState([]);
   const [selectedParkingLot, setSelectedParkingLot] = useState(null);
+  const [earningsData, setEarningsData] = useState(null);
 
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
@@ -84,10 +85,42 @@ const WardenDetailsPage = () => {
     }
   };
 
+  const fetchWardenEarnings = async () => {
+    const token = localStorage.getItem("token");
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_KEY}/pmc/warden/earnings/${slug}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch warden earnings");
+      }
+
+      const data = await response.json();
+      setEarningsData(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching warden earnings:", error);
+      
+    }
+  };
+
   useEffect(() => {
     if (!slug) return;
     fetchParkingLots();
     fetchWardenDetails();
+    fetchWardenEarnings();
   }, [slug]);
 
   const handleAssign = async () => {
@@ -185,7 +218,7 @@ const WardenDetailsPage = () => {
         <div className={styles.profile}>
           <div className={styles.profileCard}>
             <div className={styles.profilePic}>
-              {warden.fname && warden.lname ? (
+              {warden?.fname && warden?.lname ? (
                 <span className={styles.initials}>
                   {warden.fname[0].toUpperCase()}
                   {warden.lname[0].toUpperCase()}
@@ -196,11 +229,11 @@ const WardenDetailsPage = () => {
             </div>
 
             <div className={styles.profileDetails}>
-              <h2 className="font-semibold text-[36px]">{`${warden.fname} ${warden.lname}`}</h2>
+              <h2 className="font-semibold text-[36px]">{`${warden?.fname} ${warden?.lname}`}</h2>
               <h3 className="mb-2">
                 Warden ID -{" "}
                 <span className="font-bold">
-                  W{`${warden.warden_id.substring(0, 4).toUpperCase()}`}
+                  W{`${warden?.warden_id?.substring(0, 4).toUpperCase()}`}
                 </span>{" "}
               </h3>
               <p>
@@ -309,27 +342,35 @@ const WardenDetailsPage = () => {
           <div className={styles.salarycard}>
             <div className={styles.row}>
               <label>Daily Covered Target: </label>
-              <p>45 vehicles</p>
+              <p>{earningsData?.vehicles_assisted} Vehicle(s)</p>
             </div>
             <div className={styles.row}>
-              <label>Daily Earning: </label>
-              <p>900 Rupees</p>
+              <label>Daily Total Earnings: </label>
+              <p>Rs. {earningsData?.total_earnings.toLocaleString()} /=</p>
             </div>
+
+            <div className={styles.row}>
+              <label>Daily Cash Earnings: </label>
+              <p>Rs. {earningsData?.cash_earnings.toLocaleString()} /=</p>
+            </div>
+
+            
            
           </div>
 
-          <div className={styles.logcard}>
+          {/* <div className={styles.logcard}>
             <p className="font-bold">Check Warden History: </p>
             <ActionButton
               label="View"
               onClick={() => console.log("View history clicked")}
             />
-          </div>
+          </div> */}
+          
         </div>
       </div>
       <div className={styles.reviewcard}>
         <h1 className="text-[20px] font-semibold mt-4">
-          Reviews and Ratings for Warden - {warden.fname} {warden.lname}
+          Reviews and Ratings for Warden - {warden?.fname} {warden?.lname}
         </h1>
 
         <div className={styles.reviewsOuterCont}>
